@@ -1,0 +1,798 @@
+{
+  "config": {
+    "configFile": "/home/amb/iris-vista-system/tests/e2e/playwright.config.ts",
+    "rootDir": "/home/amb/iris-vista-system/tests/e2e/flows",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "./reports/html"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "./reports/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/amb/iris-vista-system/tests/e2e/reports/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "Desktop Chrome",
+        "name": "Desktop Chrome",
+        "testDir": "/home/amb/iris-vista-system/tests/e2e/flows",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/home/amb/iris-vista-system/tests/e2e/reports/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "Desktop Firefox",
+        "name": "Desktop Firefox",
+        "testDir": "/home/amb/iris-vista-system/tests/e2e/flows",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/home/amb/iris-vista-system/tests/e2e/reports/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "Tablet",
+        "name": "Tablet",
+        "testDir": "/home/amb/iris-vista-system/tests/e2e/flows",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/home/amb/iris-vista-system/tests/e2e/reports/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/home/amb/iris-vista-system/tests/e2e/flows",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 4,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "03-solicitud.spec.ts",
+      "file": "03-solicitud.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Purchase Request Flow",
+          "file": "03-solicitud.spec.ts",
+          "line": 18,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Catalog Requests",
+              "file": "03-solicitud.spec.ts",
+              "line": 37,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "5.2 - Create request with single catalog product",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 9827,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:16:46.874Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-faaf8-with-single-catalog-product-Desktop-Chrome/test-finished-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-faaf8-with-single-catalog-product-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-faaf8-with-single-catalog-product-Desktop-Chrome/trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d1b5f715e600696ea97d-383d1013838332c42da5",
+                  "file": "03-solicitud.spec.ts",
+                  "line": 38,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Quantity Management",
+              "file": "03-solicitud.spec.ts",
+              "line": 286,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "5.7 - Remove product from request",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 8123,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:16:57.015Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-b55cc-Remove-product-from-request-Desktop-Chrome/test-finished-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-b55cc-Remove-product-from-request-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-b55cc-Remove-product-from-request-Desktop-Chrome/trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d1b5f715e600696ea97d-0ac0c989876d642b29cb",
+                  "file": "03-solicitud.spec.ts",
+                  "line": 338,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Validation",
+              "file": "03-solicitud.spec.ts",
+              "line": 383,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "5.10 - Justification required validation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 6260,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:17:05.290Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-7be5b-ication-required-validation-Desktop-Chrome/test-finished-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-7be5b-ication-required-validation-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/03-solicitud-Purchase-Requ-7be5b-ication-required-validation-Desktop-Chrome/trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d1b5f715e600696ea97d-85f617424f963a88921d",
+                  "file": "03-solicitud.spec.ts",
+                  "line": 384,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "09-amazon.spec.ts",
+      "file": "09-amazon.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Amazon Integration Flow",
+          "file": "09-amazon.spec.ts",
+          "line": 15,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Configuration",
+              "file": "09-amazon.spec.ts",
+              "line": 16,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "9.2 - Enable Amazon integration",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 25943,
+                          "error": {
+                            "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+                            "stack": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:76:26",
+                            "location": {
+                              "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                              "column": 26,
+                              "line": 76
+                            },
+                            "snippet": "  74 |\n  75 |       if (await saveButton.isVisible()) {\n> 76 |         await saveButton.click();\n     |                          ^\n  77 |         await page.waitForTimeout(1000);\n  78 |         await human.takeScreenshot(page, 'amazon-enabled');\n  79 |       }"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                                "column": 26,
+                                "line": 76
+                              },
+                              "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  74 |\n  75 |       if (await saveButton.isVisible()) {\n> 76 |         await saveButton.click();\n     |                          ^\n  77 |         await page.waitForTimeout(1000);\n  78 |         await human.takeScreenshot(page, 'amazon-enabled');\n  79 |       }\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:76:26"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:16:46.829Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome/test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                            "column": 26,
+                            "line": 76
+                          }
+                        },
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 22335,
+                          "error": {
+                            "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+                            "stack": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:76:26",
+                            "location": {
+                              "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                              "column": 26,
+                              "line": 76
+                            },
+                            "snippet": "  74 |\n  75 |       if (await saveButton.isVisible()) {\n> 76 |         await saveButton.click();\n     |                          ^\n  77 |         await page.waitForTimeout(1000);\n  78 |         await human.takeScreenshot(page, 'amazon-enabled');\n  79 |       }"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                                "column": 26,
+                                "line": 76
+                              },
+                              "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  74 |\n  75 |       if (await saveButton.isVisible()) {\n> 76 |         await saveButton.click();\n     |                          ^\n  77 |         await page.waitForTimeout(1000);\n  78 |         await human.takeScreenshot(page, 'amazon-enabled');\n  79 |       }\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:76:26"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 1,
+                          "startTime": "2026-01-12T23:17:14.169Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome-retry1/test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome-retry1/video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome-retry1/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-d9f6e---Enable-Amazon-integration-Desktop-Chrome-retry1/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                            "column": 26,
+                            "line": 76
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "f74baffe527df335bbc7-4c755e31d75ef2ce5526",
+                  "file": "09-amazon.spec.ts",
+                  "line": 48,
+                  "column": 9
+                },
+                {
+                  "title": "9.3 - Configure Amazon credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 8682,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:17:37.730Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-add6b-onfigure-Amazon-credentials-Desktop-Chrome/test-finished-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-add6b-onfigure-Amazon-credentials-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-add6b-onfigure-Amazon-credentials-Desktop-Chrome/trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "f74baffe527df335bbc7-2cc711b93e8ae8d8434f",
+                  "file": "09-amazon.spec.ts",
+                  "line": 82,
+                  "column": 9
+                },
+                {
+                  "title": "9.11 - Disable Amazon integration",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 22088,
+                          "error": {
+                            "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+                            "stack": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:181:26",
+                            "location": {
+                              "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                              "column": 26,
+                              "line": 181
+                            },
+                            "snippet": "  179 |\n  180 |       if (await saveButton.isVisible()) {\n> 181 |         await saveButton.click();\n      |                          ^\n  182 |         await page.waitForTimeout(1000);\n  183 |         await human.takeScreenshot(page, 'amazon-disabled');\n  184 |       }"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                                "column": 26,
+                                "line": 181
+                              },
+                              "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  179 |\n  180 |       if (await saveButton.isVisible()) {\n> 181 |         await saveButton.click();\n      |                          ^\n  182 |         await page.waitForTimeout(1000);\n  183 |         await human.takeScreenshot(page, 'amazon-disabled');\n  184 |       }\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:181:26"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:17:46.692Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome/test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                            "column": 26,
+                            "line": 181
+                          }
+                        },
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 22522,
+                          "error": {
+                            "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+                            "stack": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:181:26",
+                            "location": {
+                              "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                              "column": 26,
+                              "line": 181
+                            },
+                            "snippet": "  179 |\n  180 |       if (await saveButton.isVisible()) {\n> 181 |         await saveButton.click();\n      |                          ^\n  182 |         await page.waitForTimeout(1000);\n  183 |         await human.takeScreenshot(page, 'amazon-disabled');\n  184 |       }"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                                "column": 26,
+                                "line": 181
+                              },
+                              "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Save\"), button:has-text(\"Guardar\")').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  179 |\n  180 |       if (await saveButton.isVisible()) {\n> 181 |         await saveButton.click();\n      |                          ^\n  182 |         await page.waitForTimeout(1000);\n  183 |         await human.takeScreenshot(page, 'amazon-disabled');\n  184 |       }\n    at /home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts:181:26"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 1,
+                          "startTime": "2026-01-12T23:18:10.084Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome-retry1/test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome-retry1/video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome-retry1/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/09-amazon-Amazon-Integrati-6fa35--Disable-Amazon-integration-Desktop-Chrome-retry1/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/amb/iris-vista-system/tests/e2e/flows/09-amazon.spec.ts",
+                            "column": 26,
+                            "line": 181
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "f74baffe527df335bbc7-3d0d3304cbc72d41bb71",
+                  "file": "09-amazon.spec.ts",
+                  "line": 154,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "11-permisos.spec.ts",
+      "file": "11-permisos.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Permission Tests",
+          "file": "11-permisos.spec.ts",
+          "line": 15,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Purchase Admin Permissions",
+              "file": "11-permisos.spec.ts",
+              "line": 60,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "15.2 - Purchase Admin can access orders",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 8497,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:16:46.916Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/11-permisos-Permission-Tes-47312-ase-Admin-can-access-orders-Desktop-Chrome/test-finished-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/11-permisos-Permission-Tes-47312-ase-Admin-can-access-orders-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/11-permisos-Permission-Tes-47312-ase-Admin-can-access-orders-Desktop-Chrome/trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "6f7001c10aa4b42fbc82-1ac81f0c6ea388a6f6be",
+                  "file": "11-permisos.spec.ts",
+                  "line": 61,
+                  "column": 9
+                },
+                {
+                  "title": "15.2b - Purchase Admin can access catalog management",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Desktop Chrome",
+                      "projectName": "Desktop Chrome",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 6536,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-12T23:16:55.780Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/11-permisos-Permission-Tes-93fad-n-access-catalog-management-Desktop-Chrome/test-finished-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/11-permisos-Permission-Tes-93fad-n-access-catalog-management-Desktop-Chrome/video.webm"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/home/amb/iris-vista-system/tests/e2e/reports/test-results/11-permisos-Permission-Tes-93fad-n-access-catalog-management-Desktop-Chrome/trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "6f7001c10aa4b42fbc82-7ad8dfced1fd92780f40",
+                  "file": "11-permisos.spec.ts",
+                  "line": 70,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-01-12T23:16:45.050Z",
+    "duration": 107878.45899999999,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

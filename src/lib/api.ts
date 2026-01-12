@@ -392,7 +392,8 @@ export const adminApi = {
   },
 
   addToCart: async (orderId: number, itemId?: number): Promise<PurchaseRequest> => {
-    const response = await api.post<ApiResponse<PurchaseRequest>>(`/admin/orders/${orderId}/add-to-cart`, {
+    // Use retry-cart endpoint which handles add to cart functionality
+    const response = await api.post<ApiResponse<PurchaseRequest>>(`/admin/orders/${orderId}/retry-cart`, {
       item_id: itemId
     });
     return response.data.data!;

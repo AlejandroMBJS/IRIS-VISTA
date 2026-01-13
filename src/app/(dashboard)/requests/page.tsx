@@ -19,6 +19,8 @@ import {
   MessageSquare,
   AlertCircle,
   RefreshCw,
+  Filter,
+  ShoppingCart,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { requestsApi } from '@/lib/api';
@@ -32,12 +34,14 @@ const formatPrice = (price: number): string => {
   return price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
+type FilterType = 'all' | 'pending' | 'approved' | 'purchased' | 'rejected';
+
 export default function RequestsPage() {
   const { language } = useLanguage();
   const [requests, setRequests] = useState<PurchaseRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState<PurchaseRequest | null>(null);
-  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [filter, setFilter] = useState<FilterType>('all');
 
   const text = {
     en: {
@@ -50,9 +54,7 @@ export default function RequestsPage() {
       products: 'Products',
       total: 'Total',
       quantity: 'Qty',
-      viewDetails: 'View Details',
       close: 'Close',
-      requestDetails: 'Request Details',
       status: 'Status',
       date: 'Date',
       justification: 'Justification',
@@ -64,8 +66,10 @@ export default function RequestsPage() {
       purchasedBy: 'Purchased by',
       purchaseNotes: 'Purchase Notes',
       adminNotes: 'Internal Notes',
+      all: 'All',
+      viewProduct: 'View',
       statuses: {
-        pending: 'Pending Approval',
+        pending: 'Pending',
         approved: 'Approved',
         rejected: 'Rejected',
         purchased: 'Purchased',
@@ -92,9 +96,7 @@ export default function RequestsPage() {
       products: '产品',
       total: '总计',
       quantity: '数量',
-      viewDetails: '查看详情',
       close: '关闭',
-      requestDetails: '请求详情',
       status: '状态',
       date: '日期',
       justification: '理由',
@@ -106,6 +108,8 @@ export default function RequestsPage() {
       purchasedBy: '购买人',
       purchaseNotes: '购买备注',
       adminNotes: '内部备注',
+      all: '全部',
+      viewProduct: '查看',
       statuses: {
         pending: '待审批',
         approved: '已批准',
@@ -134,9 +138,7 @@ export default function RequestsPage() {
       products: 'Productos',
       total: 'Total',
       quantity: 'Cant',
-      viewDetails: 'Ver Detalles',
       close: 'Cerrar',
-      requestDetails: 'Detalles de la Solicitud',
       status: 'Estado',
       date: 'Fecha',
       justification: 'Justificación',
@@ -148,6 +150,8 @@ export default function RequestsPage() {
       purchasedBy: 'Comprado por',
       purchaseNotes: 'Notas de Compra',
       adminNotes: 'Notas Internas',
+      all: 'Todos',
+      viewProduct: 'Ver',
       statuses: {
         pending: 'Pendiente',
         approved: 'Aprobado',
@@ -173,7 +177,7 @@ export default function RequestsPage() {
   const fetchRequests = async () => {
     setIsLoading(true);
     try {
-      const response = await requestsApi.getMyRequests({ per_page: 50 });
+      const response = await requestsApi.getMyRequests({ per_page: 100 });
       setRequests(response.data || []);
     } catch (error) {
       console.error('Failed to fetch requests:', error);
@@ -185,18 +189,6 @@ export default function RequestsPage() {
   useEffect(() => {
     fetchRequests();
   }, []);
-
-  const viewRequestDetails = async (requestId: number) => {
-    setIsLoadingDetail(true);
-    try {
-      const fullRequest = await requestsApi.get(requestId);
-      setSelectedRequest(fullRequest);
-    } catch (error) {
-      console.error('Failed to fetch request details:', error);
-    } finally {
-      setIsLoadingDetail(false);
-    }
-  };
 
   // Get product items (handles both multi-product and legacy)
   const getProductItems = (request: PurchaseRequest): PurchaseRequestItem[] => {
@@ -230,7 +222,7 @@ export default function RequestsPage() {
       pending: { bg: 'bg-yellow-100 text-yellow-800', icon: <Clock className="h-3 w-3 mr-1" /> },
       approved: { bg: 'bg-blue-100 text-blue-800', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
       rejected: { bg: 'bg-red-100 text-red-800', icon: <XCircle className="h-3 w-3 mr-1" /> },
-      purchased: { bg: 'bg-green-100 text-green-800', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
+      purchased: { bg: 'bg-green-100 text-green-800', icon: <ShoppingCart className="h-3 w-3 mr-1" /> },
       info_requested: { bg: 'bg-orange-100 text-orange-800', icon: <AlertCircle className="h-3 w-3 mr-1" /> },
       cancelled: { bg: 'bg-gray-100 text-gray-800', icon: <XCircle className="h-3 w-3 mr-1" /> },
     };
@@ -250,15 +242,30 @@ export default function RequestsPage() {
       case 'rejected': return <XCircle className="h-4 w-4 text-red-600" />;
       case 'returned': return <AlertCircle className="h-4 w-4 text-orange-600" />;
       case 'cancelled': return <X className="h-4 w-4 text-gray-600" />;
-      case 'purchased': return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case 'purchased': return <ShoppingCart className="h-4 w-4 text-green-600" />;
       default: return <Clock className="h-4 w-4 text-gray-600" />;
     }
   };
 
   // Count by status
   const pendingCount = requests.filter(r => r.status === 'pending').length;
-  const approvedCount = requests.filter(r => r.status === 'approved' || r.status === 'purchased').length;
+  const approvedCount = requests.filter(r => r.status === 'approved').length;
+  const purchasedCount = requests.filter(r => r.status === 'purchased').length;
   const rejectedCount = requests.filter(r => r.status === 'rejected').length;
+
+  // Filter requests
+  const filteredRequests = requests.filter(r => {
+    if (filter === 'all') return true;
+    return r.status === filter;
+  });
+
+  const filters: { key: FilterType; label: string; count: number }[] = [
+    { key: 'all', label: t.all, count: requests.length },
+    { key: 'pending', label: t.statuses.pending, count: pendingCount },
+    { key: 'approved', label: t.statuses.approved, count: approvedCount },
+    { key: 'purchased', label: t.statuses.purchased, count: purchasedCount },
+    { key: 'rejected', label: t.statuses.rejected, count: rejectedCount },
+  ];
 
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
@@ -296,7 +303,7 @@ export default function RequestsPage() {
       <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           {/* Stats Cards */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <Card className="bg-white">
               <CardContent className="p-4 text-center">
                 <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
@@ -305,8 +312,14 @@ export default function RequestsPage() {
             </Card>
             <Card className="bg-white">
               <CardContent className="p-4 text-center">
-                <p className="text-3xl font-bold text-green-600">{approvedCount}</p>
+                <p className="text-3xl font-bold text-blue-600">{approvedCount}</p>
                 <p className="text-sm text-gray-600">{t.statuses.approved}</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-white">
+              <CardContent className="p-4 text-center">
+                <p className="text-3xl font-bold text-green-600">{purchasedCount}</p>
+                <p className="text-sm text-gray-600">{t.statuses.purchased}</p>
               </CardContent>
             </Card>
             <Card className="bg-white">
@@ -317,33 +330,57 @@ export default function RequestsPage() {
             </Card>
           </div>
 
+          {/* Filters */}
+          <div className="flex gap-2 flex-wrap mb-6">
+            <Filter className="h-5 w-5 text-gray-500 mt-2" />
+            {filters.map((f) => (
+              <Button
+                key={f.key}
+                variant={filter === f.key ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter(f.key)}
+                className={filter === f.key ? 'bg-[#75534B] hover:bg-[#5D423C]' : ''}
+              >
+                {f.label} ({f.count})
+              </Button>
+            ))}
+          </div>
+
           {/* Requests List */}
           {isLoading ? (
             <div className="flex justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
             </div>
-          ) : requests.length === 0 ? (
+          ) : filteredRequests.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center text-gray-500">
                 <ClipboardList className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="mb-2">{t.noRequests}</p>
-                <p className="text-sm mb-4">{t.createFirst}</p>
-                <Link href="/purchase/new">
-                  <Button className="bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90">
-                    <Plus className="h-4 w-4 mr-2" />
-                    {t.newRequest}
-                  </Button>
-                </Link>
+                {requests.length === 0 && (
+                  <>
+                    <p className="text-sm mb-4">{t.createFirst}</p>
+                    <Link href="/purchase/new">
+                      <Button className="bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        {t.newRequest}
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-4">
-              {requests.map((request) => {
+              {filteredRequests.map((request) => {
                 const items = getProductItems(request);
                 const total = calculateTotal(request);
 
                 return (
-                  <Card key={request.id} className="overflow-hidden">
+                  <Card
+                    key={request.id}
+                    className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+                    onClick={() => setSelectedRequest(request)}
+                  >
                     {/* Request Header */}
                     <div className="p-4 md:p-6 border-b border-[#E4E1DD] bg-white">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -403,18 +440,24 @@ export default function RequestsPage() {
                                   {item.currency || 'MXN'} ${formatPrice((item.estimated_price || 0) * item.quantity)}
                                 </span>
                               )}
+                              {item.is_amazon_url && (
+                                <Badge variant="outline" className="bg-orange-50 border-orange-200 text-orange-700 text-xs">
+                                  Amazon
+                                </Badge>
+                              )}
                             </div>
                           </div>
 
                           {/* Item Actions */}
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                          <div className="flex items-center gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                             {item.url && !item.url.startsWith('catalog://') && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => window.open(item.url, '_blank')}
                               >
-                                <ExternalLink className="h-3 w-3" />
+                                <ExternalLink className="h-3 w-3 mr-1" />
+                                {t.viewProduct}
                               </Button>
                             )}
                           </div>
@@ -425,7 +468,7 @@ export default function RequestsPage() {
                       {request.justification && (
                         <div className="mt-3 p-3 bg-white rounded-lg border border-[#E4E1DD]">
                           <p className="text-xs font-medium text-[#6E6B67] uppercase mb-1">{t.justification}</p>
-                          <p className="text-sm text-[#2C2C2C]">{request.justification}</p>
+                          <p className="text-sm text-[#2C2C2C] line-clamp-2">{request.justification}</p>
                         </div>
                       )}
 
@@ -437,17 +480,6 @@ export default function RequestsPage() {
                             {t.rejectionReason}
                           </div>
                           <p className="text-sm text-red-700">{request.rejection_reason}</p>
-                        </div>
-                      )}
-
-                      {/* Admin Notes */}
-                      {request.admin_notes && (
-                        <div className="mt-3 p-3 bg-[#75534B]/5 rounded-lg border border-[#75534B]/20">
-                          <div className="flex items-center gap-2 text-sm font-medium text-[#75534B] mb-1">
-                            <MessageSquare className="h-4 w-4" />
-                            {t.adminNotes}
-                          </div>
-                          <p className="text-sm text-[#6E6B67]">{request.admin_notes}</p>
                         </div>
                       )}
 
@@ -484,18 +516,6 @@ export default function RequestsPage() {
                             {request.currency} ${formatPrice(total)}
                           </p>
                         </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => viewRequestDetails(request.id)}
-                          disabled={isLoadingDetail}
-                        >
-                          {isLoadingDetail ? (
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          ) : (
-                            <FileText className="h-4 w-4 mr-2" />
-                          )}
-                          {t.viewDetails}
-                        </Button>
                       </div>
                     </div>
                   </Card>
@@ -518,6 +538,9 @@ export default function RequestsPage() {
                 </h2>
                 <div className="flex items-center gap-2">
                   {getStatusBadge(selectedRequest.status)}
+                  <span className="text-white/80 text-sm">
+                    {new Date(selectedRequest.created_at).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
               <button
@@ -564,6 +587,11 @@ export default function RequestsPage() {
                             <span className="text-sm font-semibold text-[#75534B]">
                               {item.currency || 'MXN'} ${formatPrice(item.estimated_price)}
                             </span>
+                          )}
+                          {item.is_amazon_url && (
+                            <Badge variant="outline" className="bg-orange-50 border-orange-200 text-orange-700 text-xs">
+                              Amazon
+                            </Badge>
                           )}
                         </div>
                         {item.url && !item.url.startsWith('catalog://') && (

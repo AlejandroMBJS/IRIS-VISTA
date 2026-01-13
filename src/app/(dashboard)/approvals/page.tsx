@@ -72,6 +72,7 @@ export default function ApprovalsPage() {
       addComment: 'Add Comment',
       commentPlaceholder: 'Add your review comments...',
       rejectReasonPlaceholder: 'Reason for rejection (required)...',
+      rejectHint: 'A comment is required when rejecting. Please explain why this request is being rejected.',
       infoRequestPlaceholder: 'What information do you need?',
       productDetails: 'Requested Products',
       products: 'Products',
@@ -139,6 +140,7 @@ export default function ApprovalsPage() {
       addComment: '添加评论',
       commentPlaceholder: '添加您的审核意见...',
       rejectReasonPlaceholder: '拒绝原因（必填）...',
+      rejectHint: '拒绝时需要填写评论。请说明拒绝此请求的原因。',
       infoRequestPlaceholder: '您需要什么信息？',
       productDetails: '请求的产品',
       products: '产品',
@@ -206,6 +208,7 @@ export default function ApprovalsPage() {
       addComment: 'Agregar Comentario',
       commentPlaceholder: 'Agregar sus comentarios de revisión...',
       rejectReasonPlaceholder: 'Motivo del rechazo (obligatorio)...',
+      rejectHint: 'Se requiere un comentario al rechazar. Por favor explica por que se rechaza esta solicitud.',
       infoRequestPlaceholder: '¿Qué información necesita?',
       productDetails: 'Productos Solicitados',
       products: 'Productos',
@@ -929,6 +932,10 @@ export default function ApprovalsPage() {
                     placeholder={t.commentPlaceholder}
                     className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
                   />
+                  <p className="mt-2 text-xs text-[#6E6B67] flex items-center gap-1">
+                    <span className="text-[#D1625B]">*</span>
+                    {t.rejectHint}
+                  </p>
 
                   <div className="mt-4 flex flex-wrap gap-3">
                     <button

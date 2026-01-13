@@ -62,6 +62,7 @@ func main() {
 	emailConfigHandler := handlers.NewEmailConfigHandler(db, emailService, encryptionService)
 	notificationHandler := handlers.NewNotificationHandler(db)
 	uploadHandler := handlers.NewUploadHandler()
+	cartHandler := handlers.NewCartHandler(db, metadataService)
 
 	// Setup router
 	router := gin.Default()
@@ -142,12 +143,25 @@ func main() {
 		requests := v1.Group("/purchase-requests")
 		requests.Use(middleware.Auth(jwtService))
 		{
+			requests.GET("/config", purchaseConfigHandler.GetPublicConfig)
 			requests.POST("/extract-metadata", requestHandler.ExtractMetadata)
 			requests.POST("", requestHandler.CreateRequest)
 			requests.GET("/my", requestHandler.GetMyRequests)
 			requests.GET("/:id", requestHandler.GetRequest)
 			requests.PUT("/:id", requestHandler.UpdateRequest)
 			requests.DELETE("/:id", requestHandler.CancelRequest)
+		}
+
+		// Cart routes (all authenticated users)
+		cart := v1.Group("/cart")
+		cart.Use(middleware.Auth(jwtService))
+		{
+			cart.GET("", cartHandler.GetCart)
+			cart.GET("/count", cartHandler.GetCartCount)
+			cart.POST("", cartHandler.AddToCart)
+			cart.PUT("/:id", cartHandler.UpdateCartItem)
+			cart.DELETE("/:id", cartHandler.RemoveFromCart)
+			cart.DELETE("", cartHandler.ClearCart)
 		}
 
 		// All requests route (for admin/gm/scm)

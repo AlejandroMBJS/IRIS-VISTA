@@ -73,6 +73,9 @@ type PurchaseConfigRequest struct {
 	RequireBudgetCode *bool                `json:"require_budget_code"`
 	CustomFields      []models.CustomField `json:"custom_fields"`
 
+	// Purchase Request Options
+	ShowInternalCatalog *bool `json:"show_internal_catalog"`
+
 	// Admin Panel
 	AdminDefaultView    *string  `json:"admin_default_view"`
 	AdminVisibleColumns []string `json:"admin_visible_columns"`
@@ -129,6 +132,9 @@ type PurchaseConfigResponse struct {
 	RequireBudgetCode bool                 `json:"require_budget_code"`
 	CustomFields      []models.CustomField `json:"custom_fields"`
 
+	// Purchase Request Options
+	ShowInternalCatalog bool `json:"show_internal_catalog"`
+
 	// Admin Panel
 	AdminDefaultView    string   `json:"admin_default_view"`
 	AdminVisibleColumns []string `json:"admin_visible_columns"`
@@ -162,6 +168,44 @@ func (h *PurchaseConfigHandler) GetPurchaseConfig(c *gin.Context) {
 	}
 
 	response.Success(c, h.configToResponse(config))
+}
+
+// PublicConfigResponse represents the public-facing purchase config
+type PublicConfigResponse struct {
+	ModuleName           string `json:"module_name"`
+	ModuleDescription    string `json:"module_description"`
+	ModuleActive         bool   `json:"module_active"`
+	AllowUrgent          bool   `json:"allow_urgent"`
+	RequireJustification bool   `json:"require_justification"`
+	ShowInternalCatalog  bool   `json:"show_internal_catalog"`
+	RequireCostCenter    bool   `json:"require_cost_center"`
+	RequireProject       bool   `json:"require_project"`
+	RequireBudgetCode    bool   `json:"require_budget_code"`
+}
+
+// GetPublicConfig returns public-facing configuration for authenticated users
+func (h *PurchaseConfigHandler) GetPublicConfig(c *gin.Context) {
+	var config models.PurchaseConfig
+	if err := h.db.First(&config).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			config = models.GetDefaultPurchaseConfig()
+		} else {
+			response.InternalServerError(c, "Failed to fetch purchase config")
+			return
+		}
+	}
+
+	response.Success(c, PublicConfigResponse{
+		ModuleName:           config.ModuleName,
+		ModuleDescription:    config.ModuleDescription,
+		ModuleActive:         config.ModuleActive,
+		AllowUrgent:          config.AllowUrgent,
+		RequireJustification: config.RequireJustification,
+		ShowInternalCatalog:  config.ShowInternalCatalog,
+		RequireCostCenter:    config.RequireCostCenter,
+		RequireProject:       config.RequireProject,
+		RequireBudgetCode:    config.RequireBudgetCode,
+	})
 }
 
 // SavePurchaseConfig saves or updates the purchase configuration
@@ -286,6 +330,11 @@ func (h *PurchaseConfigHandler) SavePurchaseConfig(c *gin.Context) {
 	}
 	if req.CustomFields != nil {
 		config.SetCustomFields(req.CustomFields)
+	}
+
+	// Purchase Request Options
+	if req.ShowInternalCatalog != nil {
+		config.ShowInternalCatalog = *req.ShowInternalCatalog
 	}
 
 	// Admin Panel
@@ -426,6 +475,7 @@ func (h *PurchaseConfigHandler) configToResponse(config models.PurchaseConfig) P
 		RequireProject:               config.RequireProject,
 		RequireBudgetCode:            config.RequireBudgetCode,
 		CustomFields:                 config.GetCustomFields(),
+		ShowInternalCatalog:          config.ShowInternalCatalog,
 		AdminDefaultView:             config.AdminDefaultView,
 		AdminVisibleColumns:          config.GetAdminVisibleColumnsList(),
 		AdminDefaultSort:             config.AdminDefaultSort,

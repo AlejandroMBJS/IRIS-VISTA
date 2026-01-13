@@ -338,6 +338,9 @@ export interface PurchaseConfig {
   require_budget_code: boolean;
   custom_fields: CustomField[];
 
+  // Purchase Request Options
+  show_internal_catalog: boolean;
+
   // Admin Panel
   admin_default_view: 'cards' | 'table';
   admin_visible_columns: string[];

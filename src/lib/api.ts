@@ -270,7 +270,26 @@ export interface ProductMetadata {
   error: string | null;
 }
 
+// Public config for purchase requests page
+export interface PurchaseRequestConfig {
+  module_name: string;
+  module_description: string;
+  module_active: boolean;
+  allow_urgent: boolean;
+  require_justification: boolean;
+  show_internal_catalog: boolean;
+  require_cost_center: boolean;
+  require_project: boolean;
+  require_budget_code: boolean;
+}
+
 export const purchaseRequestsApi = {
+  // Get public purchase request config
+  getConfig: async (): Promise<PurchaseRequestConfig> => {
+    const response = await api.get<ApiResponse<PurchaseRequestConfig>>('/purchase-requests/config');
+    return response.data.data!;
+  },
+
   // Extract metadata from URL (preview before submission)
   extractMetadata: async (url: string): Promise<ProductMetadata> => {
     const response = await api.post<ApiResponse<ProductMetadata>>('/purchase-requests/extract-metadata', { url });
@@ -304,6 +323,89 @@ export const purchaseRequestsApi = {
   // Cancel a request
   cancel: async (id: number): Promise<void> => {
     await api.delete(`/purchase-requests/${id}`);
+  },
+};
+
+// Cart types
+export interface CartItem {
+  id: number;
+  url: string;
+  product_title: string;
+  product_image_url: string;
+  product_description: string;
+  estimated_price: number;
+  currency: string;
+  quantity: number;
+  subtotal: number;
+  source: 'external' | 'catalog';
+  catalog_product_id?: number;
+  is_amazon_url: boolean;
+  amazon_asin?: string;
+  created_at: string;
+}
+
+export interface CartSummary {
+  items: CartItem[];
+  item_count: number;
+  total_items: number;
+  total: number;
+  currency: string;
+}
+
+export interface AddToCartInput {
+  url: string;
+  product_title?: string;
+  product_image_url?: string;
+  product_description?: string;
+  estimated_price?: number;
+  currency?: string;
+  quantity?: number;
+  source?: 'external' | 'catalog';
+  catalog_product_id?: number;
+}
+
+export interface UpdateCartItemInput {
+  quantity?: number;
+  product_title?: string;
+  product_image_url?: string;
+  product_description?: string;
+  estimated_price?: number;
+}
+
+// Cart API
+export const cartApi = {
+  // Get current cart
+  get: async (): Promise<CartSummary> => {
+    const response = await api.get<ApiResponse<CartSummary>>('/cart');
+    return response.data.data!;
+  },
+
+  // Get cart count for navbar badge
+  getCount: async (): Promise<number> => {
+    const response = await api.get<ApiResponse<{ count: number }>>('/cart/count');
+    return response.data.data?.count || 0;
+  },
+
+  // Add item to cart
+  add: async (item: AddToCartInput): Promise<CartItem> => {
+    const response = await api.post<ApiResponse<CartItem>>('/cart', item);
+    return response.data.data!;
+  },
+
+  // Update cart item
+  update: async (id: number, data: UpdateCartItemInput): Promise<CartItem> => {
+    const response = await api.put<ApiResponse<CartItem>>(`/cart/${id}`, data);
+    return response.data.data!;
+  },
+
+  // Remove item from cart
+  remove: async (id: number): Promise<void> => {
+    await api.delete(`/cart/${id}`);
+  },
+
+  // Clear entire cart
+  clear: async (): Promise<void> => {
+    await api.delete('/cart');
   },
 };
 

@@ -55,6 +55,9 @@ type PurchaseConfig struct {
 	RequireBudgetCode  bool   `gorm:"default:false" json:"require_budget_code"`
 	CustomFields       string `gorm:"type:text" json:"custom_fields"` // JSON array of custom field definitions
 
+	// Purchase Request Options
+	ShowInternalCatalog bool `gorm:"default:true" json:"show_internal_catalog"` // Show internal catalog tab in purchase/new
+
 	// Admin Panel
 	AdminDefaultView    string `gorm:"size:20;default:table" json:"admin_default_view"` // cards, table
 	AdminVisibleColumns string `gorm:"type:text" json:"admin_visible_columns"`          // JSON array
@@ -232,6 +235,7 @@ func GetDefaultPurchaseConfig() PurchaseConfig {
 		RequireCostCenter:             false,
 		RequireProject:                false,
 		RequireBudgetCode:             false,
+		ShowInternalCatalog:           true,
 		AdminDefaultView:              "table",
 		AdminDefaultSort:              "approved_at_desc",
 	}

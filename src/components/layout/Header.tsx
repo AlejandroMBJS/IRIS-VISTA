@@ -3,15 +3,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Bell, Globe, ChevronDown, LogOut, Check, CheckCheck, Key, X, Eye, EyeOff, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Search, Bell, Globe, ChevronDown, LogOut, Check, CheckCheck, Key, X, Eye, EyeOff, Loader2, AlertCircle, CheckCircle, ShoppingCart } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
+import { useCart } from '@/contexts/CartContext';
 import { notificationsApi, authApi, type NotificationData } from '@/lib/api';
 
 export function Header() {
   const router = useRouter();
   const { user, logout } = useAuth();
   const { language, setLanguage } = useLanguage();
+  const { itemCount } = useCart();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -273,6 +275,19 @@ export function Header() {
 
         {/* Right Side */}
         <div className="flex items-center gap-1 sm:gap-3">
+          {/* Cart */}
+          <Link
+            href="/cart"
+            className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#75534B] transition-all duration-200 hover:bg-[#F9F8F6] active:scale-95"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#75534B] text-xs text-white shadow-md">
+                {itemCount > 9 ? '9+' : itemCount}
+              </span>
+            )}
+          </Link>
+
           {/* Notifications */}
           <div className="relative" ref={notificationRef}>
             <button

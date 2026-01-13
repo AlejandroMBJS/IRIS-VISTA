@@ -24,6 +24,8 @@ export function GeneralSection({ config, onChange, language }: Props) {
       allowUrgentDesc: 'Users can mark requests as urgent for priority processing',
       requireJustification: 'Require justification',
       requireJustificationDesc: 'Users must provide a reason for each purchase request',
+      showInternalCatalog: 'Show internal catalog',
+      showInternalCatalogDesc: 'Allow users to select products from the internal catalog when creating purchase requests',
     },
     zh: {
       title: '常规配置',
@@ -38,6 +40,8 @@ export function GeneralSection({ config, onChange, language }: Props) {
       allowUrgentDesc: '用户可以将请求标记为紧急以优先处理',
       requireJustification: '要求说明理由',
       requireJustificationDesc: '用户必须为每个采购请求提供原因',
+      showInternalCatalog: '显示内部目录',
+      showInternalCatalogDesc: '允许用户在创建采购请求时从内部目录中选择产品',
     },
     es: {
       title: 'Configuracion General',
@@ -52,6 +56,8 @@ export function GeneralSection({ config, onChange, language }: Props) {
       allowUrgentDesc: 'Los usuarios pueden marcar solicitudes como urgentes para procesamiento prioritario',
       requireJustification: 'Requerir justificacion',
       requireJustificationDesc: 'Los usuarios deben proporcionar una razon para cada solicitud de compra',
+      showInternalCatalog: 'Mostrar catalogo interno',
+      showInternalCatalogDesc: 'Permitir a los usuarios seleccionar productos del catalogo interno al crear solicitudes de compra',
     },
   };
 
@@ -155,6 +161,24 @@ export function GeneralSection({ config, onChange, language }: Props) {
             <div className="flex-1">
               <span className="block text-sm font-medium text-[#2C2C2C]">{t.requireJustification}</span>
               <span className="block text-sm text-[#6E6B67]">{t.requireJustificationDesc}</span>
+            </div>
+          </label>
+
+          {/* Show Internal Catalog */}
+          <label className="flex items-start gap-4 cursor-pointer">
+            <div className="relative mt-0.5">
+              <input
+                type="checkbox"
+                checked={config.show_internal_catalog}
+                onChange={(e) => onChange({ show_internal_catalog: e.target.checked })}
+                className="sr-only peer"
+              />
+              <div className="h-6 w-11 rounded-full bg-[#E4E1DD] peer-checked:bg-[#4BAF7E] transition-colors" />
+              <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
+            </div>
+            <div className="flex-1">
+              <span className="block text-sm font-medium text-[#2C2C2C]">{t.showInternalCatalog}</span>
+              <span className="block text-sm text-[#6E6B67]">{t.showInternalCatalogDesc}</span>
             </div>
           </label>
         </div>

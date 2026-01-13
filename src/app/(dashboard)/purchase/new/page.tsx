@@ -20,7 +20,8 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { purchaseRequestsApi, productsApi, type ProductMetadata, type CreatePurchaseRequestItemInput } from '@/lib/api';
+import { useCart } from '@/contexts/CartContext';
+import { purchaseRequestsApi, productsApi, type ProductMetadata, type PurchaseRequestConfig, type AddToCartInput } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types';
 
@@ -90,6 +91,7 @@ const createCatalogProduct = (product: Product): ProductItem => ({
 
 export default function NewPurchaseRequestPage() {
   const { language } = useLanguage();
+  const { addToCart } = useCart();
   const router = useRouter();
 
   // View state: 'selection' | 'form'
@@ -99,6 +101,10 @@ export default function NewPurchaseRequestPage() {
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [justification, setJustification] = useState('');
   const [urgency, setUrgency] = useState<'normal' | 'urgent'>('normal');
+
+  // Config state
+  const [config, setConfig] = useState<PurchaseRequestConfig | null>(null);
+  const [configLoading, setConfigLoading] = useState(true);
 
   // Catalog modal state
   const [showCatalogModal, setShowCatalogModal] = useState(false);
@@ -124,6 +130,33 @@ export default function NewPurchaseRequestPage() {
     };
   }, []);
 
+  // Load config on mount
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const configData = await purchaseRequestsApi.getConfig();
+        setConfig(configData);
+      } catch (err) {
+        console.error('Failed to load config:', err);
+        // Set default config if load fails
+        setConfig({
+          module_name: 'Purchase Requests',
+          module_description: '',
+          module_active: true,
+          allow_urgent: true,
+          require_justification: true,
+          show_internal_catalog: true,
+          require_cost_center: false,
+          require_project: false,
+          require_budget_code: false,
+        });
+      } finally {
+        setConfigLoading(false);
+      }
+    };
+    loadConfig();
+  }, []);
+
   const text = {
     en: {
       title: 'New Purchase Request',
@@ -132,8 +165,8 @@ export default function NewPurchaseRequestPage() {
       selectSourceTitle: 'What type of products do you want to request?',
       catalogOption: 'From Internal Catalog',
       catalogOptionDesc: 'Select products from the company catalog with verified prices and stock',
-      externalOption: 'External Products (URL)',
-      externalOptionDesc: 'Enter URLs from any online store (Amazon, MercadoLibre, etc.)',
+      ecommerceOption: 'E-commerce Links',
+      ecommerceOptionDesc: 'Enter URLs from any online store (Amazon, MercadoLibre, etc.)',
       combineTip: 'You can also combine catalog products with external products in the same request.',
       goToCatalog: 'Browse Catalog',
       addExternalUrl: 'Add URL',
@@ -152,11 +185,14 @@ export default function NewPurchaseRequestPage() {
       addProduct: 'Add another URL',
       addFromCatalog: 'Add from Catalog',
       removeProduct: 'Remove',
-      submit: 'Review & Submit',
+      submit: 'Add to Cart',
+      addingToCart: 'Adding to Cart...',
+      addedToCart: 'Added to Cart!',
+      goToCart: 'Go to Cart',
       submitting: 'Submitting...',
-      success: 'Request submitted successfully!',
-      successMessage: 'Your request has been sent for approval.',
-      viewRequests: 'View My Requests',
+      success: 'Added to Cart!',
+      successMessage: 'Your products have been added to the cart. Go to cart to review and submit your purchase request.',
+      viewRequests: 'Go to Cart',
       createAnother: 'Create Another',
       error: 'Error',
       amazonBadge: 'Amazon - Auto Cart',
@@ -170,13 +206,13 @@ export default function NewPurchaseRequestPage() {
       totalProducts: 'products',
       totalEstimated: 'Total Estimated',
       priceNotAvailable: 'Price not available for some products',
-      confirmTitle: 'Confirm Purchase Request',
-      confirmSubtitle: 'Please review the details before submitting',
+      confirmTitle: 'Add to Cart',
+      confirmSubtitle: 'Review the products you are adding to your cart',
       productsToRequest: 'Products to Request',
       subtotal: 'Subtotal',
       total: 'Total Estimated',
       backToEdit: 'Back to Edit',
-      confirmSubmit: 'Confirm & Submit',
+      confirmSubmit: 'Add to Cart',
       approvalNote: 'Once submitted, your request will be sent to the General Manager for approval.',
       minOneProduct: 'At least one product is required',
       justificationRequired: 'Justification is required',
@@ -199,8 +235,8 @@ export default function NewPurchaseRequestPage() {
       selectSourceTitle: '您想请求什么类型的产品？',
       catalogOption: '从内部目录',
       catalogOptionDesc: '从公司目录中选择具有验证价格和库存的产品',
-      externalOption: '外部产品（URL）',
-      externalOptionDesc: '输入任何在线商店的URL（Amazon、MercadoLibre等）',
+      ecommerceOption: '电商链接',
+      ecommerceOptionDesc: '输入任何在线商店的URL（Amazon、MercadoLibre等）',
       combineTip: '您也可以在同一请求中组合目录产品和外部产品。',
       goToCatalog: '浏览目录',
       addExternalUrl: '添加URL',
@@ -218,11 +254,14 @@ export default function NewPurchaseRequestPage() {
       addProduct: '添加另一个URL',
       addFromCatalog: '从目录添加',
       removeProduct: '删除',
-      submit: '审核并提交',
+      submit: '加入购物车',
+      addingToCart: '正在添加...',
+      addedToCart: '已添加到购物车！',
+      goToCart: '去购物车',
       submitting: '提交中...',
-      success: '请求提交成功！',
-      successMessage: '您的请求已发送等待批准。',
-      viewRequests: '查看我的请求',
+      success: '已添加到购物车！',
+      successMessage: '您的产品已添加到购物车。去购物车查看并提交采购请求。',
+      viewRequests: '去购物车',
       createAnother: '再创建一个',
       error: '错误',
       amazonBadge: 'Amazon - 自动加购',
@@ -236,13 +275,13 @@ export default function NewPurchaseRequestPage() {
       totalProducts: '个产品',
       totalEstimated: '预估总额',
       priceNotAvailable: '部分产品价格不可用',
-      confirmTitle: '确认采购请求',
-      confirmSubtitle: '请在提交前查看详情',
+      confirmTitle: '添加到购物车',
+      confirmSubtitle: '查看您要添加到购物车的产品',
       productsToRequest: '要请求的产品',
       subtotal: '小计',
       total: '预估总额',
       backToEdit: '返回编辑',
-      confirmSubmit: '确认并提交',
+      confirmSubmit: '加入购物车',
       approvalNote: '提交后，您的请求将发送给总经理审批。',
       minOneProduct: '至少需要一个产品',
       justificationRequired: '申请理由是必需的',
@@ -264,8 +303,8 @@ export default function NewPurchaseRequestPage() {
       selectSourceTitle: 'Que tipo de productos deseas solicitar?',
       catalogOption: 'Del Catalogo Interno',
       catalogOptionDesc: 'Selecciona productos del catalogo de la empresa con precios y stock verificados',
-      externalOption: 'Productos Externos (URL)',
-      externalOptionDesc: 'Ingresa URLs de cualquier tienda en linea (Amazon, MercadoLibre, etc.)',
+      ecommerceOption: 'Links de E-commerce',
+      ecommerceOptionDesc: 'Ingresa URLs de cualquier tienda en linea (Amazon, MercadoLibre, etc.)',
       combineTip: 'Tambien puedes combinar productos del catalogo con productos externos en la misma solicitud.',
       goToCatalog: 'Ver Catalogo',
       addExternalUrl: 'Agregar URL',
@@ -283,11 +322,14 @@ export default function NewPurchaseRequestPage() {
       addProduct: 'Agregar otra URL',
       addFromCatalog: 'Agregar del Catalogo',
       removeProduct: 'Eliminar',
-      submit: 'Revisar y Enviar',
+      submit: 'Agregar al Carrito',
+      addingToCart: 'Agregando...',
+      addedToCart: 'Agregado al Carrito!',
+      goToCart: 'Ir al Carrito',
       submitting: 'Enviando...',
-      success: 'Solicitud enviada exitosamente!',
-      successMessage: 'Tu solicitud ha sido enviada para aprobacion.',
-      viewRequests: 'Ver Mis Solicitudes',
+      success: 'Agregado al Carrito!',
+      successMessage: 'Tus productos han sido agregados al carrito. Ve al carrito para revisar y enviar tu solicitud de compra.',
+      viewRequests: 'Ir al Carrito',
       createAnother: 'Crear Otra',
       error: 'Error',
       amazonBadge: 'Amazon - Carrito Auto',
@@ -301,13 +343,13 @@ export default function NewPurchaseRequestPage() {
       totalProducts: 'productos',
       totalEstimated: 'Total Estimado',
       priceNotAvailable: 'Precio no disponible para algunos productos',
-      confirmTitle: 'Confirmar Solicitud de Compra',
-      confirmSubtitle: 'Por favor revisa los detalles antes de enviar',
+      confirmTitle: 'Agregar al Carrito',
+      confirmSubtitle: 'Revisa los productos que agregaras al carrito',
       productsToRequest: 'Productos a Solicitar',
       subtotal: 'Subtotal',
       total: 'Total Estimado',
       backToEdit: 'Volver a Editar',
-      confirmSubmit: 'Confirmar y Enviar',
+      confirmSubmit: 'Agregar al Carrito',
       approvalNote: 'Una vez enviada, la solicitud sera enviada al Gerente General para aprobacion.',
       minOneProduct: 'Se requiere al menos un producto',
       justificationRequired: 'La justificacion es requerida',
@@ -532,18 +574,21 @@ export default function NewPurchaseRequestPage() {
     setShowConfirmModal(true);
   };
 
-  // Handle actual submission
+  // Handle adding to cart
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const items: CreatePurchaseRequestItemInput[] = products.map(product => {
+      // Add each product to the cart
+      for (const product of products) {
+        let cartItem: AddToCartInput;
+
         if (product.source === 'catalog' && product.catalogProduct) {
           // Use product_url if available (e-commerce product), otherwise use a catalog reference
           const productUrl = product.catalogProduct.product_url ||
             `catalog://product/${product.catalogProduct.id}`;
-          return {
+          cartItem = {
             url: productUrl,
             quantity: product.quantity,
             product_title: product.catalogProduct.name,
@@ -551,9 +596,11 @@ export default function NewPurchaseRequestPage() {
             product_description: product.catalogProduct.description,
             estimated_price: product.catalogProduct.price,
             currency: product.catalogProduct.currency || 'MXN',
+            source: 'catalog',
+            catalog_product_id: product.catalogProduct.id,
           };
         } else {
-          return {
+          cartItem = {
             url: product.url,
             quantity: product.quantity,
             product_title: product.metadata?.title,
@@ -561,21 +608,18 @@ export default function NewPurchaseRequestPage() {
             product_description: product.metadata?.description,
             estimated_price: product.metadata?.price || undefined,
             currency: product.metadata?.currency || 'MXN',
+            source: 'external',
           };
         }
-      });
 
-      await purchaseRequestsApi.create({
-        items,
-        justification,
-        urgency,
-      });
+        await addToCart(cartItem);
+      }
 
       setSuccess(true);
       setShowConfirmModal(false);
     } catch (err) {
-      console.error('Failed to submit request:', err);
-      setError(err instanceof Error ? err.message : 'Failed to submit request');
+      console.error('Failed to add to cart:', err);
+      setError(err instanceof Error ? err.message : 'Failed to add to cart');
     } finally {
       setIsSubmitting(false);
     }
@@ -630,7 +674,7 @@ export default function NewPurchaseRequestPage() {
           <p className="text-[#6E6B67] mb-6">{t.successMessage}</p>
           <div className="flex gap-3">
             <button
-              onClick={() => router.push('/requests')}
+              onClick={() => router.push('/cart')}
               className="flex-1 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-3 text-white font-medium"
             >
               {t.viewRequests}
@@ -643,6 +687,15 @@ export default function NewPurchaseRequestPage() {
             </button>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  // Loading config
+  if (configLoading) {
+    return (
+      <div className="min-h-screen bg-[#F9F8F6] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
       </div>
     );
   }
@@ -675,28 +728,30 @@ export default function NewPurchaseRequestPage() {
               {t.selectSourceTitle}
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
-              {/* Catalog Option */}
-              <button
-                onClick={openCatalogModal}
-                className="bg-white rounded-xl border-2 border-[#E4E1DD] p-6 sm:p-8 text-left hover:border-[#75534B] hover:shadow-lg transition-all group"
-              >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#75534B]/10 flex items-center justify-center mb-4 group-hover:bg-[#75534B]/20 transition-colors">
-                  <Package className="h-7 w-7 sm:h-8 sm:w-8 text-[#75534B]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#2C2C2C] mb-2">
-                  {t.catalogOption}
-                </h3>
-                <p className="text-sm text-[#6E6B67] mb-4">
-                  {t.catalogOptionDesc}
-                </p>
-                <span className="inline-flex items-center gap-2 text-[#75534B] font-medium text-sm">
-                  <Grid3X3 className="h-4 w-4" />
-                  {t.goToCatalog}
-                </span>
-              </button>
+            <div className={`grid grid-cols-1 ${config?.show_internal_catalog ? 'md:grid-cols-2' : ''} gap-4 sm:gap-6 mb-6`}>
+              {/* Catalog Option - only show if enabled in config */}
+              {config?.show_internal_catalog && (
+                <button
+                  onClick={openCatalogModal}
+                  className="bg-white rounded-xl border-2 border-[#E4E1DD] p-6 sm:p-8 text-left hover:border-[#75534B] hover:shadow-lg transition-all group"
+                >
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#75534B]/10 flex items-center justify-center mb-4 group-hover:bg-[#75534B]/20 transition-colors">
+                    <Package className="h-7 w-7 sm:h-8 sm:w-8 text-[#75534B]" />
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-semibold text-[#2C2C2C] mb-2">
+                    {t.catalogOption}
+                  </h3>
+                  <p className="text-sm text-[#6E6B67] mb-4">
+                    {t.catalogOptionDesc}
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-[#75534B] font-medium text-sm">
+                    <Grid3X3 className="h-4 w-4" />
+                    {t.goToCatalog}
+                  </span>
+                </button>
+              )}
 
-              {/* External Option */}
+              {/* E-commerce Option */}
               <button
                 onClick={addExternalProduct}
                 className="bg-white rounded-xl border-2 border-[#E4E1DD] p-6 sm:p-8 text-left hover:border-[#75534B] hover:shadow-lg transition-all group"
@@ -705,10 +760,10 @@ export default function NewPurchaseRequestPage() {
                   <Link2 className="h-7 w-7 sm:h-8 sm:w-8 text-[#75534B]" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold text-[#2C2C2C] mb-2">
-                  {t.externalOption}
+                  {t.ecommerceOption}
                 </h3>
                 <p className="text-sm text-[#6E6B67] mb-4">
-                  {t.externalOptionDesc}
+                  {t.ecommerceOptionDesc}
                 </p>
                 <span className="inline-flex items-center gap-2 text-[#75534B] font-medium text-sm">
                   <Plus className="h-4 w-4" />
@@ -717,12 +772,14 @@ export default function NewPurchaseRequestPage() {
               </button>
             </div>
 
-            {/* Tip */}
-            <div className="bg-[#75534B]/5 border border-[#75534B]/20 rounded-lg p-4 text-center">
-              <p className="text-sm text-[#75534B]">
-                {t.combineTip}
-              </p>
-            </div>
+            {/* Tip - only show if catalog is enabled */}
+            {config?.show_internal_catalog && (
+              <div className="bg-[#75534B]/5 border border-[#75534B]/20 rounded-lg p-4 text-center">
+                <p className="text-sm text-[#75534B]">
+                  {t.combineTip}
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -1138,14 +1195,16 @@ export default function NewPurchaseRequestPage() {
                 <Link2 className="h-5 w-5" />
                 {t.addProduct}
               </button>
-              <button
-                type="button"
-                onClick={openCatalogModal}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#E4E1DD] py-4 text-[#6E6B67] hover:border-[#75534B] hover:text-[#75534B] transition-colors"
-              >
-                <Package className="h-5 w-5" />
-                {t.addFromCatalog}
-              </button>
+              {config?.show_internal_catalog && (
+                <button
+                  type="button"
+                  onClick={openCatalogModal}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#E4E1DD] py-4 text-[#6E6B67] hover:border-[#75534B] hover:text-[#75534B] transition-colors"
+                >
+                  <Package className="h-5 w-5" />
+                  {t.addFromCatalog}
+                </button>
+              )}
             </div>
 
             {/* Justification */}
@@ -1455,22 +1514,6 @@ export default function NewPurchaseRequestPage() {
                 })}
               </div>
 
-              {/* Justification */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-[#2C2C2C] mb-2">{t.justification}</h4>
-                <p className="text-sm text-[#6E6B67] bg-[#F9F8F6] rounded-lg p-3">
-                  {justification}
-                </p>
-              </div>
-
-              {/* Urgency */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-[#2C2C2C] mb-2">{t.urgency}</h4>
-                <Badge className={urgency === 'urgent' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-gray-100 text-gray-700 border-gray-200'}>
-                  {urgency === 'urgent' ? t.urgent : t.normal}
-                </Badge>
-              </div>
-
               {/* Total */}
               <div className="border-t border-[#E4E1DD] pt-4">
                 <div className="flex items-center justify-between">
@@ -1486,14 +1529,6 @@ export default function NewPurchaseRequestPage() {
                 {!allHavePrices && total > 0 && (
                   <p className="text-xs text-[#9B9792] text-right mt-1">+ {t.priceNotAvailable}</p>
                 )}
-              </div>
-
-              {/* Approval Note */}
-              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-xs text-yellow-700">
-                  <AlertCircle className="h-4 w-4 inline-block mr-1" />
-                  {t.approvalNote}
-                </p>
               </div>
             </div>
 

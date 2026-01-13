@@ -251,6 +251,31 @@ func main() {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
+	// Debug: Test metadata extraction (no auth required)
+	router.POST("/debug/extract-metadata", func(c *gin.Context) {
+		var input struct {
+			URL string `json:"url" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+		meta, err := metadataService.Extract(input.URL)
+		if err != nil {
+			c.JSON(200, gin.H{
+				"error":    err.Error(),
+				"url":      input.URL,
+				"metadata": nil,
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"error":    nil,
+			"url":      input.URL,
+			"metadata": meta,
+		})
+	})
+
 	// Start server
 	log.Printf("Server starting on port %s...", cfg.Server.Port)
 	log.Printf("Environment: %s", cfg.Server.Environment)

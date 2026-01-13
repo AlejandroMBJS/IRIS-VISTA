@@ -13,6 +13,7 @@ import {
   Settings,
   DollarSign,
   ShoppingCart,
+  Package,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -37,6 +38,9 @@ const menuItems: MenuItem[] = [
 
   // Approved Orders - Admin + Purchase Admin
   { icon: DollarSign, labelKey: 'orders', href: '/admin/orders', roles: ['admin', 'purchase_admin'], badgeKey: 'pending_orders' },
+
+  // Inventory - Admin + Purchase Admin + Supply Chain Manager
+  { icon: Package, labelKey: 'inventory', href: '/inventory', roles: ['admin', 'purchase_admin', 'supply_chain_manager'] },
 
   // Analytics - Admin + Supply Chain Manager
   { icon: BarChart3, labelKey: 'analytics', href: '/analytics', roles: ['admin', 'supply_chain_manager'] },
@@ -83,6 +87,7 @@ export function Sidebar() {
       requests: 'My Requests',
       approvals: 'Approvals',
       orders: 'Approved Orders',
+      inventory: 'Inventory',
       analytics: 'Analytics',
       users: 'Users',
       purchaseConfig: 'Purchase Settings',
@@ -94,6 +99,7 @@ export function Sidebar() {
       requests: '我的请求',
       approvals: '审批',
       orders: '已批准订单',
+      inventory: '库存',
       analytics: '分析',
       users: '用户',
       purchaseConfig: '采购设置',
@@ -105,6 +111,7 @@ export function Sidebar() {
       requests: 'Mis Solicitudes',
       approvals: 'Aprobaciones',
       orders: 'Órdenes Aprobadas',
+      inventory: 'Inventario',
       analytics: 'Analítica',
       users: 'Usuarios',
       purchaseConfig: 'Config. Compras',

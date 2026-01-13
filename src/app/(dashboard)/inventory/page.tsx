@@ -281,7 +281,6 @@ export default function InventoryPage() {
       const params = new URLSearchParams({
         page: page.toString(),
         per_page: '20',
-        source: 'internal',
       });
       if (searchTerm) params.append('search', searchTerm);
       if (categoryFilter !== 'all') params.append('category', categoryFilter);
@@ -303,7 +302,7 @@ export default function InventoryPage() {
 
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await api.get<ApiResponse<string[]>>('/products/categories?source=internal');
+      const response = await api.get<ApiResponse<string[]>>('/products/categories');
       if (response.data.success && response.data.data) {
         setCategories(response.data.data);
       }

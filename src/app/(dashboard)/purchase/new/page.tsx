@@ -691,9 +691,12 @@ export default function NewPurchaseRequestPage() {
 
       setSuccessType('direct');
       setSuccess(true);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to submit request:', err);
-      setError(err instanceof Error ? err.message : 'Failed to submit request');
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      const errorMessage = axiosError.response?.data?.message ||
+        (err instanceof Error ? err.message : 'Failed to submit request');
+      setError(errorMessage);
     } finally {
       setIsSubmittingDirect(false);
     }

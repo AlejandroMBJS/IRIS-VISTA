@@ -501,7 +501,8 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 	})
 
 	if err != nil {
-		response.InternalServerError(c, "Failed to create request")
+		log.Printf("Failed to create purchase request: %v", err)
+		response.InternalServerError(c, "Failed to create request: "+err.Error())
 		return
 	}
 

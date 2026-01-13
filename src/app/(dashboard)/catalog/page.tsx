@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { Search, ShoppingCart, AlertCircle, CheckCircle, X, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { productsApi, requestsApi } from '@/lib/api';
+import { productsApi, purchaseRequestsApi, type CreatePurchaseRequestInput, type CreatePurchaseRequestItemInput } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
-import type { Product, CreateRequestInput } from '@/types';
+import type { Product } from '@/types';
 
 // Local cart item for catalog (different from e-commerce cart)
 interface LocalCartItem {
@@ -295,31 +295,38 @@ export default function CatalogPage() {
   const submitRequest = async () => {
     setIsSubmitting(true);
     try {
-      const requestData: CreateRequestInput = {
-        type: requestType === 'issue' ? 'material_issue' : 'purchase_requisition',
-        cost_center: formData.costCenter,
-        purpose: requestType === 'issue' ? formData.issueReason : formData.purpose,
-        priority: 'normal',
-        items: cartItems.map((item) => ({
-          product_id: item.product.id,
-          name: item.product.name,
-          specification: item.product.specification,
-          quantity: item.quantity,
-          unit_price: item.product.price,
-          supplier: item.product.supplier,
-          source: 'internal',
-          image_url: item.product.image_url,
-        })),
+      // Build items using catalog URL format
+      const items: CreatePurchaseRequestItemInput[] = cartItems.map((item) => ({
+        url: item.product.product_url || `catalog://product/${item.product.id}`,
+        quantity: item.quantity,
+        product_title: item.product.name,
+        product_image_url: item.product.image_url,
+        product_description: item.product.specification || item.product.description,
+        estimated_price: item.product.price,
+        currency: item.product.currency || 'MXN',
+      }));
+
+      // Build justification from form data
+      const justification = requestType === 'issue'
+        ? `Material Issue Request: ${formData.issueReason}${formData.costCenter ? ` (Cost Center: ${formData.costCenter})` : ''}`
+        : `Purchase Requisition: ${formData.purpose}${formData.costCenter ? ` (Cost Center: ${formData.costCenter})` : ''}`;
+
+      const requestData: CreatePurchaseRequestInput = {
+        items,
+        justification,
+        urgency: 'normal',
       };
 
-      await requestsApi.create(requestData);
+      await purchaseRequestsApi.create(requestData);
       alert(t.requestSubmitted);
       setShowSubmitModal(false);
       clearCart();
       setFormData({ issueReason: '', costCenter: user?.cost_center || '', purpose: '' });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to submit request:', error);
-      alert('Failed to submit request. Please try again.');
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      const errorMessage = axiosError.response?.data?.message || 'Failed to submit request. Please try again.';
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

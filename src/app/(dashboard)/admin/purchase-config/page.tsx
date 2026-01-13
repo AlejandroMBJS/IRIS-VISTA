@@ -200,7 +200,7 @@ export default function PurchaseConfigPage() {
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
-      <div className="border-b border-[#E4E1DD] bg-white px-8 py-6">
+      <div className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E08A4B] to-[#D47A3B]">
@@ -277,7 +277,7 @@ export default function PurchaseConfigPage() {
       </div>
 
       {/* Content */}
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="mx-auto max-w-4xl">
           {activeTab === 'general' && (
             <GeneralSection

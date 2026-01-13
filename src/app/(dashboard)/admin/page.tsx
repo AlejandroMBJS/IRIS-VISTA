@@ -144,7 +144,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-8 py-8">
+      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
             {t.title}
@@ -154,7 +154,7 @@ export default function AdminPage() {
       </section>
 
       {/* Stats Grid */}
-      <section className="px-8 py-8">
+      <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {statCards.map((stat, idx) => {

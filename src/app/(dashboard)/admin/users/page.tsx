@@ -391,8 +391,8 @@ export default function UsersPage() {
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-8 py-8">
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
+      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
               {t.title}
@@ -410,7 +410,7 @@ export default function UsersPage() {
       </section>
 
       {/* Tabs */}
-      <section className="px-8 py-4 bg-white border-b border-[#E4E1DD]">
+      <section className="px-4 md:px-8 py-4 bg-white border-b border-[#E4E1DD]">
         <div className="mx-auto max-w-7xl flex gap-4">
           <button
             onClick={() => setActiveTab('all')}
@@ -444,7 +444,7 @@ export default function UsersPage() {
 
       {/* Search */}
       {activeTab === 'all' && (
-        <section className="px-8 py-6 bg-white border-b border-[#E4E1DD]">
+        <section className="px-4 md:px-8 py-6 bg-white border-b border-[#E4E1DD]">
           <div className="mx-auto max-w-7xl">
             <div className="relative max-w-md">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6E6B67]" />
@@ -461,7 +461,7 @@ export default function UsersPage() {
       )}
 
       {/* Content */}
-      <section className="px-8 py-8">
+      <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           {activeTab === 'all' ? (
             /* All Users Table */
@@ -472,7 +472,8 @@ export default function UsersPage() {
               </div>
             ) : (
               <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] overflow-hidden">
-                <table className="w-full">
+                <div className="overflow-x-auto">
+                <table className="w-full min-w-[800px]">
                   <thead>
                     <tr className="border-b border-[#E4E1DD] bg-[#F9F8F6]">
                       <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
@@ -555,6 +556,7 @@ export default function UsersPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             )
           ) : (

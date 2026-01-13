@@ -502,8 +502,8 @@ export default function InventoryPage() {
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-8 py-8">
-        <div className="mx-auto max-w-7xl flex justify-between items-start">
+      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:justify-between md:items-start gap-4">
           <div>
             <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
               {t.title}
@@ -523,8 +523,8 @@ export default function InventoryPage() {
       </section>
 
       {/* Filters */}
-      <section className="px-8 py-4 border-b border-[#E4E1DD] bg-white">
-        <div className="mx-auto max-w-7xl flex gap-4">
+      <section className="px-4 md:px-8 py-4 border-b border-[#E4E1DD] bg-white">
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6E6B67]" />
             <input
@@ -549,7 +549,7 @@ export default function InventoryPage() {
       </section>
 
       {/* Products Table */}
-      <section className="px-8 py-8">
+      <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           {loading ? (
             <div className="text-center py-12 text-[#6E6B67]">{t.loading}</div>
@@ -561,7 +561,8 @@ export default function InventoryPage() {
           ) : (
             <>
               <div className="bg-white rounded-lg shadow-sm border border-[#E4E1DD] overflow-hidden">
-                <table className="w-full">
+                <div className="overflow-x-auto">
+                <table className="w-full min-w-[800px]">
                   <thead className="bg-[#F9F8F6] border-b border-[#E4E1DD]">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-medium text-[#6E6B67]">{t.sku}</th>
@@ -616,6 +617,7 @@ export default function InventoryPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
 
               {/* Pagination */}

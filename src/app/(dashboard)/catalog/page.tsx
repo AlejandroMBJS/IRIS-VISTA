@@ -336,7 +336,7 @@ export default function CatalogPage() {
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-8 py-8">
+      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
             {t.title}
@@ -346,7 +346,7 @@ export default function CatalogPage() {
       </section>
 
       {/* Filters & Search */}
-      <section className="px-8 py-6 bg-white border-b border-[#E4E1DD]">
+      <section className="px-4 md:px-8 py-6 bg-white border-b border-[#E4E1DD]">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
@@ -406,7 +406,7 @@ export default function CatalogPage() {
       </section>
 
       {/* Products Grid */}
-      <section className="px-8 py-8">
+      <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <p className="mb-6 text-sm text-[#6E6B67]">
             {filteredProducts.length} {t.productsCount}

@@ -31,11 +31,11 @@ RUN mkdir -p /app/data
 COPY --from=builder /build/main .
 
 # Expose port
-EXPOSE 8080
+EXPOSE 8087
 
 # Health check endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget -q --spider http://localhost:8080/health || exit 1
+  CMD wget -q --spider http://localhost:8087/health || exit 1
 
 # Run the application
 CMD ["./main"]

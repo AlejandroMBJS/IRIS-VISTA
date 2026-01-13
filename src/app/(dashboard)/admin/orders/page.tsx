@@ -27,7 +27,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { adminApi } from '@/lib/api';
+import { adminApi, amazonConfigApi, type AmazonConfig } from '@/lib/api';
 import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -48,6 +48,10 @@ export default function ApprovedOrdersPage() {
   const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
   const [adminNotesInput, setAdminNotesInput] = useState<Record<number, string>>({});
   const [savingNotesId, setSavingNotesId] = useState<number | null>(null);
+
+  // Amazon integration state
+  const [amazonConfig, setAmazonConfig] = useState<AmazonConfig | null>(null);
+  const isAmazonEnabled = amazonConfig?.is_active && amazonConfig?.has_password;
 
   const text = {
     en: {
@@ -93,6 +97,8 @@ export default function ApprovedOrdersPage() {
       saveNotes: 'Save',
       editNotes: 'Edit',
       orderInfo: 'Order Info',
+      openUrl: 'Open URL',
+      amazonDisabled: 'Amazon integration disabled - open URLs manually',
     },
     zh: {
       title: '已批准订单',
@@ -137,6 +143,8 @@ export default function ApprovedOrdersPage() {
       saveNotes: '保存',
       editNotes: '编辑',
       orderInfo: '订单信息',
+      openUrl: '打开链接',
+      amazonDisabled: 'Amazon集成已禁用 - 请手动打开链接',
     },
     es: {
       title: 'Pedidos Aprobados',
@@ -181,6 +189,8 @@ export default function ApprovedOrdersPage() {
       saveNotes: 'Guardar',
       editNotes: 'Editar',
       orderInfo: 'Info del Pedido',
+      openUrl: 'Abrir URL',
+      amazonDisabled: 'Integracion Amazon deshabilitada - abrir URLs manualmente',
     },
   };
 
@@ -197,6 +207,19 @@ export default function ApprovedOrdersPage() {
       setIsLoading(false);
     }
   };
+
+  const fetchAmazonConfig = async () => {
+    try {
+      const config = await amazonConfigApi.get();
+      setAmazonConfig(config);
+    } catch (error) {
+      console.error('Failed to fetch Amazon config:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAmazonConfig();
+  }, []);
 
   useEffect(() => {
     fetchOrders();
@@ -384,9 +407,15 @@ export default function ApprovedOrdersPage() {
               <p className="text-sm md:text-base text-[#6E6B67] mt-1">{t.subtitle}</p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
-                {t.amazonConnected}
-              </Badge>
+              {isAmazonEnabled ? (
+                <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
+                  {t.amazonConnected}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="bg-gray-100 border-gray-300 text-gray-600">
+                  {t.amazonDisconnected}
+                </Badge>
+              )}
               <Button
                 variant="outline"
                 onClick={fetchOrders}
@@ -555,16 +584,19 @@ export default function ApprovedOrdersPage() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => window.open(item.url, '_blank')}
+                                title={t.openUrl}
                               >
                                 <ExternalLink className="h-3 w-3" />
                               </Button>
                             )}
-                            {order.status !== 'purchased' && !item.added_to_cart && item.is_amazon_url && (
+                            {/* Only show Add to Cart when Amazon is enabled */}
+                            {isAmazonEnabled && order.status !== 'purchased' && !item.added_to_cart && item.is_amazon_url && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleAddToCart(order.id, item.id)}
                                 disabled={processingId === order.id}
+                                title={t.addToCart}
                               >
                                 {processingId === order.id ? (
                                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -573,12 +605,13 @@ export default function ApprovedOrdersPage() {
                                 )}
                               </Button>
                             )}
-                            {item.cart_error && (
+                            {isAmazonEnabled && item.cart_error && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleRetryCart(order.id)}
                                 disabled={processingId === order.id}
+                                title={t.retryCart}
                               >
                                 <RefreshCw className="h-3 w-3" />
                               </Button>
@@ -704,7 +737,8 @@ export default function ApprovedOrdersPage() {
                         <div className="flex flex-wrap gap-2">
                           {order.status !== 'purchased' && (
                             <>
-                              {items.some(i => i.is_amazon_url && !i.added_to_cart) && (
+                              {/* Only show Add All to Cart when Amazon is enabled */}
+                              {isAmazonEnabled && items.some(i => i.is_amazon_url && !i.added_to_cart) && (
                                 <Button
                                   variant="outline"
                                   size="sm"
@@ -715,7 +749,7 @@ export default function ApprovedOrdersPage() {
                                   {t.addAllToCart}
                                 </Button>
                               )}
-                              {progress.inCart > 0 && (
+                              {isAmazonEnabled && progress.inCart > 0 && (
                                 <Button
                                   variant="outline"
                                   size="sm"

@@ -220,14 +220,16 @@ func (h *AdminHandler) GetAmazonSessionStatus(c *gin.Context) {
 func (h *AdminHandler) GetApprovedOrders(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	perPage, _ := strconv.Atoi(c.DefaultQuery("per_page", "20"))
-	filter := c.Query("filter") // all, amazon_cart, pending_manual, purchased
+	filter := c.Query("filter") // all, amazon_cart, pending_manual, purchased, delivered, cancelled
 
 	offset := (page - 1) * perPage
 
 	query := h.db.Model(&models.PurchaseRequest{}).
 		Preload("Requester").
 		Preload("ApprovedBy").
-		Preload("PurchasedBy")
+		Preload("PurchasedBy").
+		Preload("DeliveredBy").
+		Preload("CancelledBy")
 
 	// Filter by status
 	switch filter {
@@ -238,9 +240,13 @@ func (h *AdminHandler) GetApprovedOrders(c *gin.Context) {
 			models.StatusApproved, false, true, false)
 	case "purchased":
 		query = query.Where("status = ?", models.StatusPurchased)
+	case "delivered":
+		query = query.Where("status = ?", models.StatusDelivered)
+	case "cancelled":
+		query = query.Where("status = ?", models.StatusCancelled)
 	default:
-		// Default: show all approved and purchased
-		query = query.Where("status IN (?, ?)", models.StatusApproved, models.StatusPurchased)
+		// Default: show all approved, purchased, delivered, and cancelled
+		query = query.Where("status IN (?, ?, ?, ?)", models.StatusApproved, models.StatusPurchased, models.StatusDelivered, models.StatusCancelled)
 	}
 
 	var total int64

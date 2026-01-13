@@ -33,7 +33,7 @@ import { adminApi, amazonConfigApi, type AmazonConfig } from '@/lib/api';
 import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-type FilterType = 'all' | 'amazon_cart' | 'pending_manual' | 'purchased';
+type FilterType = 'all' | 'amazon_cart' | 'pending_manual' | 'purchased' | 'delivered' | 'cancelled';
 
 // Get display number - PO number if available (for approved orders), otherwise request number
 const getDisplayNumber = (request: PurchaseRequest): string => {
@@ -497,6 +497,8 @@ export default function ApprovedOrdersPage() {
     { key: 'pending_manual', label: t.pendingPurchase },
     { key: 'amazon_cart', label: t.inCart },
     { key: 'purchased', label: t.purchased },
+    { key: 'delivered', label: t.delivered },
+    { key: 'cancelled', label: t.cancelled },
     { key: 'all', label: t.all },
   ];
 
@@ -504,6 +506,8 @@ export default function ApprovedOrdersPage() {
   const pendingCount = orders.filter(o => o.status === 'approved' && !o.added_to_cart).length;
   const inCartCount = orders.filter(o => o.status === 'approved' && o.added_to_cart).length;
   const purchasedCount = orders.filter(o => o.status === 'purchased').length;
+  const deliveredCount = orders.filter(o => o.status === 'delivered').length;
+  const cancelledCount = orders.filter(o => o.status === 'cancelled').length;
 
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
@@ -546,7 +550,7 @@ export default function ApprovedOrdersPage() {
           {/* Stats and Filters */}
           <div className="mb-6">
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-6">
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
                   <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
@@ -563,6 +567,18 @@ export default function ApprovedOrdersPage() {
                 <CardContent className="p-4 text-center">
                   <p className="text-3xl font-bold text-green-600">{purchasedCount}</p>
                   <p className="text-sm text-gray-600">{t.purchased}</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-white">
+                <CardContent className="p-4 text-center">
+                  <p className="text-3xl font-bold text-emerald-600">{deliveredCount}</p>
+                  <p className="text-sm text-gray-600">{t.delivered}</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-white">
+                <CardContent className="p-4 text-center">
+                  <p className="text-3xl font-bold text-red-600">{cancelledCount}</p>
+                  <p className="text-sm text-gray-600">{t.cancelled}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white">

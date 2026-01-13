@@ -351,13 +351,9 @@ func (e *Extractor) extractAmazon(doc *goquery.Document, metadata *ProductMetada
 
 	// Price - try many different selectors (Amazon changes these frequently)
 	if metadata.Price == nil {
-		priceSelectors := []string{
+		// First try offscreen selectors that contain the full price with decimals
+		offscreenSelectors := []string{
 			".a-price .a-offscreen",
-			"#priceblock_ourprice",
-			"#priceblock_dealprice",
-			"#priceblock_saleprice",
-			".a-price-whole",
-			"#price_inside_buybox",
 			"#corePrice_feature_div .a-offscreen",
 			"#corePriceDisplay_desktop_feature_div .a-offscreen",
 			".apexPriceToPay .a-offscreen",
@@ -366,10 +362,63 @@ func (e *Extractor) extractAmazon(doc *goquery.Document, metadata *ProductMetada
 			"span.a-price span.a-offscreen",
 			"#tp_price_block_total_price_ww .a-offscreen",
 			".priceToPay .a-offscreen",
+			"#priceblock_ourprice",
+			"#priceblock_dealprice",
+			"#priceblock_saleprice",
+			"#price_inside_buybox",
 		}
-		for _, selector := range priceSelectors {
+		for _, selector := range offscreenSelectors {
 			if priceText := strings.TrimSpace(doc.Find(selector).First().Text()); priceText != "" {
 				if price, err := e.parsePrice(priceText); err == nil && price > 0 {
+					metadata.Price = &price
+					break
+				}
+			}
+		}
+	}
+
+	// If still no price, try combining whole + fraction (Amazon splits prices visually)
+	if metadata.Price == nil {
+		// Try different price containers
+		priceContainers := []string{
+			".a-price",
+			"#corePrice_feature_div .a-price",
+			"#corePriceDisplay_desktop_feature_div .a-price",
+			".apexPriceToPay",
+			".priceToPay",
+			"#tp_price_block_total_price_ww",
+		}
+
+		for _, containerSelector := range priceContainers {
+			container := doc.Find(containerSelector).First()
+			if container.Length() == 0 {
+				continue
+			}
+
+			// Get the whole part (integer)
+			whole := strings.TrimSpace(container.Find(".a-price-whole").First().Text())
+			// Get the fraction part (decimals)
+			fraction := strings.TrimSpace(container.Find(".a-price-fraction").First().Text())
+
+			if whole != "" {
+				// Remove any trailing dot/comma from whole part
+				whole = strings.TrimRight(whole, ".,")
+				// Clean up thousand separators
+				whole = strings.ReplaceAll(whole, ",", "")
+				whole = strings.ReplaceAll(whole, ".", "")
+
+				priceStr := whole
+				if fraction != "" {
+					// Ensure fraction is 2 digits
+					if len(fraction) == 1 {
+						fraction = fraction + "0"
+					}
+					priceStr = whole + "." + fraction
+				} else {
+					priceStr = whole + ".00"
+				}
+
+				if price, err := strconv.ParseFloat(priceStr, 64); err == nil && price > 0 {
 					metadata.Price = &price
 					break
 				}

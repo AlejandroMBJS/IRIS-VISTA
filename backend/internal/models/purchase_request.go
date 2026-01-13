@@ -69,7 +69,8 @@ type PurchaseRequest struct {
 	InfoRequestNote string     `gorm:"type:text" json:"info_request_note,omitempty"`
 
 	// Purchase Order number (assigned when approved)
-	PONumber string `gorm:"uniqueIndex;size:50" json:"po_number,omitempty"`
+	// Using pointer so NULL values don't violate unique constraint
+	PONumber *string `gorm:"uniqueIndex;size:50" json:"po_number,omitempty"`
 
 	// Purchase completion (when admin marks as purchased)
 	PurchasedByID *uint      `json:"purchased_by_id,omitempty"`
@@ -143,7 +144,7 @@ func GenerateRequestNumber(db *gorm.DB) string {
 
 // GeneratePONumber generates a unique purchase order number (PO-YYYY-XXXX)
 // This is called when a request is approved
-func GeneratePONumber(db *gorm.DB) string {
+func GeneratePONumber(db *gorm.DB) *string {
 	var count int64
 	year := time.Now().Year()
 	// Count approved requests that have a PO number this year
@@ -151,7 +152,8 @@ func GeneratePONumber(db *gorm.DB) string {
 		Where("po_number IS NOT NULL AND po_number != ''").
 		Where("STRFTIME('%Y', approved_at) = ?", fmt.Sprintf("%d", year)).
 		Count(&count)
-	return fmt.Sprintf("PO-%d-%04d", year, count+1)
+	poNumber := fmt.Sprintf("PO-%d-%04d", year, count+1)
+	return &poNumber
 }
 
 // CanBeCancelled checks if the request can be cancelled

@@ -72,9 +72,9 @@ func (s *NotificationService) NotifyRequestCreated(request *models.PurchaseReque
 // NotifyRequestApproved sends notification to requester when their request is approved
 func (s *NotificationService) NotifyRequestApproved(request *models.PurchaseRequest) error {
 	// Use PO number if available, otherwise fall back to request number
-	orderNum := request.PONumber
-	if orderNum == "" {
-		orderNum = request.RequestNumber
+	orderNum := request.RequestNumber
+	if request.PONumber != nil && *request.PONumber != "" {
+		orderNum = *request.PONumber
 	}
 	title := fmt.Sprintf("Order #%s approved", orderNum)
 	message := "Your purchase request has been approved and is ready to be processed."
@@ -167,9 +167,9 @@ func (s *NotificationService) NotifyRequestInfoRequired(request *models.Purchase
 // NotifyRequestPurchased sends notification to requester when their order is purchased
 func (s *NotificationService) NotifyRequestPurchased(request *models.PurchaseRequest) error {
 	// Use PO number if available
-	orderNum := request.PONumber
-	if orderNum == "" {
-		orderNum = request.RequestNumber
+	orderNum := request.RequestNumber
+	if request.PONumber != nil && *request.PONumber != "" {
+		orderNum = *request.PONumber
 	}
 	title := fmt.Sprintf("Order #%s completed", orderNum)
 	message := "Your order has been marked as purchased."
@@ -209,9 +209,9 @@ func (s *NotificationService) NotifyNewApprovedOrder(request *models.PurchaseReq
 	}
 
 	// Use PO number if available
-	orderNum := request.PONumber
-	if orderNum == "" {
-		orderNum = request.RequestNumber
+	orderNum := request.RequestNumber
+	if request.PONumber != nil && *request.PONumber != "" {
+		orderNum = *request.PONumber
 	}
 	title := fmt.Sprintf("New approved order #%s", orderNum)
 	message := fmt.Sprintf("Order from %s ready to purchase. Total: $%.2f MXN",

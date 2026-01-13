@@ -699,7 +699,6 @@ export default function HomePage() {
           <div className="relative mx-auto max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <p className="text-white/70 text-sm font-medium mb-1">{t.gmSubtitle}</p>
                 <h1 className="text-3xl md:text-4xl text-white font-bold">
                   {t.welcome}, {user?.name?.split(' ')[0] || 'Manager'}
                 </h1>

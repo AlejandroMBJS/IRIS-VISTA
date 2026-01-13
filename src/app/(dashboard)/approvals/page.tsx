@@ -491,7 +491,7 @@ export default function ApprovalsPage() {
           <div className="mb-6 flex flex-col md:flex-row gap-4">
             {/* Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-              {(['all', 'pending', 'approved', 'rejected', 'info_requested'] as const).map((tab) => (
+              {(['all', 'pending', 'approved', 'rejected'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setSelectedTab(tab)}

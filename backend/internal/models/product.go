@@ -40,6 +40,11 @@ type Product struct {
 	ClickUpID     string         `gorm:"size:50" json:"clickup_id"`       // Optional ClickUp task ID
 	Source        ProductSource  `gorm:"default:'internal';size:20" json:"source"`
 	IsActive      bool           `gorm:"default:true" json:"is_active"`
+	// E-commerce fields
+	ProductURL    string         `gorm:"size:2000" json:"product_url"`    // Optional URL for e-commerce products
+	IsEcommerce   bool           `gorm:"default:false" json:"is_ecommerce"` // Mark as e-commerce product
+	ASIN          string         `gorm:"size:20;index" json:"asin"`       // Amazon ASIN if applicable
+	Brand         string         `gorm:"size:100" json:"brand"`           // Product brand
 	Images        []ProductImage `gorm:"foreignKey:ProductID" json:"images"`
 	CreatedAt     time.Time      `json:"created_at"`
 	UpdatedAt     time.Time      `json:"updated_at"`

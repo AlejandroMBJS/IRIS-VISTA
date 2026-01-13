@@ -31,6 +31,11 @@ interface ProductFormData {
   clickup_id: string;
   is_active: boolean;
   images: { url: string; sort_order: number; is_primary: boolean; caption: string }[];
+  // E-commerce fields
+  product_url: string;
+  is_ecommerce: boolean;
+  asin: string;
+  brand: string;
 }
 
 interface UploadRequirements {
@@ -64,6 +69,11 @@ const emptyFormData: ProductFormData = {
   clickup_id: '',
   is_active: true,
   images: [],
+  // E-commerce fields
+  product_url: '',
+  is_ecommerce: false,
+  asin: '',
+  brand: '',
 };
 
 export default function InventoryPage() {
@@ -140,6 +150,12 @@ export default function InventoryPage() {
       localization: 'Localization',
       media: 'Media & Images',
       actions: 'Actions',
+      ecommerce: 'E-commerce',
+      productUrl: 'Product URL',
+      isEcommerce: 'E-commerce Product',
+      asin: 'Amazon ASIN',
+      brand: 'Brand',
+      ecommerceHint: 'Mark as e-commerce if this product is purchased from an online store',
     },
     zh: {
       title: '库存管理',
@@ -191,6 +207,12 @@ export default function InventoryPage() {
       localization: '本地化',
       media: '媒体与图片',
       actions: '操作',
+      ecommerce: '电商',
+      productUrl: '产品链接',
+      isEcommerce: '电商产品',
+      asin: 'Amazon ASIN',
+      brand: '品牌',
+      ecommerceHint: '如果此产品从在线商店购买，请标记为电商产品',
     },
     es: {
       title: 'Gestión de Inventario',
@@ -242,6 +264,12 @@ export default function InventoryPage() {
       localization: 'Localización',
       media: 'Media e Imágenes',
       actions: 'Acciones',
+      ecommerce: 'E-commerce',
+      productUrl: 'URL del Producto',
+      isEcommerce: 'Producto E-commerce',
+      asin: 'Amazon ASIN',
+      brand: 'Marca',
+      ecommerceHint: 'Marcar como e-commerce si este producto se compra de una tienda en línea',
     },
   };
 
@@ -336,6 +364,11 @@ export default function InventoryPage() {
           is_primary: img.is_primary,
           caption: img.caption || '',
         })) || [],
+        // E-commerce fields
+        product_url: product.product_url || '',
+        is_ecommerce: product.is_ecommerce || false,
+        asin: product.asin || '',
+        brand: product.brand || '',
       });
     } else {
       setEditingProduct(null);
@@ -800,6 +833,7 @@ export default function InventoryPage() {
                       className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
                     >
                       <option value="USD">USD</option>
+                      <option value="MXN">MXN</option>
                       <option value="CNY">CNY</option>
                       <option value="EUR">EUR</option>
                     </select>
@@ -935,6 +969,65 @@ export default function InventoryPage() {
                     onChange={handleFileUpload}
                     className="hidden"
                   />
+                </div>
+              </div>
+
+              {/* E-commerce Section */}
+              <div>
+                <h3 className="text-lg font-medium text-[#2C2C2C] mb-4">{t.ecommerce}</h3>
+                <p className="text-sm text-[#6E6B67] mb-4">{t.ecommerceHint}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.productUrl}</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        value={formData.product_url}
+                        onChange={(e) => setFormData(prev => ({ ...prev, product_url: e.target.value }))}
+                        placeholder="https://www.amazon.com.mx/dp/..."
+                        className="flex-1 px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      />
+                      {formData.product_url && (
+                        <a
+                          href={formData.product_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 text-[#75534B] hover:bg-[#F9F8F6] rounded-lg"
+                        >
+                          <ExternalLink className="h-5 w-5" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.brand}</label>
+                    <input
+                      type="text"
+                      value={formData.brand}
+                      onChange={(e) => setFormData(prev => ({ ...prev, brand: e.target.value }))}
+                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.asin}</label>
+                    <input
+                      type="text"
+                      value={formData.asin}
+                      onChange={(e) => setFormData(prev => ({ ...prev, asin: e.target.value }))}
+                      placeholder="B0BWK6PXZX"
+                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                    />
+                  </div>
+                  <div className="col-span-2 flex items-center gap-2 mt-2">
+                    <input
+                      type="checkbox"
+                      id="is_ecommerce"
+                      checked={formData.is_ecommerce}
+                      onChange={(e) => setFormData(prev => ({ ...prev, is_ecommerce: e.target.checked }))}
+                      className="h-4 w-4 rounded border-[#E4E1DD] text-[#75534B] focus:ring-[#75534B]"
+                    />
+                    <label htmlFor="is_ecommerce" className="text-sm text-[#6E6B67]">{t.isEcommerce}</label>
+                  </div>
                 </div>
               </div>
 

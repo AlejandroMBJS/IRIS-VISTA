@@ -100,6 +100,11 @@ export interface Product {
   source: ProductSource;
   is_active: boolean;
   images?: ProductImage[];
+  // E-commerce fields
+  product_url?: string;
+  is_ecommerce?: boolean;
+  asin?: string;
+  brand?: string;
 }
 
 // Cart types

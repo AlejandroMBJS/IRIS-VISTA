@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   ShoppingCart,
   Power,
@@ -14,194 +14,223 @@ import {
   Link2,
   Clock,
   Shield,
+  Save,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-
-interface AmazonConfig {
-  enabled: boolean;
-  account_email: string;
-  session_status: 'connected' | 'disconnected' | 'expired';
-  last_verified_at?: string;
-  auto_verify_minutes: number;
-  notify_on_expiry: boolean;
-  add_without_confirm: boolean;
-  max_products_per_op: number;
-  delay_between_products: number;
-}
+import { amazonConfigApi, type AmazonConfig } from '@/lib/api';
 
 interface AmazonSectionProps {
   language: 'en' | 'zh' | 'es';
 }
 
 export function AmazonSection({ language }: AmazonSectionProps) {
-  const [config, setConfig] = useState<AmazonConfig>({
-    enabled: true,
-    account_email: 'iamx_punchout@improaerotek.com',
-    session_status: 'connected',
-    last_verified_at: new Date().toISOString(),
-    auto_verify_minutes: 30,
-    notify_on_expiry: true,
-    add_without_confirm: false,
-    max_products_per_op: 10,
-    delay_between_products: 2,
-  });
-
+  const [config, setConfig] = useState<AmazonConfig | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [marketplace, setMarketplace] = useState('www.amazon.com.mx');
+  const [isActive, setIsActive] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [hasChanges, setHasChanges] = useState(false);
 
   const text = {
     en: {
       title: 'Amazon Integration',
       subtitle: 'Configure Amazon Business integration for automated cart management',
       enableIntegration: 'Enable Integration',
-      enableDescription: 'When enabled, you can add approved products directly to the Amazon Business cart.',
+      enableDescription: 'When enabled, approved products will be automatically added to the Amazon Business cart. When disabled, you can manually open product URLs and mark them as purchased.',
       connectionStatus: 'Connection Status',
       connected: 'Connected',
-      disconnected: 'Disconnected',
-      expired: 'Session Expired',
-      account: 'Account',
-      lastVerified: 'Last verified',
-      verifySession: 'Verify Session',
-      disconnect: 'Disconnect',
-      connect: 'Connect',
-      reconnect: 'Reconnect',
+      disconnected: 'Not Configured',
+      lastTested: 'Last tested',
+      testConnection: 'Test Connection',
+      testing: 'Testing...',
       credentials: 'Amazon Business Credentials',
       credentialsWarning: 'Credentials are stored encrypted on the server.',
       email: 'Amazon Business Email',
       password: 'Password',
-      updateCredentials: 'Update Credentials',
-      advancedOptions: 'Advanced Options',
-      autoVerify: 'Auto-verify session every',
-      minutes: 'minutes',
-      notifyExpiry: 'Notify if session expires',
-      addWithoutConfirm: 'Add to cart without confirmation (not recommended)',
-      maxProducts: 'Maximum products per operation',
-      delayBetween: 'Delay between products (seconds)',
-      disabledMessage: 'Amazon integration is disabled. Enable it to configure settings.',
-      testConnection: 'Test Connection',
-      connectionSuccess: 'Connection verified successfully',
+      passwordPlaceholder: 'Enter new password to update',
+      marketplace: 'Marketplace',
+      saveChanges: 'Save Changes',
+      saving: 'Saving...',
+      disabledMessage: 'Amazon integration is disabled. When disabled, you can manually open product URLs and mark orders as purchased.',
+      configuredMessage: 'Amazon is configured. Test the connection to verify credentials.',
+      notConfigured: 'Amazon is not configured. Enter your credentials below.',
+      saveSuccess: 'Amazon configuration saved successfully',
+      saveFailed: 'Failed to save configuration',
+      testSuccess: 'Connection test successful',
+      testFailed: 'Connection test failed',
+      loadError: 'Failed to load configuration',
     },
     zh: {
       title: 'Amazon 集成',
       subtitle: '配置 Amazon Business 集成以自动管理购物车',
       enableIntegration: '启用集成',
-      enableDescription: '启用后，您可以将已批准的产品直接添加到 Amazon Business 购物车。',
+      enableDescription: '启用后，已批准的产品将自动添加到 Amazon Business 购物车。禁用时，您可以手动打开产品链接并标记为已购买。',
       connectionStatus: '连接状态',
       connected: '已连接',
-      disconnected: '未连接',
-      expired: '会话已过期',
-      account: '账户',
-      lastVerified: '上次验证',
-      verifySession: '验证会话',
-      disconnect: '断开连接',
-      connect: '连接',
-      reconnect: '重新连接',
+      disconnected: '未配置',
+      lastTested: '上次测试',
+      testConnection: '测试连接',
+      testing: '测试中...',
       credentials: 'Amazon Business 凭据',
       credentialsWarning: '凭据已加密存储在服务器上。',
       email: 'Amazon Business 邮箱',
       password: '密码',
-      updateCredentials: '更新凭据',
-      advancedOptions: '高级选项',
-      autoVerify: '自动验证会话间隔',
-      minutes: '分钟',
-      notifyExpiry: '会话过期时通知',
-      addWithoutConfirm: '无需确认直接添加到购物车（不推荐）',
-      maxProducts: '每次操作最大产品数',
-      delayBetween: '产品之间的延迟（秒）',
-      disabledMessage: 'Amazon 集成已禁用。启用它以配置设置。',
-      testConnection: '测试连接',
-      connectionSuccess: '连接验证成功',
+      passwordPlaceholder: '输入新密码以更新',
+      marketplace: '市场',
+      saveChanges: '保存更改',
+      saving: '保存中...',
+      disabledMessage: 'Amazon 集成已禁用。禁用时，您可以手动打开产品链接并标记订单为已购买。',
+      configuredMessage: 'Amazon 已配置。测试连接以验证凭据。',
+      notConfigured: 'Amazon 未配置。请在下方输入您的凭据。',
+      saveSuccess: 'Amazon 配置保存成功',
+      saveFailed: '保存配置失败',
+      testSuccess: '连接测试成功',
+      testFailed: '连接测试失败',
+      loadError: '加载配置失败',
     },
     es: {
       title: 'Integracion Amazon',
       subtitle: 'Configurar integracion de Amazon Business para gestion automatizada del carrito',
       enableIntegration: 'Habilitar Integracion',
-      enableDescription: 'Cuando esta habilitado, puedes agregar productos aprobados directamente al carrito de Amazon Business.',
+      enableDescription: 'Cuando esta habilitado, los productos aprobados se agregaran automaticamente al carrito de Amazon Business. Cuando esta deshabilitado, puedes abrir manualmente las URLs de productos y marcarlos como comprados.',
       connectionStatus: 'Estado de Conexion',
       connected: 'Conectado',
-      disconnected: 'Desconectado',
-      expired: 'Sesion Expirada',
-      account: 'Cuenta',
-      lastVerified: 'Ultima verificacion',
-      verifySession: 'Verificar Sesion',
-      disconnect: 'Desconectar',
-      connect: 'Conectar',
-      reconnect: 'Reconectar',
+      disconnected: 'No Configurado',
+      lastTested: 'Ultima prueba',
+      testConnection: 'Probar Conexion',
+      testing: 'Probando...',
       credentials: 'Credenciales de Amazon Business',
       credentialsWarning: 'Las credenciales se almacenan encriptadas en el servidor.',
       email: 'Email de Amazon Business',
       password: 'Contrasena',
-      updateCredentials: 'Actualizar Credenciales',
-      advancedOptions: 'Opciones Avanzadas',
-      autoVerify: 'Verificar sesion automaticamente cada',
-      minutes: 'minutos',
-      notifyExpiry: 'Notificar si la sesion expira',
-      addWithoutConfirm: 'Agregar al carrito sin confirmacion (no recomendado)',
-      maxProducts: 'Maximo de productos por operacion',
-      delayBetween: 'Retraso entre productos (segundos)',
-      disabledMessage: 'La integracion de Amazon esta deshabilitada. Habilita para configurar.',
-      testConnection: 'Probar Conexion',
-      connectionSuccess: 'Conexion verificada exitosamente',
+      passwordPlaceholder: 'Ingresa nueva contrasena para actualizar',
+      marketplace: 'Marketplace',
+      saveChanges: 'Guardar Cambios',
+      saving: 'Guardando...',
+      disabledMessage: 'La integracion de Amazon esta deshabilitada. Cuando esta deshabilitada, puedes abrir manualmente las URLs de productos y marcar ordenes como compradas.',
+      configuredMessage: 'Amazon esta configurado. Prueba la conexion para verificar las credenciales.',
+      notConfigured: 'Amazon no esta configurado. Ingresa tus credenciales abajo.',
+      saveSuccess: 'Configuracion de Amazon guardada exitosamente',
+      saveFailed: 'Error al guardar la configuracion',
+      testSuccess: 'Prueba de conexion exitosa',
+      testFailed: 'Prueba de conexion fallida',
+      loadError: 'Error al cargar la configuracion',
     },
   };
 
   const t = text[language];
 
-  const handleToggle = () => {
-    setConfig({ ...config, enabled: !config.enabled });
-  };
+  const fetchConfig = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await amazonConfigApi.get();
+      setConfig(data);
+      setEmail(data.email || '');
+      setMarketplace(data.marketplace || 'www.amazon.com.mx');
+      setIsActive(data.is_active);
+      setPassword(''); // Never show existing password
+    } catch (error) {
+      console.error('Failed to fetch Amazon config:', error);
+      // Set defaults for empty config
+      setConfig({
+        id: 0,
+        email: '',
+        marketplace: 'www.amazon.com.mx',
+        has_password: false,
+        is_active: false,
+        test_status: '',
+        test_message: '',
+        created_at: '',
+        updated_at: '',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-  const handleVerifySession = async () => {
-    setIsVerifying(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setConfig({ ...config, last_verified_at: new Date().toISOString() });
-    setIsVerifying(false);
-  };
+  useEffect(() => {
+    fetchConfig();
+  }, [fetchConfig]);
 
-  const handleConnect = async () => {
-    setIsConnecting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setConfig({ ...config, session_status: 'connected', last_verified_at: new Date().toISOString() });
-    setIsConnecting(false);
-  };
+  // Track changes
+  useEffect(() => {
+    if (config) {
+      const emailChanged = email !== (config.email || '');
+      const marketplaceChanged = marketplace !== (config.marketplace || 'www.amazon.com.mx');
+      const activeChanged = isActive !== config.is_active;
+      const passwordChanged = password.length > 0;
+      setHasChanges(emailChanged || marketplaceChanged || activeChanged || passwordChanged);
+    }
+  }, [config, email, marketplace, isActive, password]);
 
-  const handleDisconnect = () => {
-    setConfig({ ...config, session_status: 'disconnected' });
-  };
+  const handleSave = async () => {
+    if (!email) {
+      setMessage({ type: 'error', text: 'Email is required' });
+      return;
+    }
 
-  const getStatusBadge = () => {
-    switch (config.session_status) {
-      case 'connected':
-        return (
-          <Badge className="bg-green-100 text-green-800 flex items-center gap-1">
-            <CheckCircle className="h-3 w-3" />
-            {t.connected}
-          </Badge>
-        );
-      case 'expired':
-        return (
-          <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1">
-            <AlertTriangle className="h-3 w-3" />
-            {t.expired}
-          </Badge>
-        );
-      default:
-        return (
-          <Badge className="bg-red-100 text-red-800 flex items-center gap-1">
-            <XCircle className="h-3 w-3" />
-            {t.disconnected}
-          </Badge>
-        );
+    setIsSaving(true);
+    setMessage(null);
+
+    try {
+      const data: { email: string; marketplace?: string; is_active?: boolean; password?: string } = {
+        email,
+        marketplace,
+        is_active: isActive,
+      };
+
+      // Only send password if it was changed
+      if (password.length > 0) {
+        data.password = password;
+      }
+
+      const savedConfig = await amazonConfigApi.save(data);
+      setConfig(savedConfig);
+      setPassword(''); // Clear password field after save
+      setHasChanges(false);
+      setMessage({ type: 'success', text: t.saveSuccess });
+      setTimeout(() => setMessage(null), 3000);
+    } catch (error) {
+      console.error('Failed to save Amazon config:', error);
+      setMessage({ type: 'error', text: t.saveFailed });
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  const formatLastVerified = (dateString?: string) => {
+  const handleTest = async () => {
+    setIsTesting(true);
+    setMessage(null);
+
+    try {
+      const result = await amazonConfigApi.test();
+      if (result.status === 'success') {
+        setMessage({ type: 'success', text: t.testSuccess });
+        // Refresh config to get updated test status
+        fetchConfig();
+      } else {
+        setMessage({ type: 'error', text: `${t.testFailed}: ${result.message}` });
+      }
+    } catch (error) {
+      console.error('Failed to test connection:', error);
+      setMessage({ type: 'error', text: t.testFailed });
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
+  const handleToggle = () => {
+    setIsActive(!isActive);
+  };
+
+  const formatLastTested = (dateString?: string) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
     const now = new Date();
@@ -209,8 +238,56 @@ export function AmazonSection({ language }: AmazonSectionProps) {
 
     if (diffMins < 1) return language === 'zh' ? '刚刚' : language === 'es' ? 'Ahora' : 'Just now';
     if (diffMins < 60) return language === 'zh' ? `${diffMins}分钟前` : language === 'es' ? `Hace ${diffMins} min` : `${diffMins} min ago`;
+    if (diffMins < 1440) {
+      const hours = Math.floor(diffMins / 60);
+      return language === 'zh' ? `${hours}小时前` : language === 'es' ? `Hace ${hours}h` : `${hours}h ago`;
+    }
     return date.toLocaleString();
   };
+
+  const getStatusBadge = () => {
+    if (!config?.has_password) {
+      return (
+        <Badge className="bg-gray-100 text-gray-800 flex items-center gap-1">
+          <XCircle className="h-3 w-3" />
+          {t.disconnected}
+        </Badge>
+      );
+    }
+
+    if (config.test_status === 'success') {
+      return (
+        <Badge className="bg-green-100 text-green-800 flex items-center gap-1">
+          <CheckCircle className="h-3 w-3" />
+          {t.connected}
+        </Badge>
+      );
+    }
+
+    if (config.test_status === 'failed') {
+      return (
+        <Badge className="bg-red-100 text-red-800 flex items-center gap-1">
+          <XCircle className="h-3 w-3" />
+          {t.testFailed}
+        </Badge>
+      );
+    }
+
+    return (
+      <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1">
+        <AlertTriangle className="h-3 w-3" />
+        {language === 'zh' ? '未测试' : language === 'es' ? 'No probado' : 'Not tested'}
+      </Badge>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-6 w-6 animate-spin text-[#6E6B67]" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -231,24 +308,42 @@ export function AmazonSection({ language }: AmazonSectionProps) {
         <div className="mt-6 flex items-center justify-between p-4 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD]">
           <div>
             <p className="font-medium text-[#2C2C2C]">{t.enableIntegration}</p>
-            <p className="text-sm text-[#6E6B67] mt-0.5">{t.enableDescription}</p>
+            <p className="text-sm text-[#6E6B67] mt-0.5 max-w-lg">{t.enableDescription}</p>
           </div>
           <button
             onClick={handleToggle}
             className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
-              config.enabled ? 'bg-green-500' : 'bg-gray-300'
+              isActive ? 'bg-green-500' : 'bg-gray-300'
             }`}
           >
             <span
               className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                config.enabled ? 'translate-x-8' : 'translate-x-1'
+                isActive ? 'translate-x-8' : 'translate-x-1'
               }`}
             />
           </button>
         </div>
+
+        {/* Message */}
+        {message && (
+          <div
+            className={`mt-4 flex items-center gap-2 rounded-lg px-4 py-3 ${
+              message.type === 'success'
+                ? 'bg-[#4BAF7E]/10 text-[#4BAF7E]'
+                : 'bg-[#D1625B]/10 text-[#D1625B]'
+            }`}
+          >
+            {message.type === 'success' ? (
+              <CheckCircle className="h-4 w-4" />
+            ) : (
+              <AlertTriangle className="h-4 w-4" />
+            )}
+            <span className="text-sm font-medium">{message.text}</span>
+          </div>
+        )}
       </div>
 
-      {!config.enabled ? (
+      {!isActive ? (
         <div className="rounded-xl border border-[#E4E1DD] bg-white p-8 text-center">
           <Power className="h-12 w-12 mx-auto text-gray-300" />
           <p className="mt-4 text-[#6E6B67]">{t.disabledMessage}</p>
@@ -267,61 +362,47 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                 <div className="flex items-center gap-3">
                   {getStatusBadge()}
                 </div>
-                <div className="flex items-center gap-2">
-                  {config.session_status === 'connected' ? (
-                    <>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleVerifySession}
-                        disabled={isVerifying}
-                      >
-                        {isVerifying ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <RefreshCw className="h-4 w-4" />
-                        )}
-                        <span className="ml-2">{t.verifySession}</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleDisconnect}
-                        className="text-red-600 border-red-200 hover:bg-red-50"
-                      >
-                        {t.disconnect}
-                      </Button>
-                    </>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTest}
+                  disabled={isTesting || !config?.has_password}
+                >
+                  {isTesting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <Button
-                      size="sm"
-                      onClick={handleConnect}
-                      disabled={isConnecting}
-                      className="bg-[#FF9900] hover:bg-[#FF6600] text-white"
-                    >
-                      {isConnecting ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : null}
-                      {config.session_status === 'expired' ? t.reconnect : t.connect}
-                    </Button>
+                    <RefreshCw className="h-4 w-4" />
                   )}
-                </div>
+                  <span className="ml-2">{isTesting ? t.testing : t.testConnection}</span>
+                </Button>
               </div>
 
-              {config.session_status !== 'disconnected' && (
+              {config?.has_password && (
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#E4E1DD]">
                   <div>
-                    <p className="text-xs text-[#6E6B67]">{t.account}</p>
-                    <p className="text-sm font-medium text-[#2C2C2C]">{config.account_email}</p>
+                    <p className="text-xs text-[#6E6B67]">{t.email}</p>
+                    <p className="text-sm font-medium text-[#2C2C2C]">{config.email}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-[#6E6B67]">{t.lastVerified}</p>
+                    <p className="text-xs text-[#6E6B67]">{t.lastTested}</p>
                     <p className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      {formatLastVerified(config.last_verified_at)}
+                      {formatLastTested(config.last_test_at)}
                     </p>
                   </div>
+                  {config.test_message && (
+                    <div className="col-span-2">
+                      <p className="text-xs text-[#6E6B67]">Status</p>
+                      <p className={`text-sm ${config.test_status === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                        {config.test_message}
+                      </p>
+                    </div>
+                  )}
                 </div>
+              )}
+
+              {!config?.has_password && (
+                <p className="text-sm text-[#6E6B67]">{t.notConfigured}</p>
               )}
             </div>
           </div>
@@ -344,8 +425,8 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                 </label>
                 <Input
                   type="email"
-                  value={config.account_email}
-                  onChange={(e) => setConfig({ ...config, account_email: e.target.value })}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="email@amazon.com"
                 />
               </div>
@@ -359,7 +440,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="********"
+                    placeholder={config?.has_password ? t.passwordPlaceholder : '********'}
                     className="pr-10"
                   />
                   <button
@@ -370,87 +451,61 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
+                {config?.has_password && (
+                  <p className="text-xs text-[#6E6B67] mt-1">
+                    {language === 'zh' ? '留空以保留现有密码' : language === 'es' ? 'Dejar en blanco para mantener la contrasena actual' : 'Leave blank to keep existing password'}
+                  </p>
+                )}
               </div>
 
-              <Button variant="outline" className="w-full">
-                {t.updateCredentials}
+              <div>
+                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                  {t.marketplace}
+                </label>
+                <select
+                  value={marketplace}
+                  onChange={(e) => setMarketplace(e.target.value)}
+                  className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                >
+                  <option value="www.amazon.com.mx">Amazon Mexico (amazon.com.mx)</option>
+                  <option value="www.amazon.com">Amazon US (amazon.com)</option>
+                  <option value="www.amazon.es">Amazon Spain (amazon.es)</option>
+                </select>
+              </div>
+
+              <Button
+                onClick={handleSave}
+                disabled={isSaving || !hasChanges}
+                className="w-full bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90"
+              >
+                {isSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Save className="h-4 w-4 mr-2" />
+                )}
+                {isSaving ? t.saving : t.saveChanges}
               </Button>
             </div>
           </div>
-
-          {/* Advanced Options */}
-          <div className="rounded-xl border border-[#E4E1DD] bg-white p-6">
-            <h3 className="text-base font-semibold text-[#2C2C2C] mb-4">
-              {t.advancedOptions}
-            </h3>
-
-            <div className="space-y-4">
-              {/* Auto Verify */}
-              <div className="flex items-center justify-between p-3 rounded-lg bg-[#F9F8F6]">
-                <label className="text-sm text-[#2C2C2C]">{t.autoVerify}</label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    min={5}
-                    max={120}
-                    value={config.auto_verify_minutes}
-                    onChange={(e) => setConfig({ ...config, auto_verify_minutes: parseInt(e.target.value) || 30 })}
-                    className="w-20 text-center"
-                  />
-                  <span className="text-sm text-[#6E6B67]">{t.minutes}</span>
-                </div>
-              </div>
-
-              {/* Notify on Expiry */}
-              <div className="flex items-center justify-between p-3 rounded-lg bg-[#F9F8F6]">
-                <label className="text-sm text-[#2C2C2C]">{t.notifyExpiry}</label>
-                <input
-                  type="checkbox"
-                  checked={config.notify_on_expiry}
-                  onChange={(e) => setConfig({ ...config, notify_on_expiry: e.target.checked })}
-                  className="rounded border-gray-300 text-[#75534B] focus:ring-[#75534B]"
-                />
-              </div>
-
-              {/* Add Without Confirm */}
-              <div className="flex items-center justify-between p-3 rounded-lg bg-[#F9F8F6]">
-                <label className="text-sm text-[#2C2C2C]">{t.addWithoutConfirm}</label>
-                <input
-                  type="checkbox"
-                  checked={config.add_without_confirm}
-                  onChange={(e) => setConfig({ ...config, add_without_confirm: e.target.checked })}
-                  className="rounded border-gray-300 text-[#75534B] focus:ring-[#75534B]"
-                />
-              </div>
-
-              {/* Max Products */}
-              <div className="flex items-center justify-between p-3 rounded-lg bg-[#F9F8F6]">
-                <label className="text-sm text-[#2C2C2C]">{t.maxProducts}</label>
-                <Input
-                  type="number"
-                  min={1}
-                  max={50}
-                  value={config.max_products_per_op}
-                  onChange={(e) => setConfig({ ...config, max_products_per_op: parseInt(e.target.value) || 10 })}
-                  className="w-20 text-center"
-                />
-              </div>
-
-              {/* Delay Between Products */}
-              <div className="flex items-center justify-between p-3 rounded-lg bg-[#F9F8F6]">
-                <label className="text-sm text-[#2C2C2C]">{t.delayBetween}</label>
-                <Input
-                  type="number"
-                  min={0}
-                  max={10}
-                  value={config.delay_between_products}
-                  onChange={(e) => setConfig({ ...config, delay_between_products: parseInt(e.target.value) || 2 })}
-                  className="w-20 text-center"
-                />
-              </div>
-            </div>
-          </div>
         </>
+      )}
+
+      {/* Save button for toggle changes when disabled */}
+      {!isActive && hasChanges && (
+        <div className="rounded-xl border border-[#E4E1DD] bg-white p-4">
+          <Button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="w-full bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90"
+          >
+            {isSaving ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
+            {isSaving ? t.saving : t.saveChanges}
+          </Button>
+        </div>
       )}
     </div>
   );

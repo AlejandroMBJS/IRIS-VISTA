@@ -513,6 +513,56 @@ export const emailConfigApi = {
   },
 };
 
+// Amazon Config API
+export interface AmazonConfig {
+  id: number;
+  email: string;
+  marketplace: string;
+  has_password: boolean;
+  is_active: boolean;
+  last_login_at?: string;
+  last_test_at?: string;
+  test_status: string;
+  test_message: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AmazonConfigInput {
+  email: string;
+  password?: string;
+  marketplace?: string;
+  is_active?: boolean;
+}
+
+export interface AmazonSessionStatus {
+  is_logged_in: boolean;
+  last_activity?: string;
+  session_valid: boolean;
+}
+
+export const amazonConfigApi = {
+  get: async (): Promise<AmazonConfig> => {
+    const response = await api.get<ApiResponse<AmazonConfig>>('/admin/amazon/config');
+    return response.data.data!;
+  },
+
+  save: async (data: AmazonConfigInput): Promise<AmazonConfig> => {
+    const response = await api.put<ApiResponse<AmazonConfig>>('/admin/amazon/config', data);
+    return response.data.data!;
+  },
+
+  test: async (): Promise<{ status: string; message: string }> => {
+    const response = await api.post<ApiResponse<{ status: string; message: string }>>('/admin/amazon/test');
+    return response.data.data!;
+  },
+
+  getSessionStatus: async (): Promise<AmazonSessionStatus> => {
+    const response = await api.get<ApiResponse<AmazonSessionStatus>>('/admin/amazon/session');
+    return response.data.data!;
+  },
+};
+
 // Notifications API
 export interface NotificationData {
   id: number;

@@ -63,6 +63,7 @@ export default function RequestsPage() {
       purchaseInfo: 'Purchase Information',
       orderNumber: 'Order Number',
       purchasedBy: 'Purchased by',
+      purchaseNotes: 'Purchase Notes',
     },
     zh: {
       title: '我的请求',
@@ -111,6 +112,7 @@ export default function RequestsPage() {
       purchaseInfo: '购买信息',
       orderNumber: '订单号',
       purchasedBy: '购买人',
+      purchaseNotes: '购买备注',
     },
     es: {
       title: 'Mis Solicitudes',
@@ -159,6 +161,7 @@ export default function RequestsPage() {
       purchaseInfo: 'Información de Compra',
       orderNumber: 'Número de Orden',
       purchasedBy: 'Comprado por',
+      purchaseNotes: 'Notas de Compra',
     },
   };
 
@@ -503,7 +506,7 @@ export default function RequestsPage() {
                     )}
                     {selectedRequest.purchase_notes && (
                       <div className="pt-3 border-t border-green-200">
-                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">Notas de Compra</span>
+                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">{t.purchaseNotes}</span>
                         <p className="text-sm text-green-800 mt-1 whitespace-pre-wrap break-words leading-relaxed">{selectedRequest.purchase_notes}</p>
                       </div>
                     )}

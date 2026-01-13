@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Bell, Globe, ChevronDown, LogOut, Check, CheckCheck } from 'lucide-react';
+import { Search, Bell, Globe, ChevronDown, LogOut, Check, CheckCheck, Key, X, Eye, EyeOff, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
-import { notificationsApi, type NotificationData } from '@/lib/api';
+import { notificationsApi, authApi, type NotificationData } from '@/lib/api';
 
 export function Header() {
   const router = useRouter();
@@ -19,6 +19,17 @@ export function Header() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+
+  // Password change modal state
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPwd, setShowCurrentPwd] = useState(false);
+  const [showNewPwd, setShowNewPwd] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   // Fetch notifications
   const fetchNotifications = useCallback(async () => {
@@ -98,6 +109,17 @@ export function Header() {
       search: 'Search IRIS Vista...',
       notifications: 'Notifications',
       logout: 'Sign Out',
+      changePassword: 'Change Password',
+      passwordModalTitle: 'Change Password',
+      currentPassword: 'Current Password',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm New Password',
+      passwordMinLength: 'Minimum 6 characters',
+      passwordMismatch: 'Passwords do not match',
+      passwordChanged: 'Password changed successfully',
+      changeBtn: 'Change Password',
+      changing: 'Changing...',
+      cancel: 'Cancel',
       languages: {
         en: 'English',
         zh: '中文',
@@ -108,6 +130,17 @@ export function Header() {
       search: '搜索 IRIS Vista...',
       notifications: '通知',
       logout: '退出登录',
+      changePassword: '修改密码',
+      passwordModalTitle: '修改密码',
+      currentPassword: '当前密码',
+      newPassword: '新密码',
+      confirmPassword: '确认新密码',
+      passwordMinLength: '至少6个字符',
+      passwordMismatch: '密码不匹配',
+      passwordChanged: '密码修改成功',
+      changeBtn: '修改密码',
+      changing: '修改中...',
+      cancel: '取消',
       languages: {
         en: 'English',
         zh: '中文',
@@ -117,7 +150,18 @@ export function Header() {
     es: {
       search: 'Buscar IRIS Vista...',
       notifications: 'Notificaciones',
-      logout: 'Cerrar Sesión',
+      logout: 'Cerrar Sesion',
+      changePassword: 'Cambiar Contrasena',
+      passwordModalTitle: 'Cambiar Contrasena',
+      currentPassword: 'Contrasena Actual',
+      newPassword: 'Nueva Contrasena',
+      confirmPassword: 'Confirmar Nueva Contrasena',
+      passwordMinLength: 'Minimo 6 caracteres',
+      passwordMismatch: 'Las contrasenas no coinciden',
+      passwordChanged: 'Contrasena cambiada exitosamente',
+      changeBtn: 'Cambiar Contrasena',
+      changing: 'Cambiando...',
+      cancel: 'Cancelar',
       languages: {
         en: 'English',
         zh: '中文',
@@ -137,6 +181,46 @@ export function Header() {
   const handleLogout = async () => {
     await logout();
     router.push('/login');
+  };
+
+  const openPasswordModal = () => {
+    setShowUserMenu(false);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordError(null);
+    setPasswordSuccess(false);
+    setShowPasswordModal(true);
+  };
+
+  const handleChangePassword = async () => {
+    setPasswordError(null);
+
+    if (newPassword.length < 6) {
+      setPasswordError(t.passwordMinLength);
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError(t.passwordMismatch);
+      return;
+    }
+
+    setIsChangingPassword(true);
+
+    try {
+      await authApi.changePassword(currentPassword, newPassword);
+      setPasswordSuccess(true);
+      setTimeout(() => {
+        setShowPasswordModal(false);
+        setPasswordSuccess(false);
+      }, 1500);
+    } catch (err) {
+      console.error('Failed to change password:', err);
+      setPasswordError(err instanceof Error ? err.message : 'Failed to change password');
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
 
   const getUserInitials = () => {
@@ -328,6 +412,13 @@ export function Header() {
                   </p>
                 </div>
                 <button
+                  onClick={openPasswordModal}
+                  className="w-full px-4 py-3 text-left text-sm text-[#2C2C2C] hover:bg-[#F9F8F6] transition-colors flex items-center gap-2 border-b border-[#E4E1DD]"
+                >
+                  <Key className="h-4 w-4" />
+                  {t.changePassword}
+                </button>
+                <button
                   onClick={handleLogout}
                   className="w-full px-4 py-3 text-left text-sm text-[#D1625B] hover:bg-red-50 transition-colors flex items-center gap-2"
                 >
@@ -339,6 +430,135 @@ export function Header() {
           </div>
         </div>
       </div>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#E4E1DD]">
+              <h2 className="text-lg font-semibold text-[#2C2C2C] flex items-center gap-2">
+                <Key className="h-5 w-5 text-[#75534B]" />
+                {t.passwordModalTitle}
+              </h2>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5 text-[#6E6B67]" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-6 py-4 space-y-4">
+              {passwordSuccess ? (
+                <div className="flex flex-col items-center py-8">
+                  <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
+                  <p className="text-lg font-medium text-[#2C2C2C]">{t.passwordChanged}</p>
+                </div>
+              ) : (
+                <>
+                  {/* Current Password */}
+                  <div>
+                    <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                      {t.currentPassword}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showCurrentPwd ? 'text' : 'password'}
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        className="w-full px-4 py-2.5 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 focus:border-[#75534B] pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCurrentPwd(!showCurrentPwd)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showCurrentPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* New Password */}
+                  <div>
+                    <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                      {t.newPassword}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showNewPwd ? 'text' : 'password'}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full px-4 py-2.5 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 focus:border-[#75534B] pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPwd(!showNewPwd)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showNewPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                    <p className="text-xs text-[#6E6B67] mt-1">{t.passwordMinLength}</p>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div>
+                    <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                      {t.confirmPassword}
+                    </label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full px-4 py-2.5 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 focus:border-[#75534B]"
+                    />
+                  </div>
+
+                  {/* Error */}
+                  {passwordError && (
+                    <div className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-2 rounded-lg">
+                      <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                      <p className="text-sm">{passwordError}</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            {!passwordSuccess && (
+              <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#E4E1DD] bg-[#F9F8F6]">
+                <button
+                  onClick={() => setShowPasswordModal(false)}
+                  disabled={isChangingPassword}
+                  className="px-4 py-2 rounded-lg border border-[#E4E1DD] bg-white text-[#2C2C2C] font-medium hover:bg-[#F9F8F6] transition-colors disabled:opacity-50"
+                >
+                  {t.cancel}
+                </button>
+                <button
+                  onClick={handleChangePassword}
+                  disabled={isChangingPassword || !currentPassword || !newPassword || !confirmPassword}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                >
+                  {isChangingPassword ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {t.changing}
+                    </>
+                  ) : (
+                    <>
+                      <Key className="h-4 w-4" />
+                      {t.changeBtn}
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

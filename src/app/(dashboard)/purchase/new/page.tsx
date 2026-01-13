@@ -200,6 +200,9 @@ export default function NewPurchaseRequestPage() {
       price: 'Estimated Price',
       noImage: 'No image',
       fetchError: 'Could not fetch details. You can fill them manually.',
+      productName: 'Product name',
+      productDescription: 'Product description',
+      imageUrl: 'Image URL',
       summary: 'Summary',
       totalProducts: 'products',
       totalEstimated: 'Total Estimated',
@@ -273,6 +276,9 @@ export default function NewPurchaseRequestPage() {
       price: '预估价格',
       noImage: '无图片',
       fetchError: '无法获取详情。您可以手动填写。',
+      productName: '产品名称',
+      productDescription: '产品描述',
+      imageUrl: '图片链接',
       summary: '摘要',
       totalProducts: '个产品',
       totalEstimated: '预估总额',
@@ -345,6 +351,9 @@ export default function NewPurchaseRequestPage() {
       price: 'Precio Estimado',
       noImage: 'Sin imagen',
       fetchError: 'No se pudieron obtener los detalles. Puedes llenarlos manualmente.',
+      productName: 'Nombre del producto',
+      productDescription: 'Descripción del producto',
+      imageUrl: 'URL de imagen',
       summary: 'Resumen',
       totalProducts: 'productos',
       totalEstimated: 'Total Estimado',
@@ -1190,7 +1199,7 @@ export default function NewPurchaseRequestPage() {
                                 const newMetadata = { ...product.metadata!, image_url: e.target.value };
                                 updateProduct(product.id, 'metadata', newMetadata);
                               }}
-                              placeholder="URL imagen"
+                              placeholder={t.imageUrl}
                               className="w-20 sm:w-24 text-[10px] text-[#6E6B67] bg-transparent border-b border-[#E4E1DD] focus:border-[#75534B] focus:outline-none text-center truncate"
                             />
                           </div>
@@ -1204,14 +1213,20 @@ export default function NewPurchaseRequestPage() {
                                 const newMetadata = { ...product.metadata!, title: e.target.value };
                                 updateProduct(product.id, 'metadata', newMetadata);
                               }}
-                              placeholder={language === 'es' ? 'Nombre del producto' : language === 'zh' ? '产品名称' : 'Product name'}
+                              placeholder={t.productName}
                               className="w-full font-semibold text-[#2C2C2C] text-sm bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-1"
                             />
-                            {product.metadata.description && (
-                              <p className="text-xs text-[#6E6B67] line-clamp-2 mb-2 hidden sm:block">
-                                {product.metadata.description}
-                              </p>
-                            )}
+                            {/* Editable Description */}
+                            <textarea
+                              value={product.metadata.description || ''}
+                              onChange={(e) => {
+                                const newMetadata = { ...product.metadata!, description: e.target.value };
+                                updateProduct(product.id, 'metadata', newMetadata);
+                              }}
+                              placeholder={t.productDescription}
+                              rows={2}
+                              className="w-full text-xs text-[#6E6B67] bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-2 resize-none hidden sm:block"
+                            />
                             {/* Editable Price */}
                             <div className="flex items-center gap-2">
                               <span className="text-sm text-[#6E6B67]">{product.metadata.currency || 'MXN'} $</span>

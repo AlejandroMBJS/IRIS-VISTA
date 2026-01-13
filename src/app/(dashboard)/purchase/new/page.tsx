@@ -35,18 +35,9 @@ const generateUUID = (): string => {
   });
 };
 
-// Format price to show all significant decimals (minimum 2)
+// Format price to exactly 2 decimal places
 const formatPrice = (price: number): string => {
-  // Convert to string and check if it has more than 2 decimal places
-  const priceStr = price.toString();
-  const decimalIndex = priceStr.indexOf('.');
-  if (decimalIndex === -1) {
-    // No decimals, add .00
-    return price.toFixed(2);
-  }
-  const decimals = priceStr.length - decimalIndex - 1;
-  // Show all decimals, minimum 2
-  return price.toFixed(Math.max(2, decimals));
+  return price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 // Source type for products

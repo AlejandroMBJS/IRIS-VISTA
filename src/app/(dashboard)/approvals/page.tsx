@@ -580,41 +580,54 @@ export default function ApprovalsPage() {
                       <p className="text-sm font-medium text-[#6E6B67] mb-3">
                         {t.products} ({items.length}):
                       </p>
-                      <div className="flex flex-wrap gap-3">
-                        {items.slice(0, 4).map((item, idx) => (
+                      <div className="space-y-3">
+                        {items.slice(0, 3).map((item, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center gap-3 bg-[#F9F8F6] rounded-lg p-3 border border-[#E4E1DD]"
+                            className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]"
                           >
+                            {/* Product Image */}
                             {item.product_image_url ? (
-                              <div className="w-12 h-12 rounded bg-white border border-[#E4E1DD] overflow-hidden flex-shrink-0">
+                              <div className="w-16 h-16 rounded bg-white border border-[#E4E1DD] overflow-hidden flex-shrink-0">
                                 <Image
                                   src={item.product_image_url}
                                   alt={item.product_title}
-                                  width={48}
-                                  height={48}
+                                  width={64}
+                                  height={64}
                                   className="object-contain w-full h-full"
                                   unoptimized
                                 />
                               </div>
                             ) : (
-                              <div className="w-12 h-12 rounded bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
+                              <div className="w-16 h-16 rounded bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
                                 <Package className="h-6 w-6 text-[#6E6B67]" />
                               </div>
                             )}
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium text-[#2C2C2C] truncate max-w-[150px]">
+
+                            {/* Product Info */}
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-[#2C2C2C] truncate">
                                 {item.product_title}
                               </p>
-                              <p className="text-xs text-[#6E6B67]">
-                                x{item.quantity}
-                              </p>
+                              <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#6E6B67]">
+                                <span>{t.quantity}: {item.quantity}</span>
+                                {item.estimated_price && (
+                                  <span className="font-medium text-[#75534B]">
+                                    {item.currency || approval.currency || 'MXN'} ${((item.estimated_price || 0) * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                  </span>
+                                )}
+                                {(item.is_amazon_url || item.url) && (
+                                  <Badge variant="outline" className="bg-orange-50 border-orange-200 text-orange-700 text-xs">
+                                    {item.is_amazon_url ? 'Amazon' : t.external}
+                                  </Badge>
+                                )}
+                              </div>
                             </div>
                           </div>
                         ))}
-                        {items.length > 4 && (
-                          <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] text-sm font-medium text-[#6E6B67]">
-                            +{items.length - 4}
+                        {items.length > 3 && (
+                          <div className="flex items-center justify-center py-2 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] text-sm font-medium text-[#6E6B67]">
+                            +{items.length - 3} {t.products.toLowerCase()}
                           </div>
                         )}
                       </div>

@@ -87,6 +87,7 @@ type RequestItemResponse struct {
 type RequestResponse struct {
 	ID                 uint          `json:"id"`
 	RequestNumber      string        `json:"request_number"`
+	PONumber           string        `json:"po_number,omitempty"`
 
 	// Multi-product support
 	Items          []RequestItemResponse `json:"items,omitempty"`
@@ -158,9 +159,16 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 	// Calculate totals
 	r.CalculateTotals()
 
+	// Get PO number if it exists
+	poNumber := ""
+	if r.PONumber != nil {
+		poNumber = *r.PONumber
+	}
+
 	resp := RequestResponse{
 		ID:                 r.ID,
 		RequestNumber:      r.RequestNumber,
+		PONumber:           poNumber,
 		ProductCount:       r.ProductCount,
 		TotalEstimated:     r.TotalEstimated,
 		URL:                r.URL,

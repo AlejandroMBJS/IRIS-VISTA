@@ -1,7 +1,10 @@
 package main
 
 import (
+	"io"
 	"log"
+	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"vista-backend/config"
@@ -273,6 +276,44 @@ func main() {
 			"error":    nil,
 			"url":      input.URL,
 			"metadata": meta,
+		})
+	})
+
+	// Debug: Get raw HTML from URL to see what we're receiving
+	router.POST("/debug/fetch-html", func(c *gin.Context) {
+		var input struct {
+			URL string `json:"url" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		client := &http.Client{Timeout: 15 * time.Second}
+		req, _ := http.NewRequest("GET", input.URL, nil)
+		req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
+		req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+		req.Header.Set("Accept-Language", "es-MX,es;q=0.9,en;q=0.8")
+
+		resp, err := client.Do(req)
+		if err != nil {
+			c.JSON(200, gin.H{"error": err.Error(), "html": ""})
+			return
+		}
+		defer resp.Body.Close()
+
+		body, _ := io.ReadAll(resp.Body)
+		htmlStr := string(body)
+
+		// Return first 5000 chars to see what we get
+		if len(htmlStr) > 5000 {
+			htmlStr = htmlStr[:5000]
+		}
+
+		c.JSON(200, gin.H{
+			"status_code": resp.StatusCode,
+			"html_length": len(body),
+			"html_preview": htmlStr,
 		})
 	})
 

@@ -242,12 +242,24 @@ export default function ApprovedOrdersPage() {
   };
 
   const t = text[language];
+  type ApiFilterType = 'all' | 'amazon_cart' | 'pending_manual' | 'purchased';
+
+  const applyLocalFilter = (data: PurchaseRequest[], f: FilterType) => {
+    if (f === 'delivered') return data.filter(o => o.status === 'delivered');
+    if (f === 'cancelled') return data.filter(o => o.status === 'cancelled');
+    return data;
+  };
+
 
   const fetchOrders = async () => {
     setIsLoading(true);
     try {
-      const response = await adminApi.getApprovedOrders({ filter });
-      setOrders(response.data || []);
+      const apiFilter: ApiFilterType =
+        filter === 'delivered' || filter === 'cancelled' ? 'all' : filter;
+
+      const response = await adminApi.getApprovedOrders({ filter: apiFilter });
+      const data = response.data || [];
+      setOrders(applyLocalFilter(data, filter));
     } catch (error) {
       console.error('Failed to fetch orders:', error);
     } finally {

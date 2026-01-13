@@ -22,7 +22,13 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
-import { purchaseRequestsApi, productsApi, type ProductMetadata, type PurchaseRequestConfig, type AddToCartInput, type CreatePurchaseRequestInput, type CreatePurchaseRequestItemInput } from '@/lib/api';
+import { purchaseRequestsApi, productsApi, type ProductMetadata, type PurchaseRequestConfig, type AddToCartInput, type CreatePurchaseRequestInput, type CreatePurchaseRequestItemInput, type TranslatedText } from '@/lib/api';
+
+// Helper to get translated text based on current language
+const getTranslatedText = (translated: TranslatedText | undefined, fallback: string, lang: 'en' | 'zh' | 'es'): string => {
+  if (!translated) return fallback;
+  return translated[lang] || translated.original || fallback;
+};
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types';
 
@@ -615,12 +621,20 @@ export default function NewPurchaseRequestPage() {
             catalog_product_id: product.catalogProduct.id,
           };
         } else {
+          // Use translated title/description if available
+          const title = product.metadata?.title_translated
+            ? getTranslatedText(product.metadata.title_translated, product.metadata?.title || '', language)
+            : product.metadata?.title;
+          const description = product.metadata?.description_translated
+            ? getTranslatedText(product.metadata.description_translated, product.metadata?.description || '', language)
+            : product.metadata?.description;
+
           cartItem = {
             url: product.url,
             quantity: product.quantity,
-            product_title: product.metadata?.title,
+            product_title: title,
             product_image_url: product.metadata?.image_url,
-            product_description: product.metadata?.description,
+            product_description: description,
             estimated_price: product.metadata?.price || undefined,
             currency: product.metadata?.currency || 'MXN',
             source: 'external',
@@ -669,12 +683,20 @@ export default function NewPurchaseRequestPage() {
             currency: product.catalogProduct.currency || 'MXN',
           };
         } else {
+          // Use translated title/description if available
+          const title = product.metadata?.title_translated
+            ? getTranslatedText(product.metadata.title_translated, product.metadata?.title || '', language)
+            : product.metadata?.title;
+          const description = product.metadata?.description_translated
+            ? getTranslatedText(product.metadata.description_translated, product.metadata?.description || '', language)
+            : product.metadata?.description;
+
           return {
             url: product.url,
             quantity: product.quantity,
-            product_title: product.metadata?.title,
+            product_title: title,
             product_image_url: product.metadata?.image_url,
-            product_description: product.metadata?.description,
+            product_description: description,
             estimated_price: product.metadata?.price || undefined,
             currency: product.metadata?.currency || 'MXN',
           };
@@ -1184,7 +1206,7 @@ export default function NewPurchaseRequestPage() {
                               {product.metadata.image_url ? (
                                 <img
                                   src={product.metadata.image_url}
-                                  alt={product.metadata.title}
+                                  alt={getTranslatedText(product.metadata.title_translated, product.metadata.title, language)}
                                   className="max-w-full max-h-full object-contain"
                                 />
                               ) : (
@@ -1205,22 +1227,30 @@ export default function NewPurchaseRequestPage() {
                           </div>
 
                           <div className="flex-1 min-w-0">
-                            {/* Editable Title */}
+                            {/* Editable Title - shows translated version based on current language */}
                             <input
                               type="text"
-                              value={product.metadata.title || ''}
+                              value={getTranslatedText(product.metadata.title_translated, product.metadata.title || '', language)}
                               onChange={(e) => {
                                 const newMetadata = { ...product.metadata!, title: e.target.value };
+                                // Clear translation when user edits manually
+                                if (newMetadata.title_translated) {
+                                  newMetadata.title_translated[language] = e.target.value;
+                                }
                                 updateProduct(product.id, 'metadata', newMetadata);
                               }}
                               placeholder={t.productName}
                               className="w-full font-semibold text-[#2C2C2C] text-sm bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-1"
                             />
-                            {/* Editable Description */}
+                            {/* Editable Description - shows translated version based on current language */}
                             <textarea
-                              value={product.metadata.description || ''}
+                              value={getTranslatedText(product.metadata.description_translated, product.metadata.description || '', language)}
                               onChange={(e) => {
                                 const newMetadata = { ...product.metadata!, description: e.target.value };
+                                // Update translation when user edits manually
+                                if (newMetadata.description_translated) {
+                                  newMetadata.description_translated[language] = e.target.value;
+                                }
                                 updateProduct(product.id, 'metadata', newMetadata);
                               }}
                               placeholder={t.productDescription}

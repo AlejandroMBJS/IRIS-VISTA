@@ -343,6 +343,13 @@ export interface CreatePurchaseRequestInput {
   urgency?: 'normal' | 'urgent';
 }
 
+export interface TranslatedText {
+  original: string;
+  en: string;
+  zh: string;
+  es: string;
+}
+
 export interface ProductMetadata {
   url: string;
   title: string;
@@ -354,6 +361,8 @@ export interface ProductMetadata {
   is_amazon: boolean;
   amazon_asin: string;
   error: string | null;
+  title_translated?: TranslatedText;
+  description_translated?: TranslatedText;
 }
 
 // Public config for purchase requests page

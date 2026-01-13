@@ -14,14 +14,24 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+// TranslatedText contains text in multiple languages
+type TranslatedText struct {
+	Original string `json:"original"`
+	En       string `json:"en"`
+	Zh       string `json:"zh"`
+	Es       string `json:"es"`
+}
+
 // ProductMetadata contains extracted metadata from a product URL
 type ProductMetadata struct {
-	Title       string   `json:"title"`
-	Description string   `json:"description"`
-	ImageURL    string   `json:"image_url"`
-	Price       *float64 `json:"price,omitempty"`
-	Currency    string   `json:"currency,omitempty"`
-	SiteName    string   `json:"site_name,omitempty"`
+	Title            string          `json:"title"`
+	Description      string          `json:"description"`
+	ImageURL         string          `json:"image_url"`
+	Price            *float64        `json:"price,omitempty"`
+	Currency         string          `json:"currency,omitempty"`
+	SiteName         string          `json:"site_name,omitempty"`
+	TitleTranslated  *TranslatedText `json:"title_translated,omitempty"`
+	DescTranslated   *TranslatedText `json:"description_translated,omitempty"`
 }
 
 // Extractor extracts metadata from product URLs
@@ -868,17 +878,161 @@ func (e *Extractor) cleanTitle(title, siteName string) string {
 
 // Service wraps the Extractor for dependency injection
 type Service struct {
-	extractor *Extractor
+	extractor        *Extractor
+	enableTranslation bool
 }
 
 // NewService creates a new metadata service
 func NewService() *Service {
 	return &Service{
-		extractor: NewExtractor(),
+		extractor:        NewExtractor(),
+		enableTranslation: true,
 	}
 }
 
-// Extract extracts metadata from a URL
+// Extract extracts metadata from a URL and translates title/description
 func (s *Service) Extract(url string) (*ProductMetadata, error) {
-	return s.extractor.ExtractFromURL(url)
+	metadata, err := s.extractor.ExtractFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add translations for title and description
+	if s.enableTranslation && metadata != nil {
+		if metadata.Title != "" {
+			titleTranslated := s.translateText(metadata.Title)
+			metadata.TitleTranslated = titleTranslated
+		}
+		if metadata.Description != "" {
+			descTranslated := s.translateText(metadata.Description)
+			metadata.DescTranslated = descTranslated
+		}
+	}
+
+	return metadata, nil
+}
+
+// translateText translates text to all supported languages
+func (s *Service) translateText(text string) *TranslatedText {
+	if text == "" {
+		return nil
+	}
+
+	// Limit text length
+	if len(text) > 500 {
+		text = text[:500]
+	}
+
+	result := &TranslatedText{
+		Original: text,
+	}
+
+	// Detect source language using simple heuristic
+	sourceLang := detectLanguage(text)
+
+	// Translate to each target language
+	targetLangs := []string{"en", "zh", "es"}
+	for _, targetLang := range targetLangs {
+		var translated string
+		if sourceLang == targetLang {
+			translated = text
+		} else {
+			var err error
+			translated, err = googleTranslate(text, sourceLang, targetLang)
+			if err != nil {
+				translated = text // Fallback to original
+			}
+		}
+
+		switch targetLang {
+		case "en":
+			result.En = translated
+		case "zh":
+			result.Zh = translated
+		case "es":
+			result.Es = translated
+		}
+	}
+
+	return result
+}
+
+// detectLanguage detects the language of text using simple heuristics
+func detectLanguage(text string) string {
+	// Check for Chinese characters
+	for _, r := range text {
+		if r >= 0x4E00 && r <= 0x9FFF {
+			return "zh"
+		}
+	}
+
+	// Check for Spanish-specific characters
+	spanishChars := []rune{'ñ', 'Ñ', '¿', '¡', 'á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'}
+	for _, r := range text {
+		for _, sc := range spanishChars {
+			if r == sc {
+				return "es"
+			}
+		}
+	}
+
+	// Default to auto (let translator decide)
+	return "auto"
+}
+
+// googleTranslate uses Google Translate free API
+func googleTranslate(text, sourceLang, targetLang string) (string, error) {
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	// Build URL with query parameters
+	baseURL := "https://translate.googleapis.com/translate_a/single"
+	params := fmt.Sprintf("?client=gtx&sl=%s&tl=%s&dt=t&q=%s",
+		sourceLang, targetLang, strings.ReplaceAll(strings.ReplaceAll(text, " ", "%20"), "\n", "%20"))
+
+	req, err := http.NewRequest("GET", baseURL+params, nil)
+	if err != nil {
+		return text, err
+	}
+
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return text, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return text, fmt.Errorf("translation failed: %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return text, err
+	}
+
+	// Parse response - format: [[["translated","original",...],...],...]
+	var result []interface{}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return text, err
+	}
+
+	// Extract translated text
+	if len(result) > 0 {
+		if sentences, ok := result[0].([]interface{}); ok {
+			var translated strings.Builder
+			for _, sentence := range sentences {
+				if parts, ok := sentence.([]interface{}); ok && len(parts) > 0 {
+					if trans, ok := parts[0].(string); ok {
+						translated.WriteString(trans)
+					}
+				}
+			}
+			if translated.Len() > 0 {
+				return translated.String(), nil
+			}
+		}
+	}
+
+	return text, fmt.Errorf("could not parse translation")
 }

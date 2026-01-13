@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
@@ -99,6 +99,16 @@ export default function NewPurchaseRequestPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  // Ref for auto-fetch timers (defined early for cleanup)
+  const autoFetchTimersRef = useRef<Record<string, NodeJS.Timeout>>({});
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(autoFetchTimersRef.current).forEach(timer => clearTimeout(timer));
+    };
+  }, []);
 
   const text = {
     en: {
@@ -330,12 +340,17 @@ export default function NewPurchaseRequestPage() {
   });
 
   // Fetch metadata for a specific product
-  const fetchMetadata = async (productId: string) => {
-    const productIndex = products.findIndex(p => p.id === productId);
-    if (productIndex === -1) return;
+  const fetchMetadata = async (productId: string, urlOverride?: string) => {
+    // Get current URL from state using functional pattern
+    let productUrl = urlOverride || '';
 
-    const product = products[productIndex];
-    if (!product.url.trim() || product.source === 'catalog') return;
+    if (!urlOverride) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      productUrl = product.url;
+    }
+
+    if (!productUrl.trim()) return;
 
     // Update loading state
     setProducts(prev => prev.map(p =>
@@ -343,7 +358,7 @@ export default function NewPurchaseRequestPage() {
     ));
 
     try {
-      const data = await purchaseRequestsApi.extractMetadata(product.url);
+      const data = await purchaseRequestsApi.extractMetadata(productUrl);
       setProducts(prev => prev.map(p =>
         p.id === productId ? {
           ...p,
@@ -358,14 +373,14 @@ export default function NewPurchaseRequestPage() {
         p.id === productId ? {
           ...p,
           metadata: {
-            url: product.url,
+            url: productUrl,
             title: '',
             description: '',
             image_url: '',
             price: null,
             currency: 'MXN',
             site_name: '',
-            is_amazon: product.url.toLowerCase().includes('amazon'),
+            is_amazon: productUrl.toLowerCase().includes('amazon'),
             amazon_asin: '',
             error: 'Failed to fetch',
           },
@@ -376,11 +391,62 @@ export default function NewPurchaseRequestPage() {
     }
   };
 
+  // Check if string is a valid URL
+  const isValidUrl = useCallback((str: string): boolean => {
+    try {
+      const url = new URL(str);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }, []);
+
   // Update product field
   const updateProduct = (productId: string, field: keyof ProductItem, value: unknown) => {
     setProducts(prev => prev.map(p =>
       p.id === productId ? { ...p, [field]: value } : p
     ));
+
+    // Auto-fetch metadata when URL changes (with debounce for typing)
+    if (field === 'url' && typeof value === 'string') {
+      // Clear existing timer for this product
+      if (autoFetchTimersRef.current[productId]) {
+        clearTimeout(autoFetchTimersRef.current[productId]);
+      }
+
+      // If valid URL, set timer to auto-fetch after 500ms
+      if (isValidUrl(value)) {
+        const urlToFetch = value; // Capture the URL value
+        autoFetchTimersRef.current[productId] = setTimeout(() => {
+          fetchMetadata(productId, urlToFetch);
+          delete autoFetchTimersRef.current[productId];
+        }, 500);
+      }
+    }
+  };
+
+  // Handle paste event for immediate URL extraction
+  const handleUrlPaste = (productId: string, event: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedText = event.clipboardData.getData('text').trim();
+
+    if (isValidUrl(pastedText)) {
+      // Clear any existing timer
+      if (autoFetchTimersRef.current[productId]) {
+        clearTimeout(autoFetchTimersRef.current[productId]);
+        delete autoFetchTimersRef.current[productId];
+      }
+
+      // Update the URL immediately
+      setProducts(prev => prev.map(p =>
+        p.id === productId ? { ...p, url: pastedText } : p
+      ));
+
+      // Fetch metadata immediately (no delay)
+      fetchMetadata(productId, pastedText);
+
+      // Prevent the default paste to avoid double update
+      event.preventDefault();
+    }
   };
 
   // Add new external product
@@ -642,6 +708,149 @@ export default function NewPurchaseRequestPage() {
             </div>
           </div>
         </section>
+
+        {/* Catalog Modal for Selection Screen */}
+        {showCatalogModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#E4E1DD] flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <Package className="h-5 w-5 text-[#75534B]" />
+                  <h2 className="text-lg sm:text-xl font-semibold text-[#2C2C2C]">{t.catalogTitle}</h2>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowCatalogModal(false);
+                    if (products.length > 0) {
+                      setView('form');
+                    }
+                  }}
+                  className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors"
+                >
+                  <X className="h-5 w-5 text-[#6E6B67]" />
+                </button>
+              </div>
+
+              {/* Filters */}
+              <div className="px-4 sm:px-6 py-4 border-b border-[#E4E1DD] flex-shrink-0">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6E6B67]" />
+                    <input
+                      type="text"
+                      value={catalogSearch}
+                      onChange={(e) => setCatalogSearch(e.target.value)}
+                      placeholder={t.searchPlaceholder}
+                      className="w-full rounded-lg border border-[#E4E1DD] bg-white py-2 pl-10 pr-4 text-sm text-[#2C2C2C] placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none"
+                    />
+                  </div>
+                  <select
+                    value={catalogCategory}
+                    onChange={(e) => setCatalogCategory(e.target.value)}
+                    className="rounded-lg border border-[#E4E1DD] bg-white py-2 px-3 text-sm text-[#2C2C2C] focus:border-[#75534B] focus:outline-none"
+                  >
+                    <option value="">{t.allCategories}</option>
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Products Grid */}
+              <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
+                {catalogLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+                  </div>
+                ) : filteredCatalogProducts.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Package className="h-12 w-12 text-[#9B9792] mx-auto mb-4" />
+                    <p className="text-[#6E6B67]">{t.noProductsFound}</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredCatalogProducts.map(product => {
+                      const isAdded = products.some(p => p.source === 'catalog' && p.catalogProduct?.id === product.id);
+                      const isOutOfStock = product.stock <= 0;
+
+                      return (
+                        <div
+                          key={product.id}
+                          className={`bg-[#F9F8F6] rounded-lg p-4 border ${isAdded ? 'border-[#75534B]' : 'border-transparent'}`}
+                        >
+                          <div className="w-full h-24 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center mb-3 overflow-hidden">
+                            {product.image_url ? (
+                              <img
+                                src={product.image_url}
+                                alt={product.name}
+                                className="max-w-full max-h-full object-contain"
+                              />
+                            ) : product.image_emoji ? (
+                              <span className="text-4xl">{product.image_emoji}</span>
+                            ) : (
+                              <Package className="h-8 w-8 text-[#9B9792]" />
+                            )}
+                          </div>
+                          <h4 className="font-medium text-[#2C2C2C] text-sm line-clamp-2 mb-1">
+                            {product.name}
+                          </h4>
+                          <p className="text-xs text-[#9B9792] mb-2">
+                            {product.sku && `SKU: ${product.sku} · `}
+                            {t.stock}: {product.stock}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-[#75534B]">
+                              ${product.price.toFixed(2)}
+                            </span>
+                            <button
+                              onClick={() => addCatalogProductToRequest(product)}
+                              disabled={isOutOfStock}
+                              className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
+                                isAdded
+                                  ? 'bg-[#75534B] text-white'
+                                  : isOutOfStock
+                                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                  : 'bg-[#75534B]/10 text-[#75534B] hover:bg-[#75534B]/20'
+                              }`}
+                            >
+                              {isAdded ? (
+                                <CheckCircle className="h-4 w-4" />
+                              ) : isOutOfStock ? (
+                                t.outOfStock
+                              ) : (
+                                <Plus className="h-4 w-4" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[#E4E1DD] bg-[#F9F8F6] flex-shrink-0">
+                <p className="text-sm text-[#6E6B67]">
+                  {products.filter(p => p.source === 'catalog').length} {t.totalProducts} {t.catalogBadge.toLowerCase()}
+                </p>
+                <button
+                  onClick={() => {
+                    setShowCatalogModal(false);
+                    if (products.length > 0) {
+                      setView('form');
+                    }
+                  }}
+                  className="px-4 py-2 rounded-lg bg-[#75534B] text-white font-medium hover:bg-[#5D423C] transition-colors"
+                >
+                  {products.length > 0 ? t.close : t.close}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -653,20 +862,20 @@ export default function NewPurchaseRequestPage() {
       <section className="border-b border-[#E4E1DD] bg-white px-4 sm:px-8 py-6 sm:py-8">
         <div className="mx-auto max-w-4xl">
           <div className="flex items-center gap-3 sm:gap-4 mb-2">
-            {products.length > 0 && (
-              <button
-                onClick={() => {
-                  if (products.length === 0) {
-                    setView('selection');
-                  } else {
-                    // Go back to form with products
-                  }
-                }}
-                className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors -ml-2"
-              >
-                <ArrowLeft className="h-5 w-5 text-[#6E6B67]" />
-              </button>
-            )}
+            <button
+              onClick={() => {
+                if (products.length === 0) {
+                  setView('selection');
+                } else {
+                  // Clear products and go back to selection
+                  setProducts([]);
+                  setView('selection');
+                }
+              }}
+              className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors -ml-2"
+            >
+              <ArrowLeft className="h-5 w-5 text-[#6E6B67]" />
+            </button>
             <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#75534B] to-[#5D423C] flex items-center justify-center flex-shrink-0">
               <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
@@ -768,6 +977,7 @@ export default function NewPurchaseRequestPage() {
                             type="url"
                             value={product.url}
                             onChange={(e) => updateProduct(product.id, 'url', e.target.value)}
+                            onPaste={(e) => handleUrlPaste(product.id, e)}
                             placeholder={t.urlPlaceholder}
                             className="w-full rounded-lg border border-[#E4E1DD] bg-white py-3 pl-10 sm:pl-12 pr-4 text-sm text-[#2C2C2C] transition-all placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
                           />

@@ -8,7 +8,6 @@ import {
   ExternalLink,
   ClipboardList,
   CheckSquare,
-  Package,
   Settings,
   DollarSign,
   MoreHorizontal,
@@ -36,7 +35,6 @@ const primaryItems: NavItem[] = [
 const moreItems: NavItem[] = [
   { icon: CheckSquare, labelKey: 'approvals', href: '/approvals', roles: ['general_manager', 'admin'] },
   { icon: DollarSign, labelKey: 'orders', href: '/admin/orders', roles: ['admin', 'purchase_admin'] },
-  { icon: Package, labelKey: 'inventory', href: '/inventory' },
   { icon: Settings, labelKey: 'admin', href: '/admin', roles: ['admin'] },
 ];
 
@@ -54,7 +52,6 @@ export function MobileBottomNav() {
       requests: 'Requests',
       approvals: 'Approvals',
       orders: 'Orders',
-      inventory: 'Inventory',
       admin: 'Admin',
       more: 'More',
     },
@@ -65,7 +62,6 @@ export function MobileBottomNav() {
       requests: '请求',
       approvals: '审批',
       orders: '订单',
-      inventory: '库存',
       admin: '管理',
       more: '更多',
     },
@@ -76,7 +72,6 @@ export function MobileBottomNav() {
       requests: 'Solicitudes',
       approvals: 'Aprobaciones',
       orders: 'Órdenes',
-      inventory: 'Inventario',
       admin: 'Admin',
       more: 'Más',
     },

@@ -228,8 +228,10 @@ func (e *Extractor) findFirstSignificantImage(doc *goquery.Document, baseURL str
 func (e *Extractor) extractSiteSpecific(doc *goquery.Document, url string, metadata *ProductMetadata) {
 	lowerURL := strings.ToLower(url)
 
-	// Amazon
-	if strings.Contains(lowerURL, "amazon.com") || strings.Contains(lowerURL, "amazon.com.mx") {
+	// Amazon (including shortened URLs like a.co and amzn.to)
+	if strings.Contains(lowerURL, "amazon.com") || strings.Contains(lowerURL, "amazon.com.mx") ||
+		strings.Contains(lowerURL, "a.co/") || strings.Contains(lowerURL, "amzn.to/") ||
+		strings.Contains(lowerURL, "amzn.com/") {
 		e.extractAmazon(doc, metadata)
 	}
 

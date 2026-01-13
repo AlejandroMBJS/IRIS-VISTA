@@ -33,6 +33,14 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 type FilterType = 'all' | 'amazon_cart' | 'pending_manual' | 'purchased';
 
+// Get display number - PO number if available (for approved orders), otherwise request number
+const getDisplayNumber = (request: PurchaseRequest): string => {
+  if (request.po_number) {
+    return request.po_number;
+  }
+  return request.request_number;
+};
+
 export default function ApprovedOrdersPage() {
   const { language } = useLanguage();
   const [orders, setOrders] = useState<PurchaseRequest[]>([]);
@@ -505,7 +513,7 @@ export default function ApprovedOrdersPage() {
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <span className="text-lg font-semibold text-[#2C2C2C]">
-                            {order.request_number}
+                            {getDisplayNumber(order)}
                           </span>
                           {getOrderStatusBadge(order)}
                         </div>
@@ -809,7 +817,7 @@ export default function ApprovedOrdersPage() {
             <div className="p-6 space-y-4">
               {/* Order Summary */}
               <div className="bg-[#F9F8F6] rounded-lg p-4 border border-[#E4E1DD]">
-                <p className="text-sm text-[#6E6B67]">{selectedOrder.request_number}</p>
+                <p className="text-sm text-[#6E6B67]">{getDisplayNumber(selectedOrder)}</p>
                 <p className="font-medium text-[#2C2C2C]">{selectedOrder.requester?.name}</p>
                 <div className="mt-2 space-y-1">
                   {getProductItems(selectedOrder).map((item, idx) => (

@@ -131,6 +131,9 @@ func (h *ApprovalHandler) ApproveRequest(c *gin.Context) {
 	request.ApprovedByID = &userID
 	request.ApprovedAt = &now
 
+	// Generate PO number when approved
+	request.PONumber = models.GeneratePONumber(h.db)
+
 	// If it's an Amazon URL, try to add to cart
 	if request.IsAmazonURL && h.amazonSvc != nil {
 		go h.addToAmazonCart(&request)

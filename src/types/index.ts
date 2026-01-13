@@ -191,6 +191,9 @@ export interface PurchaseRequest {
   rejected_at?: string;
   rejection_reason?: string;
 
+  // PO Number (assigned when approved)
+  po_number?: string;
+
   // Info request
   info_requested_at?: string;
   info_request_note?: string;

@@ -1,0 +1,36 @@
+ Option 1: Remove all requests only (keep users)
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM request_histories;
+  DELETE FROM purchase_request_items;
+  DELETE FROM purchase_requests;
+  DELETE FROM cart_items;
+  DELETE FROM notifications;
+  DELETE FROM activity_logs;
+  "
+
+  Option 2: Reset everything but keep admin user
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM request_histories;
+  DELETE FROM purchase_request_items;
+  DELETE FROM purchase_requests;
+  DELETE FROM cart_items;
+  DELETE FROM notifications;
+  DELETE FROM activity_logs;
+  DELETE FROM audit_logs;
+  DELETE FROM users WHERE employee_number != 'admin';
+  "
+
+  Option 3: Complete reset (will recreate admin on restart)
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM request_histories;
+  DELETE FROM purchase_request_items;
+  DELETE FROM purchase_requests;
+  DELETE FROM cart_items;
+  DELETE FROM notifications;
+  DELETE FROM activity_logs;
+  DELETE FROM audit_logs;
+  DELETE FROM users;
+  DELETE FROM products;
+  DELETE FROM product_images;
+  "
+

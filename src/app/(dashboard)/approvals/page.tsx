@@ -33,6 +33,14 @@ import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 
 type ViewMode = 'cards' | 'table';
 
+// Get display number - PO number if approved/purchased, otherwise request number
+const getDisplayNumber = (request: PurchaseRequest): string => {
+  if ((request.status === 'approved' || request.status === 'purchased') && request.po_number) {
+    return request.po_number;
+  }
+  return request.request_number;
+};
+
 export default function ApprovalsPage() {
   const { language } = useLanguage();
   const { user } = useAuth();
@@ -365,6 +373,7 @@ export default function ApprovalsPage() {
       const query = searchQuery.toLowerCase();
       return (
         approval.request_number?.toLowerCase().includes(query) ||
+        approval.po_number?.toLowerCase().includes(query) ||
         approval.requester?.name?.toLowerCase().includes(query) ||
         approval.product_title?.toLowerCase().includes(query)
       );
@@ -531,7 +540,7 @@ export default function ApprovalsPage() {
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <span className="text-lg font-semibold text-[#2C2C2C]">
-                            {approval.request_number}
+                            {getDisplayNumber(approval)}
                           </span>
                           {approval.urgency === 'urgent' && (
                             <Badge className="bg-red-500 text-white animate-pulse">
@@ -668,7 +677,7 @@ export default function ApprovalsPage() {
               <div>
                 <div className="flex items-center gap-3">
                   <h2 className="text-xl md:text-2xl text-white font-semibold">
-                    {selectedApproval.request_number}
+                    {getDisplayNumber(selectedApproval)}
                   </h2>
                   {selectedApproval.urgency === 'urgent' && (
                     <Badge className="bg-red-500 text-white">

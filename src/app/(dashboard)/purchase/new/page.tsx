@@ -18,10 +18,11 @@ import {
   Search,
   Grid3X3,
   ArrowLeft,
+  Send,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
-import { purchaseRequestsApi, productsApi, type ProductMetadata, type PurchaseRequestConfig, type AddToCartInput } from '@/lib/api';
+import { purchaseRequestsApi, productsApi, type ProductMetadata, type PurchaseRequestConfig, type AddToCartInput, type CreatePurchaseRequestInput, type CreatePurchaseRequestItemInput } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types';
 
@@ -99,6 +100,8 @@ export default function NewPurchaseRequestPage() {
 
   // Multi-product state
   const [products, setProducts] = useState<ProductItem[]>([]);
+  const [justification, setJustification] = useState('');
+  const [urgency, setUrgency] = useState<'normal' | 'urgent'>('normal');
 
   // Config state
   const [config, setConfig] = useState<PurchaseRequestConfig | null>(null);
@@ -114,8 +117,10 @@ export default function NewPurchaseRequestPage() {
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingDirect, setIsSubmittingDirect] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [successType, setSuccessType] = useState<'cart' | 'direct'>('cart');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Ref for auto-fetch timers (defined early for cleanup)
@@ -184,10 +189,14 @@ export default function NewPurchaseRequestPage() {
       addFromCatalog: 'Add from Catalog',
       removeProduct: 'Remove',
       submit: 'Add to Cart',
+      submitForApproval: 'Submit for Approval',
+      submittingApproval: 'Submitting for Approval...',
       addingToCart: 'Adding to Cart...',
       addedToCart: 'Added to Cart!',
       goToCart: 'Go to Cart',
       submitting: 'Submitting...',
+      directSubmitSuccess: 'Request Submitted!',
+      directSubmitMessage: 'Your purchase request has been submitted for approval.',
       success: 'Added to Cart!',
       successMessage: 'Your products have been added to the cart. Go to cart to review and submit your purchase request.',
       viewRequests: 'Go to Cart',
@@ -253,10 +262,14 @@ export default function NewPurchaseRequestPage() {
       addFromCatalog: '从目录添加',
       removeProduct: '删除',
       submit: '加入购物车',
+      submitForApproval: '提交审批',
+      submittingApproval: '正在提交审批...',
       addingToCart: '正在添加...',
       addedToCart: '已添加到购物车！',
       goToCart: '去购物车',
       submitting: '提交中...',
+      directSubmitSuccess: '请求已提交！',
+      directSubmitMessage: '您的采购请求已提交审批。',
       success: '已添加到购物车！',
       successMessage: '您的产品已添加到购物车。去购物车查看并提交采购请求。',
       viewRequests: '去购物车',
@@ -321,10 +334,14 @@ export default function NewPurchaseRequestPage() {
       addFromCatalog: 'Agregar del Catalogo',
       removeProduct: 'Eliminar',
       submit: 'Agregar al Carrito',
+      submitForApproval: 'Enviar para Aprobacion',
+      submittingApproval: 'Enviando para Aprobacion...',
       addingToCart: 'Agregando...',
       addedToCart: 'Agregado al Carrito!',
       goToCart: 'Ir al Carrito',
       submitting: 'Enviando...',
+      directSubmitSuccess: 'Solicitud Enviada!',
+      directSubmitMessage: 'Tu solicitud de compra ha sido enviada para aprobacion.',
       success: 'Agregado al Carrito!',
       successMessage: 'Tus productos han sido agregados al carrito. Ve al carrito para revisar y enviar tu solicitud de compra.',
       viewRequests: 'Ir al Carrito',
@@ -549,12 +566,14 @@ export default function NewPurchaseRequestPage() {
   };
 
   // Validate form
-  const validateForm = (): string | null => {
+  const validateForm = (requireJustification: boolean = false): string | null => {
     if (products.length === 0) return t.minOneProduct;
 
     for (const product of products) {
       if (product.source === 'external' && !product.url.trim()) return t.urlRequired;
     }
+
+    if (requireJustification && !justification.trim()) return t.justificationRequired;
 
     return null;
   };
@@ -611,6 +630,7 @@ export default function NewPurchaseRequestPage() {
         await addToCart(cartItem);
       }
 
+      setSuccessType('cart');
       setSuccess(true);
       setShowConfirmModal(false);
     } catch (err) {
@@ -621,8 +641,68 @@ export default function NewPurchaseRequestPage() {
     }
   };
 
+  // Handle direct submit for approval (bypasses cart)
+  const handleDirectSubmit = async () => {
+    // Validate with justification required
+    const validationError = validateForm(true);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setIsSubmittingDirect(true);
+    setError(null);
+
+    try {
+      // Build the request items
+      const items: CreatePurchaseRequestItemInput[] = products.map(product => {
+        if (product.source === 'catalog' && product.catalogProduct) {
+          const productUrl = product.catalogProduct.product_url ||
+            `catalog://product/${product.catalogProduct.id}`;
+          return {
+            url: productUrl,
+            quantity: product.quantity,
+            product_title: product.catalogProduct.name,
+            product_image_url: product.catalogProduct.image_url,
+            product_description: product.catalogProduct.description,
+            estimated_price: product.catalogProduct.price,
+            currency: product.catalogProduct.currency || 'MXN',
+          };
+        } else {
+          return {
+            url: product.url,
+            quantity: product.quantity,
+            product_title: product.metadata?.title,
+            product_image_url: product.metadata?.image_url,
+            product_description: product.metadata?.description,
+            estimated_price: product.metadata?.price || undefined,
+            currency: product.metadata?.currency || 'MXN',
+          };
+        }
+      });
+
+      const requestData: CreatePurchaseRequestInput = {
+        items,
+        justification: justification.trim(),
+        urgency,
+      };
+
+      await purchaseRequestsApi.create(requestData);
+
+      setSuccessType('direct');
+      setSuccess(true);
+    } catch (err) {
+      console.error('Failed to submit request:', err);
+      setError(err instanceof Error ? err.message : 'Failed to submit request');
+    } finally {
+      setIsSubmittingDirect(false);
+    }
+  };
+
   const resetForm = () => {
     setProducts([]);
+    setJustification('');
+    setUrgency('normal');
     setError(null);
     setSuccess(false);
     setShowConfirmModal(false);
@@ -658,20 +738,25 @@ export default function NewPurchaseRequestPage() {
 
   // Success screen
   if (success) {
+    const isDirectSubmit = successType === 'direct';
     return (
       <div className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-8">
         <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-semibold text-[#2C2C2C] mb-2">{t.success}</h2>
-          <p className="text-[#6E6B67] mb-6">{t.successMessage}</p>
+          <h2 className="text-2xl font-semibold text-[#2C2C2C] mb-2">
+            {isDirectSubmit ? t.directSubmitSuccess : t.success}
+          </h2>
+          <p className="text-[#6E6B67] mb-6">
+            {isDirectSubmit ? t.directSubmitMessage : t.successMessage}
+          </p>
           <div className="flex gap-3">
             <button
-              onClick={() => router.push('/cart')}
+              onClick={() => router.push(isDirectSubmit ? '/requests' : '/cart')}
               className="flex-1 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-3 text-white font-medium"
             >
-              {t.viewRequests}
+              {isDirectSubmit ? (language === 'es' ? 'Ver Mis Solicitudes' : language === 'zh' ? '查看我的请求' : 'View My Requests') : t.viewRequests}
             </button>
             <button
               onClick={resetForm}
@@ -1221,6 +1306,62 @@ export default function NewPurchaseRequestPage() {
               </div>
             </div>
 
+            {/* Justification & Urgency - Optional for cart, required for direct submit */}
+            <div className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6">
+              <div className="space-y-4">
+                {/* Justification */}
+                <div>
+                  <label className="block text-sm font-medium text-[#6E6B67] mb-2">
+                    {t.justification}
+                    <span className="text-xs text-[#9B9792] ml-2">
+                      ({language === 'es' ? 'requerido para enviar directamente' : language === 'zh' ? '直接提交时必填' : 'required for direct submit'})
+                    </span>
+                  </label>
+                  <textarea
+                    value={justification}
+                    onChange={(e) => setJustification(e.target.value)}
+                    placeholder={t.justificationPlaceholder}
+                    rows={3}
+                    className="w-full rounded-lg border border-[#E4E1DD] bg-white py-3 px-4 text-sm text-[#2C2C2C] transition-all placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 resize-none"
+                  />
+                </div>
+
+                {/* Urgency - only show if config allows */}
+                {config?.allow_urgent && (
+                  <div>
+                    <label className="block text-sm font-medium text-[#6E6B67] mb-2">
+                      {t.urgency}
+                    </label>
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setUrgency('normal')}
+                        className={`flex-1 flex items-center justify-center gap-2 rounded-lg border py-2.5 px-4 text-sm font-medium transition-all ${
+                          urgency === 'normal'
+                            ? 'border-[#75534B] bg-[#75534B]/10 text-[#75534B]'
+                            : 'border-[#E4E1DD] text-[#6E6B67] hover:border-[#75534B]'
+                        }`}
+                      >
+                        {t.normal}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUrgency('urgent')}
+                        className={`flex-1 flex items-center justify-center gap-2 rounded-lg border py-2.5 px-4 text-sm font-medium transition-all ${
+                          urgency === 'urgent'
+                            ? 'border-[#E08A4B] bg-[#E08A4B]/10 text-[#E08A4B]'
+                            : 'border-[#E4E1DD] text-[#6E6B67] hover:border-[#E08A4B]'
+                        }`}
+                      >
+                        <Zap className="h-4 w-4" />
+                        {t.urgent}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Error */}
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
@@ -1229,16 +1370,39 @@ export default function NewPurchaseRequestPage() {
               </div>
             )}
 
-            {/* Submit */}
-            <button
-              type="button"
-              onClick={handleReview}
-              disabled={isSubmitting || products.length === 0}
-              className="w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-4 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              {t.submit}
-            </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Add to Cart Button */}
+              <button
+                type="button"
+                onClick={handleReview}
+                disabled={isSubmitting || isSubmittingDirect || products.length === 0}
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-[#75534B] px-6 py-4 text-[#75534B] font-medium transition-all hover:bg-[#75534B]/5 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {t.submit}
+              </button>
+
+              {/* Direct Submit for Approval Button */}
+              <button
+                type="button"
+                onClick={handleDirectSubmit}
+                disabled={isSubmitting || isSubmittingDirect || products.length === 0}
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-4 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmittingDirect ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    {t.submittingApproval}
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-5 w-5" />
+                    {t.submitForApproval}
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </section>

@@ -68,6 +68,9 @@ type PurchaseRequest struct {
 	InfoRequestedAt *time.Time `json:"info_requested_at,omitempty"`
 	InfoRequestNote string     `gorm:"type:text" json:"info_request_note,omitempty"`
 
+	// Purchase Order number (assigned when approved)
+	PONumber string `gorm:"uniqueIndex;size:50" json:"po_number,omitempty"`
+
 	// Purchase completion (when admin marks as purchased)
 	PurchasedByID *uint      `json:"purchased_by_id,omitempty"`
 	PurchasedBy   *User      `gorm:"foreignKey:PurchasedByID" json:"purchased_by,omitempty"`
@@ -130,12 +133,25 @@ func (pr *PurchaseRequest) HasAmazonItems() bool {
 	return pr.IsAmazonURL
 }
 
-// GenerateRequestNumber generates a unique request number
+// GenerateRequestNumber generates a unique purchase request number (PR-YYYY-XXXX)
 func GenerateRequestNumber(db *gorm.DB) string {
 	var count int64
 	year := time.Now().Year()
 	db.Model(&PurchaseRequest{}).Where("STRFTIME('%Y', created_at) = ?", fmt.Sprintf("%d", year)).Count(&count)
-	return fmt.Sprintf("REQ-%d-%04d", year, count+1)
+	return fmt.Sprintf("PR-%d-%04d", year, count+1)
+}
+
+// GeneratePONumber generates a unique purchase order number (PO-YYYY-XXXX)
+// This is called when a request is approved
+func GeneratePONumber(db *gorm.DB) string {
+	var count int64
+	year := time.Now().Year()
+	// Count approved requests that have a PO number this year
+	db.Model(&PurchaseRequest{}).
+		Where("po_number IS NOT NULL AND po_number != ''").
+		Where("STRFTIME('%Y', approved_at) = ?", fmt.Sprintf("%d", year)).
+		Count(&count)
+	return fmt.Sprintf("PO-%d-%04d", year, count+1)
 }
 
 // CanBeCancelled checks if the request can be cancelled

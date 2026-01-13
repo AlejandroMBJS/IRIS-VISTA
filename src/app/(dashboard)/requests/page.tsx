@@ -34,6 +34,14 @@ const formatPrice = (price: number): string => {
   return price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
+// Get display number - PO number if approved/purchased, otherwise request number
+const getDisplayNumber = (request: PurchaseRequest): string => {
+  if ((request.status === 'approved' || request.status === 'purchased') && request.po_number) {
+    return request.po_number;
+  }
+  return request.request_number;
+};
+
 type FilterType = 'all' | 'pending' | 'approved' | 'purchased' | 'rejected';
 
 export default function RequestsPage() {
@@ -386,7 +394,7 @@ export default function RequestsPage() {
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <span className="text-lg font-semibold text-[#2C2C2C]">
-                            {request.request_number}
+                            {getDisplayNumber(request)}
                           </span>
                           {getStatusBadge(request.status)}
                         </div>
@@ -534,7 +542,7 @@ export default function RequestsPage() {
             <div className="bg-gradient-to-r from-[#75534B] to-[#5D423C] p-6 rounded-t-xl flex items-center justify-between flex-shrink-0">
               <div>
                 <h2 className="text-2xl text-white font-semibold mb-1">
-                  {selectedRequest.request_number}
+                  {getDisplayNumber(selectedRequest)}
                 </h2>
                 <div className="flex items-center gap-2">
                   {getStatusBadge(selectedRequest.status)}

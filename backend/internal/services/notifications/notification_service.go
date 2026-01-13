@@ -71,7 +71,12 @@ func (s *NotificationService) NotifyRequestCreated(request *models.PurchaseReque
 
 // NotifyRequestApproved sends notification to requester when their request is approved
 func (s *NotificationService) NotifyRequestApproved(request *models.PurchaseRequest) error {
-	title := fmt.Sprintf("Request #%s approved", request.RequestNumber)
+	// Use PO number if available, otherwise fall back to request number
+	orderNum := request.PONumber
+	if orderNum == "" {
+		orderNum = request.RequestNumber
+	}
+	title := fmt.Sprintf("Order #%s approved", orderNum)
 	message := "Your purchase request has been approved and is ready to be processed."
 
 	notification := models.NewNotification(
@@ -161,7 +166,12 @@ func (s *NotificationService) NotifyRequestInfoRequired(request *models.Purchase
 
 // NotifyRequestPurchased sends notification to requester when their order is purchased
 func (s *NotificationService) NotifyRequestPurchased(request *models.PurchaseRequest) error {
-	title := fmt.Sprintf("Order #%s completed", request.RequestNumber)
+	// Use PO number if available
+	orderNum := request.PONumber
+	if orderNum == "" {
+		orderNum = request.RequestNumber
+	}
+	title := fmt.Sprintf("Order #%s completed", orderNum)
 	message := "Your order has been marked as purchased."
 
 	notification := models.NewNotification(
@@ -198,7 +208,12 @@ func (s *NotificationService) NotifyNewApprovedOrder(request *models.PurchaseReq
 		return err
 	}
 
-	title := fmt.Sprintf("New approved order #%s", request.RequestNumber)
+	// Use PO number if available
+	orderNum := request.PONumber
+	if orderNum == "" {
+		orderNum = request.RequestNumber
+	}
+	title := fmt.Sprintf("New approved order #%s", orderNum)
 	message := fmt.Sprintf("Order from %s ready to purchase. Total: $%.2f MXN",
 		request.Requester.Name, s.getTotalEstimated(request))
 

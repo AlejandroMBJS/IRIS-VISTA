@@ -270,7 +270,7 @@ export default function RequestsPage() {
             <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
           </div>
           <Link
-            href="/catalog"
+            href="/purchase/new"
             className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
           >
             <Plus className="h-5 w-5" />
@@ -288,10 +288,10 @@ export default function RequestsPage() {
               <p className="text-[#6E6B67] mb-4">{t.noRequests}</p>
               <p className="text-sm text-[#6E6B67] mb-6">{t.createFirst}</p>
               <Link
-                href="/catalog"
+                href="/purchase/new"
                 className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
               >
-                {t.browseCatalog}
+                {t.newRequest}
               </Link>
             </div>
           ) : (

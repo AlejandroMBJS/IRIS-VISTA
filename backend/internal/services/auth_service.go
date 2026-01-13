@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrInvalidCredentials   = errors.New("invalid employee number or password")
+	ErrInvalidCredentials   = errors.New("invalid email or password")
 	ErrUserNotFound         = errors.New("user not found")
 	ErrUserPending          = errors.New("user account is pending approval")
 	ErrUserRejected         = errors.New("user registration was rejected")
@@ -31,10 +31,10 @@ func NewAuthService(db *gorm.DB, jwtService *jwt.JWTService) *AuthService {
 	}
 }
 
-// Login authenticates a user by employee number and returns tokens
-func (as *AuthService) Login(employeeNumber, password string) (*jwt.TokenPair, *models.User, error) {
+// Login authenticates a user by email and returns tokens
+func (as *AuthService) Login(email, password string) (*jwt.TokenPair, *models.User, error) {
 	var user models.User
-	if err := as.db.Where("employee_number = ?", employeeNumber).First(&user).Error; err != nil {
+	if err := as.db.Where("email = ?", email).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil, ErrInvalidCredentials
 		}

@@ -42,8 +42,8 @@ func (h *AuthHandler) logActivity(c *gin.Context, activityType models.ActivityTy
 }
 
 type LoginRequest struct {
-	EmployeeNumber string `json:"employee_number" binding:"required,min=1"`
-	Password       string `json:"password" binding:"required,min=6"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=6"`
 }
 
 type LoginResponse struct {
@@ -90,9 +90,9 @@ type RefreshResponse struct {
 	ExpiresIn    int64  `json:"expires_in"`
 }
 
-// Login handles user login with employee number
+// Login handles user login with email
 // @Summary User login
-// @Description Authenticates a user with employee number and returns JWT tokens
+// @Description Authenticates a user with email and returns JWT tokens
 // @Tags Auth
 // @Accept json
 // @Produce json
@@ -109,18 +109,18 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	tokens, user, err := h.authService.Login(req.EmployeeNumber, req.Password)
+	tokens, user, err := h.authService.Login(req.Email, req.Password)
 	if err != nil {
 		// Log failed login attempt
 		var details string
 		switch err {
 		case services.ErrInvalidCredentials:
 			details = "Invalid credentials"
-			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
-			response.Unauthorized(c, "Invalid employee number or password")
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.Email, false, details)
+			response.Unauthorized(c, "Invalid email or password")
 		case services.ErrUserPending:
 			details = "Account pending approval"
-			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.Email, false, details)
 			c.JSON(403, gin.H{
 				"success": false,
 				"error":   "Account pending approval",
@@ -129,7 +129,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 			})
 		case services.ErrUserRejected:
 			details = "Account rejected"
-			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.Email, false, details)
 			c.JSON(403, gin.H{
 				"success": false,
 				"error":   "Account registration rejected",
@@ -138,7 +138,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 			})
 		case services.ErrUserDisabled:
 			details = "Account disabled"
-			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.Email, false, details)
 			c.JSON(403, gin.H{
 				"success": false,
 				"error":   "Account disabled",
@@ -146,14 +146,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 				"message": "Your account has been disabled. Please contact the administrator.",
 			})
 		default:
-			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, err.Error())
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.Email, false, err.Error())
 			response.InternalServerError(c, "Login failed")
 		}
 		return
 	}
 
 	// Log successful login
-	h.logActivity(c, models.ActivityLogin, &user.ID, req.EmployeeNumber, true, "")
+	h.logActivity(c, models.ActivityLogin, &user.ID, req.Email, true, "")
 
 	response.Success(c, LoginResponse{
 		User: UserResponse{

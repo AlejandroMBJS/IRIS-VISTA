@@ -24,7 +24,7 @@ export interface PendingUser {
 }
 
 export interface LoginCredentials {
-  employee_number: string;
+  email: string;
   password: string;
 }
 

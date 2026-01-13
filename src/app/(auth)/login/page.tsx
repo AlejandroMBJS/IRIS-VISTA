@@ -11,7 +11,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
   const { language, setLanguage } = useLanguage();
-  const [employeeNumber, setEmployeeNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -23,13 +23,13 @@ export default function LoginPage() {
     en: {
       welcomeBack: 'Welcome back',
       signInToContinue: 'Sign in to your account to continue',
-      employeeNumber: 'Employee Number',
-      employeeNumberPlaceholder: 'Enter your employee number',
+      email: 'Email',
+      emailPlaceholder: 'Enter your email',
       password: 'Password',
       passwordPlaceholder: 'Enter your password',
       signIn: 'Sign In',
       signingIn: 'Signing in...',
-      loginError: 'Invalid employee number or password',
+      loginError: 'Invalid email or password',
       pendingError: 'Your account is awaiting admin approval. Please wait for confirmation.',
       rejectedError: 'Your registration was rejected. Please contact the administrator.',
       disabledError: 'Your account has been disabled. Please contact the administrator.',
@@ -44,13 +44,13 @@ export default function LoginPage() {
     zh: {
       welcomeBack: '欢迎回来',
       signInToContinue: '登录您的账户以继续',
-      employeeNumber: '员工编号',
-      employeeNumberPlaceholder: '输入您的员工编号',
+      email: '邮箱',
+      emailPlaceholder: '输入您的邮箱',
       password: '密码',
       passwordPlaceholder: '输入您的密码',
       signIn: '登录',
       signingIn: '登录中...',
-      loginError: '员工编号或密码错误',
+      loginError: '邮箱或密码错误',
       pendingError: '您的账户正在等待管理员审批，请耐心等待确认。',
       rejectedError: '您的注册申请已被拒绝，请联系管理员。',
       disabledError: '您的账户已被禁用，请联系管理员。',
@@ -65,13 +65,13 @@ export default function LoginPage() {
     es: {
       welcomeBack: 'Bienvenido de nuevo',
       signInToContinue: 'Inicie sesión en su cuenta para continuar',
-      employeeNumber: 'Número de Empleado',
-      employeeNumberPlaceholder: 'Ingrese su número de empleado',
+      email: 'Correo Electrónico',
+      emailPlaceholder: 'Ingrese su correo electrónico',
       password: 'Contraseña',
       passwordPlaceholder: 'Ingrese su contraseña',
       signIn: 'Iniciar Sesión',
       signingIn: 'Iniciando sesión...',
-      loginError: 'Número de empleado o contraseña inválidos',
+      loginError: 'Correo electrónico o contraseña inválidos',
       pendingError: 'Su cuenta está pendiente de aprobación. Por favor espere la confirmación.',
       rejectedError: 'Su registro fue rechazado. Por favor contacte al administrador.',
       disabledError: 'Su cuenta ha sido deshabilitada. Por favor contacte al administrador.',
@@ -100,7 +100,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login({ employee_number: employeeNumber, password });
+      await login({ email, password });
       router.push('/');
     } catch (err: unknown) {
       // Check for specific error codes from the API
@@ -205,19 +205,19 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
-              htmlFor="employeeNumber"
+              htmlFor="email"
               className="block text-sm font-medium text-[#2C2C2C] mb-1.5"
             >
-              {t.employeeNumber}
+              {t.email}
             </label>
             <input
-              id="employeeNumber"
-              type="text"
-              value={employeeNumber}
-              onChange={(e) => setEmployeeNumber(e.target.value)}
-              placeholder={t.employeeNumberPlaceholder}
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t.emailPlaceholder}
               required
-              autoComplete="username"
+              autoComplete="email"
               className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
             />
           </div>
@@ -288,7 +288,7 @@ export default function LoginPage() {
       {/* Demo credentials hint */}
       <div className="mt-4 rounded-lg bg-white/50 p-4 text-center text-xs text-[#6E6B67] border border-[#E4E1DD]/50">
         <p className="font-medium mb-1">Demo Account:</p>
-        <p>Employee Number: admin / Password: admin123</p>
+        <p>Email: admin@vista.com / Password: admin123</p>
       </div>
     </div>
   );

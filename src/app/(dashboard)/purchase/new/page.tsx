@@ -99,8 +99,6 @@ export default function NewPurchaseRequestPage() {
 
   // Multi-product state
   const [products, setProducts] = useState<ProductItem[]>([]);
-  const [justification, setJustification] = useState('');
-  const [urgency, setUrgency] = useState<'normal' | 'urgent'>('normal');
 
   // Config state
   const [config, setConfig] = useState<PurchaseRequestConfig | null>(null);
@@ -558,8 +556,6 @@ export default function NewPurchaseRequestPage() {
       if (product.source === 'external' && !product.url.trim()) return t.urlRequired;
     }
 
-    if (!justification.trim()) return t.justificationRequired;
-
     return null;
   };
 
@@ -627,8 +623,6 @@ export default function NewPurchaseRequestPage() {
 
   const resetForm = () => {
     setProducts([]);
-    setJustification('');
-    setUrgency('normal');
     setError(null);
     setSuccess(false);
     setShowConfirmModal(false);
@@ -1205,51 +1199,6 @@ export default function NewPurchaseRequestPage() {
                   {t.addFromCatalog}
                 </button>
               )}
-            </div>
-
-            {/* Justification */}
-            <div className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6">
-              <label className="block text-sm font-semibold text-[#2C2C2C] mb-2">
-                {t.justification} <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                value={justification}
-                onChange={(e) => setJustification(e.target.value)}
-                placeholder={t.justificationPlaceholder}
-                rows={4}
-                className="w-full rounded-lg border border-[#E4E1DD] bg-white py-3 px-4 text-sm text-[#2C2C2C] placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 resize-none"
-              />
-            </div>
-
-            {/* Urgency */}
-            <div className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6">
-              <label className="block text-sm font-semibold text-[#2C2C2C] mb-3">
-                {t.urgency}
-              </label>
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setUrgency('normal')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-medium text-sm transition-all ${
-                    urgency === 'normal'
-                      ? 'bg-[#75534B] text-white'
-                      : 'bg-[#F9F8F6] text-[#6E6B67] border border-[#E4E1DD] hover:bg-[#E4E1DD]'
-                  }`}
-                >
-                  {t.normal}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setUrgency('urgent')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-medium text-sm transition-all ${
-                    urgency === 'urgent'
-                      ? 'bg-[#D1625B] text-white'
-                      : 'bg-[#F9F8F6] text-[#6E6B67] border border-[#E4E1DD] hover:bg-[#E4E1DD]'
-                  }`}
-                >
-                  {t.urgent}
-                </button>
-              </div>
             </div>
 
             {/* Summary */}

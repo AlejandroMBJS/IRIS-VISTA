@@ -441,8 +441,9 @@ func (e *Extractor) extractMercadoLibre(doc *goquery.Document, metadata *Product
 	if metadata.Price == nil {
 		// Try to get the full price from the container that has both parts
 		priceContainerSelectors := []string{
-			".andes-money-amount",
 			".ui-pdp-price__second-line .andes-money-amount",
+			".andes-money-amount--cents-superscript",
+			".andes-money-amount",
 			".price-tag",
 		}
 		for _, selector := range priceContainerSelectors {
@@ -451,14 +452,42 @@ func (e *Extractor) extractMercadoLibre(doc *goquery.Document, metadata *Product
 				continue
 			}
 
-			// Get fraction (integer part)
-			fraction := strings.TrimSpace(container.Find(".andes-money-amount__fraction, .price-tag-fraction").First().Text())
-			// Get cents (decimal part)
-			cents := strings.TrimSpace(container.Find(".andes-money-amount__cents, .price-tag-cents").First().Text())
+			// Get fraction (integer part) - try multiple selectors
+			fractionSelectors := []string{
+				".andes-money-amount__fraction",
+				".price-tag-fraction",
+				"span[class*='fraction']",
+			}
+			var fraction string
+			for _, fs := range fractionSelectors {
+				if f := strings.TrimSpace(container.Find(fs).First().Text()); f != "" {
+					fraction = f
+					break
+				}
+			}
+
+			// Get cents (decimal part) - try multiple selectors
+			centsSelectors := []string{
+				".andes-money-amount__cents",
+				".price-tag-cents",
+				"span[class*='cents']",
+				"sup",
+			}
+			var cents string
+			for _, cs := range centsSelectors {
+				if c := strings.TrimSpace(container.Find(cs).First().Text()); c != "" {
+					cents = c
+					break
+				}
+			}
 
 			if fraction != "" {
 				priceStr := fraction
-				if cents != "" {
+				if cents != "" && len(cents) <= 2 {
+					// Pad cents to 2 digits if needed (e.g., "9" -> "90")
+					if len(cents) == 1 {
+						cents = cents + "0"
+					}
 					priceStr = fraction + "." + cents
 				}
 				if price, err := e.parsePrice(priceStr); err == nil && price > 0 {
@@ -474,6 +503,7 @@ func (e *Extractor) extractMercadoLibre(doc *goquery.Document, metadata *Product
 		priceSelectors := []string{
 			"[itemprop='price']",
 			".ui-pdp-price__main-container .andes-money-amount",
+			"meta[itemprop='price']",
 		}
 		for _, selector := range priceSelectors {
 			el := doc.Find(selector).First()
@@ -715,13 +745,20 @@ func (e *Extractor) parseJSONLDOffer(offer map[string]interface{}, metadata *Pro
 		return
 	}
 
-	// Try price field
+	// Try price field - handle various JSON number types
 	switch price := offer["price"].(type) {
 	case float64:
 		metadata.Price = &price
 	case int:
 		p := float64(price)
 		metadata.Price = &p
+	case int64:
+		p := float64(price)
+		metadata.Price = &p
+	case json.Number:
+		if p, err := price.Float64(); err == nil && p > 0 {
+			metadata.Price = &p
+		}
 	case string:
 		if p, err := e.parsePrice(price); err == nil && p > 0 {
 			metadata.Price = &p
@@ -736,6 +773,13 @@ func (e *Extractor) parseJSONLDOffer(offer map[string]interface{}, metadata *Pro
 		case int:
 			p := float64(price)
 			metadata.Price = &p
+		case int64:
+			p := float64(price)
+			metadata.Price = &p
+		case json.Number:
+			if p, err := price.Float64(); err == nil && p > 0 {
+				metadata.Price = &p
+			}
 		case string:
 			if p, err := e.parsePrice(price); err == nil && p > 0 {
 				metadata.Price = &p

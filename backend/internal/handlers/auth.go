@@ -1,20 +1,44 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"vista-backend/internal/middleware"
+	"vista-backend/internal/models"
 	"vista-backend/internal/services"
 	"vista-backend/pkg/response"
 )
 
 type AuthHandler struct {
 	authService *services.AuthService
+	db          *gorm.DB
 }
 
-func NewAuthHandler(authService *services.AuthService) *AuthHandler {
+func NewAuthHandler(authService *services.AuthService, db *gorm.DB) *AuthHandler {
 	return &AuthHandler{
 		authService: authService,
+		db:          db,
 	}
+}
+
+// logActivity logs an authentication activity
+func (h *AuthHandler) logActivity(c *gin.Context, activityType models.ActivityType, userID *uint, identifier string, success bool, details string) {
+	ipAddress := c.ClientIP()
+	userAgent := c.GetHeader("User-Agent")
+
+	log := models.NewActivityLog(activityType, userID, identifier, ipAddress, userAgent).
+		WithSuccess(success).
+		WithDetails(details)
+
+	// For login, set session expiry (24 hours by default)
+	if activityType == models.ActivityLogin && success {
+		expiresAt := time.Now().Add(24 * time.Hour)
+		log.WithSession("", expiresAt)
+	}
+
+	h.db.Create(log)
 }
 
 type LoginRequest struct {
@@ -87,10 +111,16 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	tokens, user, err := h.authService.Login(req.EmployeeNumber, req.Password)
 	if err != nil {
+		// Log failed login attempt
+		var details string
 		switch err {
 		case services.ErrInvalidCredentials:
+			details = "Invalid credentials"
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
 			response.Unauthorized(c, "Invalid employee number or password")
 		case services.ErrUserPending:
+			details = "Account pending approval"
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
 			c.JSON(403, gin.H{
 				"success": false,
 				"error":   "Account pending approval",
@@ -98,6 +128,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 				"message": "Your account is awaiting admin approval. Please wait for confirmation.",
 			})
 		case services.ErrUserRejected:
+			details = "Account rejected"
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
 			c.JSON(403, gin.H{
 				"success": false,
 				"error":   "Account registration rejected",
@@ -105,6 +137,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 				"message": "Your registration was rejected. Please contact the administrator.",
 			})
 		case services.ErrUserDisabled:
+			details = "Account disabled"
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, details)
 			c.JSON(403, gin.H{
 				"success": false,
 				"error":   "Account disabled",
@@ -112,10 +146,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 				"message": "Your account has been disabled. Please contact the administrator.",
 			})
 		default:
+			h.logActivity(c, models.ActivityLoginFailed, nil, req.EmployeeNumber, false, err.Error())
 			response.InternalServerError(c, "Login failed")
 		}
 		return
 	}
+
+	// Log successful login
+	h.logActivity(c, models.ActivityLogin, &user.ID, req.EmployeeNumber, true, "")
 
 	response.Success(c, LoginResponse{
 		User: UserResponse{
@@ -173,6 +211,9 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		}
 		return
 	}
+
+	// Log registration
+	h.logActivity(c, models.ActivityRegistration, &user.ID, req.EmployeeNumber, true, "New user registered")
 
 	response.Created(c, RegisterResponse{
 		Message:        "Registration successful. Please wait for admin approval.",

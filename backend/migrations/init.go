@@ -25,6 +25,7 @@ func RunMigrations(db *gorm.DB) error {
 		&models.EmailConfig{},
 		&models.AuditLog{},
 		&models.CartItem{},
+		&models.ActivityLog{},
 	)
 	if err != nil {
 		return err

@@ -14,6 +14,7 @@ import {
   DollarSign,
   ShoppingCart,
   Package,
+  Activity,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -50,6 +51,9 @@ const menuItems: MenuItem[] = [
 
   // User Management - Admin only
   { icon: Users, labelKey: 'users', href: '/admin/users', roles: ['admin'] },
+
+  // Activity Logs - Admin only
+  { icon: Activity, labelKey: 'logs', href: '/admin/logs', roles: ['admin'] },
 
   // System Admin - Admin only
   { icon: Settings, labelKey: 'admin', href: '/admin', roles: ['admin'] },
@@ -91,6 +95,7 @@ export function Sidebar() {
       analytics: 'Analytics',
       users: 'Users',
       purchaseConfig: 'Purchase Settings',
+      logs: 'Activity Logs',
       admin: 'Admin',
     },
     zh: {
@@ -103,6 +108,7 @@ export function Sidebar() {
       analytics: '分析',
       users: '用户',
       purchaseConfig: '采购设置',
+      logs: '活动日志',
       admin: '管理',
     },
     es: {
@@ -115,6 +121,7 @@ export function Sidebar() {
       analytics: 'Analítica',
       users: 'Usuarios',
       purchaseConfig: 'Config. Compras',
+      logs: 'Registro de Actividad',
       admin: 'Admin',
     },
   };

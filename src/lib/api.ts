@@ -717,4 +717,84 @@ export const notificationsApi = {
   },
 };
 
+// Activity Logs types
+export interface ActivityLog {
+  id: number;
+  user_id: number | null;
+  user_name: string;
+  user_email: string;
+  type: 'login' | 'login_failed' | 'logout' | 'token_refresh' | 'password_reset' | 'registration';
+  success: boolean;
+  ip_address: string;
+  user_agent: string;
+  details: string;
+  identifier: string;
+  session_id: string;
+  expires_at: string | null;
+  ended_at: string | null;
+  created_at: string;
+  is_active: boolean;
+  duration_seconds: number | null;
+}
+
+export interface ActivityStats {
+  total_logins: number;
+  failed_logins: number;
+  active_sessions: number;
+  unique_users: number;
+  today_logins: number;
+  today_failed_logins: number;
+}
+
+export interface ActivityLogsResponse {
+  data: ActivityLog[];
+  total: number;
+  page: number;
+  per_page: number;
+  pages: number;
+}
+
+export interface ActivityLogsFilters {
+  page?: number;
+  per_page?: number;
+  type?: string;
+  user_id?: number;
+  success?: boolean;
+  start_date?: string;
+  end_date?: string;
+  search?: string;
+}
+
+// Activity Logs API
+export const activityLogsApi = {
+  getLogs: async (filters: ActivityLogsFilters = {}): Promise<ActivityLogsResponse> => {
+    const params = new URLSearchParams();
+    if (filters.page) params.append('page', filters.page.toString());
+    if (filters.per_page) params.append('per_page', filters.per_page.toString());
+    if (filters.type) params.append('type', filters.type);
+    if (filters.user_id) params.append('user_id', filters.user_id.toString());
+    if (filters.success !== undefined) params.append('success', filters.success.toString());
+    if (filters.start_date) params.append('start_date', filters.start_date);
+    if (filters.end_date) params.append('end_date', filters.end_date);
+    if (filters.search) params.append('search', filters.search);
+
+    const response = await api.get<ApiResponse<ActivityLogsResponse>>(`/admin/activity-logs?${params.toString()}`);
+    return response.data.data!;
+  },
+
+  getStats: async (): Promise<ActivityStats> => {
+    const response = await api.get<ApiResponse<ActivityStats>>('/admin/activity-logs/stats');
+    return response.data.data!;
+  },
+
+  getActiveSessions: async (): Promise<ActivityLog[]> => {
+    const response = await api.get<ApiResponse<ActivityLog[]>>('/admin/activity-logs/sessions');
+    return response.data.data!;
+  },
+
+  endSession: async (id: number): Promise<void> => {
+    await api.delete(`/admin/activity-logs/sessions/${id}`);
+  },
+};
+
 export default api;

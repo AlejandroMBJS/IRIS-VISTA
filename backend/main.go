@@ -52,7 +52,7 @@ func main() {
 	emailService := email.NewEmailService(db)
 
 	// Initialize handlers
-	authHandler := handlers.NewAuthHandler(authService)
+	authHandler := handlers.NewAuthHandler(authService, db)
 	userHandler := handlers.NewUserHandler(db)
 	productHandler := handlers.NewProductHandler(db)
 	requestHandler := handlers.NewRequestHandler(db)
@@ -63,6 +63,7 @@ func main() {
 	notificationHandler := handlers.NewNotificationHandler(db)
 	uploadHandler := handlers.NewUploadHandler()
 	cartHandler := handlers.NewCartHandler(db, metadataService)
+	activityLogHandler := handlers.NewActivityLogHandler(db)
 
 	// Setup router
 	router := gin.Default()
@@ -225,6 +226,17 @@ func main() {
 			emailConfig.GET("/email-config", emailConfigHandler.GetEmailConfig)
 			emailConfig.PUT("/email-config", emailConfigHandler.SaveEmailConfig)
 			emailConfig.POST("/email-config/test", emailConfigHandler.TestEmailConfig)
+		}
+
+		// Activity logs routes (Admin only)
+		activityLogs := v1.Group("/admin/activity-logs")
+		activityLogs.Use(middleware.Auth(jwtService))
+		activityLogs.Use(middleware.RequireAdmin())
+		{
+			activityLogs.GET("", activityLogHandler.GetActivityLogs)
+			activityLogs.GET("/stats", activityLogHandler.GetActivityStats)
+			activityLogs.GET("/sessions", activityLogHandler.GetActiveSessions)
+			activityLogs.DELETE("/sessions/:id", activityLogHandler.EndSession)
 		}
 
 		// Approved orders management (Admin + PurchaseAdmin)

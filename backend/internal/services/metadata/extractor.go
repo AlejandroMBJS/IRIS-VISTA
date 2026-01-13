@@ -531,12 +531,48 @@ func (e *Extractor) parsePrice(priceStr string) (float64, error) {
 	// Remove currency symbols and whitespace
 	priceStr = strings.TrimSpace(priceStr)
 
-	// Remove common currency symbols and characters
+	// Remove common currency symbols and characters (but keep commas and dots for now)
 	replacer := strings.NewReplacer(
 		"$", "", "USD", "", "MXN", "", "€", "", "£", "",
-		",", "", " ", "", "\u00a0", "", // non-breaking space
+		" ", "", "\u00a0", "", // non-breaking space
 	)
 	priceStr = replacer.Replace(priceStr)
+
+	// Handle different decimal separators
+	// Format: 1,234.56 (US) or 1.234,56 (Latin/Europe)
+	// Count dots and commas to determine format
+	dotCount := strings.Count(priceStr, ".")
+	commaCount := strings.Count(priceStr, ",")
+
+	if commaCount > 0 && dotCount > 0 {
+		// Both present - determine which is decimal separator
+		lastDot := strings.LastIndex(priceStr, ".")
+		lastComma := strings.LastIndex(priceStr, ",")
+
+		if lastComma > lastDot {
+			// Comma is decimal separator (1.234,56)
+			priceStr = strings.ReplaceAll(priceStr, ".", "")
+			priceStr = strings.Replace(priceStr, ",", ".", 1)
+		} else {
+			// Dot is decimal separator (1,234.56)
+			priceStr = strings.ReplaceAll(priceStr, ",", "")
+		}
+	} else if commaCount == 1 && dotCount == 0 {
+		// Only comma - check if it's decimal separator
+		// If comma is followed by exactly 2 digits at end, it's decimal
+		parts := strings.Split(priceStr, ",")
+		if len(parts) == 2 && len(parts[1]) <= 2 {
+			// Comma is decimal separator (269,99)
+			priceStr = strings.Replace(priceStr, ",", ".", 1)
+		} else {
+			// Comma is thousand separator (1,234)
+			priceStr = strings.ReplaceAll(priceStr, ",", "")
+		}
+	} else if commaCount > 1 {
+		// Multiple commas - thousand separators (1,234,567)
+		priceStr = strings.ReplaceAll(priceStr, ",", "")
+	}
+	// If only dots, keep as-is (standard format)
 
 	// Extract numeric value using regex
 	re := regexp.MustCompile(`[\d.]+`)

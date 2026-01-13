@@ -2,21 +2,34 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ClipboardList, Plus, Loader2, Eye, X, Clock, CheckCircle, XCircle, ArrowRight, User, MessageSquare, FileText, Package } from 'lucide-react';
+import Image from 'next/image';
+import {
+  ClipboardList,
+  Plus,
+  Loader2,
+  X,
+  Clock,
+  CheckCircle,
+  XCircle,
+  User,
+  Package,
+  Calendar,
+  ExternalLink,
+  FileText,
+  MessageSquare,
+  AlertCircle,
+  RefreshCw,
+} from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { requestsApi } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
-import type { PurchaseRequest } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 
 // Format price to show all significant decimals (minimum 2)
 const formatPrice = (price: number): string => {
-  const priceStr = price.toString();
-  const decimalIndex = priceStr.indexOf('.');
-  if (decimalIndex === -1) {
-    return price.toFixed(2);
-  }
-  const decimals = priceStr.length - decimalIndex - 1;
-  return price.toFixed(Math.max(2, decimals));
+  return price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 export default function RequestsPage() {
@@ -29,160 +42,136 @@ export default function RequestsPage() {
   const text = {
     en: {
       title: 'My Requests',
-      subtitle: 'View and manage your purchase requests',
+      subtitle: 'View and track your purchase requests',
       newRequest: 'New Request',
-      requestNumber: 'Request Number',
-      product: 'Product',
-      amount: 'Amount',
-      date: 'Date',
-      status: 'Status',
-      actions: 'Actions',
-      view: 'View',
       noRequests: 'No requests found',
-      createFirst: 'Create your first request from the catalog',
-      browseCatalog: 'Browse Catalog',
-      requestDetails: 'Request Details',
-      costCenter: 'Cost Center',
-      purpose: 'Purpose',
-      items: 'Items',
-      item: 'Item',
-      quantity: 'Quantity',
-      unitPrice: 'Unit Price',
+      createFirst: 'Create your first purchase request',
+      refresh: 'Refresh',
+      products: 'Products',
       total: 'Total',
-      statuses: {
-        pending: 'Pending',
-        approved: 'Approved',
-        rejected: 'Rejected',
-        processing: 'Processing',
-        completed: 'Completed',
-        cancelled: 'Cancelled',
-      },
+      quantity: 'Qty',
+      viewDetails: 'View Details',
+      close: 'Close',
+      requestDetails: 'Request Details',
+      status: 'Status',
+      date: 'Date',
+      justification: 'Justification',
       history: 'History',
-      historyActions: {
-        created: 'Request Created',
-        approved: 'Approved',
-        rejected: 'Rejected',
-        returned: 'Returned for Revision',
-        cancelled: 'Cancelled',
-        modified: 'Modified',
-      },
-      by: 'by',
       noHistory: 'No history available',
       rejectionReason: 'Rejection Reason',
-      notes: 'Notes',
-      adminNotes: 'Internal Notes',
       purchaseInfo: 'Purchase Information',
       orderNumber: 'Order Number',
       purchasedBy: 'Purchased by',
       purchaseNotes: 'Purchase Notes',
+      adminNotes: 'Internal Notes',
+      statuses: {
+        pending: 'Pending Approval',
+        approved: 'Approved',
+        rejected: 'Rejected',
+        purchased: 'Purchased',
+        info_requested: 'Info Requested',
+        cancelled: 'Cancelled',
+      },
+      historyActions: {
+        created: 'Request Created',
+        approved: 'Approved',
+        rejected: 'Rejected',
+        returned: 'Info Requested',
+        cancelled: 'Cancelled',
+        modified: 'Modified',
+        purchased: 'Purchased',
+      },
     },
     zh: {
       title: '我的请求',
-      subtitle: '查看和管理您的采购请求',
+      subtitle: '查看和跟踪您的采购请求',
       newRequest: '新建请求',
-      requestNumber: '请求编号',
-      product: '产品',
-      amount: '金额',
-      date: '日期',
-      status: '状态',
-      actions: '操作',
-      view: '查看',
       noRequests: '没有找到请求',
-      createFirst: '从目录创建您的第一个请求',
-      browseCatalog: '浏览目录',
-      requestDetails: '请求详情',
-      costCenter: '成本中心',
-      purpose: '目的',
-      items: '商品',
-      item: '商品',
-      quantity: '数量',
-      unitPrice: '单价',
+      createFirst: '创建您的第一个采购请求',
+      refresh: '刷新',
+      products: '产品',
       total: '总计',
-      statuses: {
-        pending: '待审批',
-        approved: '已批准',
-        rejected: '已拒绝',
-        processing: '处理中',
-        completed: '已完成',
-        cancelled: '已取消',
-      },
+      quantity: '数量',
+      viewDetails: '查看详情',
+      close: '关闭',
+      requestDetails: '请求详情',
+      status: '状态',
+      date: '日期',
+      justification: '理由',
       history: '历史记录',
-      historyActions: {
-        created: '请求已创建',
-        approved: '已批准',
-        rejected: '已拒绝',
-        returned: '退回修改',
-        cancelled: '已取消',
-        modified: '已修改',
-      },
-      by: '由',
       noHistory: '暂无历史记录',
       rejectionReason: '拒绝原因',
-      notes: '备注',
-      adminNotes: '内部备注',
       purchaseInfo: '购买信息',
       orderNumber: '订单号',
       purchasedBy: '购买人',
       purchaseNotes: '购买备注',
+      adminNotes: '内部备注',
+      statuses: {
+        pending: '待审批',
+        approved: '已批准',
+        rejected: '已拒绝',
+        purchased: '已购买',
+        info_requested: '需要信息',
+        cancelled: '已取消',
+      },
+      historyActions: {
+        created: '请求已创建',
+        approved: '已批准',
+        rejected: '已拒绝',
+        returned: '需要信息',
+        cancelled: '已取消',
+        modified: '已修改',
+        purchased: '已购买',
+      },
     },
     es: {
       title: 'Mis Solicitudes',
-      subtitle: 'Ver y gestionar sus solicitudes de compra',
+      subtitle: 'Ver y seguir sus solicitudes de compra',
       newRequest: 'Nueva Solicitud',
-      requestNumber: 'Número de Solicitud',
-      product: 'Producto',
-      amount: 'Monto',
-      date: 'Fecha',
-      status: 'Estado',
-      actions: 'Acciones',
-      view: 'Ver',
       noRequests: 'No se encontraron solicitudes',
-      createFirst: 'Cree su primera solicitud desde el catálogo',
-      browseCatalog: 'Navegar Catálogo',
-      requestDetails: 'Detalles de la Solicitud',
-      costCenter: 'Centro de Costos',
-      purpose: 'Propósito',
-      items: 'Artículos',
-      item: 'Artículo',
-      quantity: 'Cantidad',
-      unitPrice: 'Precio Unitario',
+      createFirst: 'Cree su primera solicitud de compra',
+      refresh: 'Actualizar',
+      products: 'Productos',
       total: 'Total',
-      statuses: {
-        pending: 'Pendiente',
-        approved: 'Aprobado',
-        rejected: 'Rechazado',
-        processing: 'Procesando',
-        completed: 'Completado',
-        cancelled: 'Cancelado',
-      },
+      quantity: 'Cant',
+      viewDetails: 'Ver Detalles',
+      close: 'Cerrar',
+      requestDetails: 'Detalles de la Solicitud',
+      status: 'Estado',
+      date: 'Fecha',
+      justification: 'Justificación',
       history: 'Historial',
-      historyActions: {
-        created: 'Solicitud Creada',
-        approved: 'Aprobado',
-        rejected: 'Rechazado',
-        returned: 'Devuelto para Revisión',
-        cancelled: 'Cancelado',
-        modified: 'Modificado',
-      },
-      by: 'por',
       noHistory: 'Sin historial disponible',
       rejectionReason: 'Motivo de Rechazo',
-      notes: 'Notas',
-      adminNotes: 'Notas Internas',
       purchaseInfo: 'Información de Compra',
       orderNumber: 'Número de Orden',
       purchasedBy: 'Comprado por',
       purchaseNotes: 'Notas de Compra',
+      adminNotes: 'Notas Internas',
+      statuses: {
+        pending: 'Pendiente',
+        approved: 'Aprobado',
+        rejected: 'Rechazado',
+        purchased: 'Comprado',
+        info_requested: 'Info Solicitada',
+        cancelled: 'Cancelado',
+      },
+      historyActions: {
+        created: 'Solicitud Creada',
+        approved: 'Aprobado',
+        rejected: 'Rechazado',
+        returned: 'Info Solicitada',
+        cancelled: 'Cancelado',
+        modified: 'Modificado',
+        purchased: 'Comprado',
+      },
     },
   };
 
   const t = text[language];
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
-
   const fetchRequests = async () => {
+    setIsLoading(true);
     try {
       const response = await requestsApi.getMyRequests({ per_page: 50 });
       setRequests(response.data || []);
@@ -192,6 +181,10 @@ export default function RequestsPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
   const viewRequestDetails = async (requestId: number) => {
     setIsLoadingDetail(true);
@@ -205,26 +198,46 @@ export default function RequestsPage() {
     }
   };
 
+  // Get product items (handles both multi-product and legacy)
+  const getProductItems = (request: PurchaseRequest): PurchaseRequestItem[] => {
+    if (request.items && request.items.length > 0) {
+      return request.items;
+    }
+    return [{
+      id: 0,
+      url: request.url || '',
+      product_title: request.product_title || 'Product',
+      product_image_url: request.product_image_url || '',
+      product_description: request.product_description,
+      estimated_price: request.estimated_price,
+      currency: request.currency,
+      quantity: request.quantity,
+      subtotal: (request.estimated_price || 0) * request.quantity,
+      is_amazon_url: request.is_amazon_url,
+      added_to_cart: request.added_to_cart,
+    }];
+  };
+
+  // Calculate total
+  const calculateTotal = (request: PurchaseRequest) => {
+    if (request.total_estimated) return request.total_estimated;
+    const items = getProductItems(request);
+    return items.reduce((sum, item) => sum + (item.estimated_price || 0) * item.quantity, 0);
+  };
+
   const getStatusBadge = (status: string) => {
-    const statusMap: { [key: string]: { bg: string; text: string } } = {
-      pending: { bg: '#E1A948', text: '#E1A948' },
-      approved: { bg: '#4BAF7E', text: '#4BAF7E' },
-      rejected: { bg: '#D1625B', text: '#D1625B' },
-      processing: { bg: '#3A6EA5', text: '#3A6EA5' },
-      completed: { bg: '#4BAF7E', text: '#4BAF7E' },
-      cancelled: { bg: '#6B7280', text: '#6B7280' },
+    const config: Record<string, { bg: string; icon: React.ReactNode }> = {
+      pending: { bg: 'bg-yellow-100 text-yellow-800', icon: <Clock className="h-3 w-3 mr-1" /> },
+      approved: { bg: 'bg-blue-100 text-blue-800', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
+      rejected: { bg: 'bg-red-100 text-red-800', icon: <XCircle className="h-3 w-3 mr-1" /> },
+      purchased: { bg: 'bg-green-100 text-green-800', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
+      info_requested: { bg: 'bg-orange-100 text-orange-800', icon: <AlertCircle className="h-3 w-3 mr-1" /> },
+      cancelled: { bg: 'bg-gray-100 text-gray-800', icon: <XCircle className="h-3 w-3 mr-1" /> },
     };
-    const s = statusMap[status] || statusMap.pending;
+    const c = config[status] || config.pending;
     return (
-      <Badge
-        style={{
-          backgroundColor: `${s.bg}15`,
-          color: s.text,
-          borderColor: `${s.text}40`,
-          borderWidth: '1px',
-        }}
-        className="font-medium"
-      >
+      <Badge className={c.bg}>
+        {c.icon}
         {t.statuses[status as keyof typeof t.statuses] || status}
       </Badge>
     );
@@ -232,162 +245,262 @@ export default function RequestsPage() {
 
   const getActionIcon = (action: string) => {
     switch (action) {
-      case 'created':
-        return <Clock className="h-4 w-4 text-[#3A6EA5]" />;
-      case 'approved':
-        return <CheckCircle className="h-4 w-4 text-[#4BAF7E]" />;
-      case 'rejected':
-        return <XCircle className="h-4 w-4 text-[#D1625B]" />;
-      case 'returned':
-        return <ArrowRight className="h-4 w-4 text-[#E1A948]" />;
-      case 'cancelled':
-        return <X className="h-4 w-4 text-[#6B7280]" />;
-      default:
-        return <Clock className="h-4 w-4 text-[#6B7280]" />;
+      case 'created': return <Clock className="h-4 w-4 text-blue-600" />;
+      case 'approved': return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case 'rejected': return <XCircle className="h-4 w-4 text-red-600" />;
+      case 'returned': return <AlertCircle className="h-4 w-4 text-orange-600" />;
+      case 'cancelled': return <X className="h-4 w-4 text-gray-600" />;
+      case 'purchased': return <CheckCircle className="h-4 w-4 text-green-600" />;
+      default: return <Clock className="h-4 w-4 text-gray-600" />;
     }
   };
 
-  const getActionColor = (action: string) => {
-    switch (action) {
-      case 'created':
-        return '#3A6EA5';
-      case 'approved':
-        return '#4BAF7E';
-      case 'rejected':
-        return '#D1625B';
-      case 'returned':
-        return '#E1A948';
-      case 'cancelled':
-        return '#6B7280';
-      default:
-        return '#6B7280';
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
-      </div>
-    );
-  }
+  // Count by status
+  const pendingCount = requests.filter(r => r.status === 'pending').length;
+  const approvedCount = requests.filter(r => r.status === 'approved' || r.status === 'purchased').length;
+  const rejectedCount = requests.filter(r => r.status === 'rejected').length;
 
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-8 py-8">
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <div>
-            <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
-              {t.title}
-            </h1>
-            <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
+      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-4xl text-[#2C2C2C] font-semibold">
+                {t.title}
+              </h1>
+              <p className="text-sm md:text-base text-[#6E6B67] mt-1">{t.subtitle}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={fetchRequests}
+                disabled={isLoading}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                {t.refresh}
+              </Button>
+              <Link href="/purchase/new">
+                <Button className="bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  {t.newRequest}
+                </Button>
+              </Link>
+            </div>
           </div>
-          <Link
-            href="/purchase/new"
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
-          >
-            <Plus className="h-5 w-5" />
-            {t.newRequest}
-          </Link>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="px-8 py-8">
+      <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
-          {requests.length === 0 ? (
-            <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] p-12 text-center">
-              <ClipboardList className="h-12 w-12 text-[#E4E1DD] mx-auto mb-4" />
-              <p className="text-[#6E6B67] mb-4">{t.noRequests}</p>
-              <p className="text-sm text-[#6E6B67] mb-6">{t.createFirst}</p>
-              <Link
-                href="/purchase/new"
-                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
-              >
-                {t.newRequest}
-              </Link>
-            </div>
-          ) : (
-            <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[#E4E1DD] bg-[#F9F8F6]">
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
-                      {t.requestNumber}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
-                      {t.product}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
-                      {t.amount}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
-                      {t.date}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
-                      {t.status}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
-                      {t.actions}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {requests.map((request) => {
-                    // Calculate total from items if available
-                    const itemCount = request.items?.length || 1;
-                    const displayTitle = itemCount > 1
-                      ? `${itemCount} ${t.items}`
-                      : (request.items?.[0]?.product_title || request.product_title || 'Product');
-                    const totalAmount = request.total_estimated || request.estimated_price || 0;
+          {/* Stats Cards */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <Card className="bg-white">
+              <CardContent className="p-4 text-center">
+                <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
+                <p className="text-sm text-gray-600">{t.statuses.pending}</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-white">
+              <CardContent className="p-4 text-center">
+                <p className="text-3xl font-bold text-green-600">{approvedCount}</p>
+                <p className="text-sm text-gray-600">{t.statuses.approved}</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-white">
+              <CardContent className="p-4 text-center">
+                <p className="text-3xl font-bold text-red-600">{rejectedCount}</p>
+                <p className="text-sm text-gray-600">{t.statuses.rejected}</p>
+              </CardContent>
+            </Card>
+          </div>
 
-                    return (
-                      <tr
-                        key={request.id}
-                        className="border-b border-[#E4E1DD] last:border-0 hover:bg-[#F9F8F6] transition-colors"
-                      >
-                        <td className="px-6 py-4">
-                          <span className="text-sm font-semibold text-[#2C2C2C]">
+          {/* Requests List */}
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+            </div>
+          ) : requests.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center text-gray-500">
+                <ClipboardList className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p className="mb-2">{t.noRequests}</p>
+                <p className="text-sm mb-4">{t.createFirst}</p>
+                <Link href="/purchase/new">
+                  <Button className="bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90">
+                    <Plus className="h-4 w-4 mr-2" />
+                    {t.newRequest}
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {requests.map((request) => {
+                const items = getProductItems(request);
+                const total = calculateTotal(request);
+
+                return (
+                  <Card key={request.id} className="overflow-hidden">
+                    {/* Request Header */}
+                    <div className="p-4 md:p-6 border-b border-[#E4E1DD] bg-white">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg font-semibold text-[#2C2C2C]">
                             {request.request_number}
                           </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-[#6E6B67] max-w-[200px]">
-                          <div className="flex items-center gap-2">
-                            {itemCount > 1 && (
-                              <Badge className="bg-[#75534B]/10 text-[#75534B] border-[#75534B]/30 text-xs">
-                                {itemCount}
-                              </Badge>
-                            )}
-                            <span className="truncate">{displayTitle}</span>
+                          {getStatusBadge(request.status)}
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-[#6E6B67]">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            {new Date(request.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Products List */}
+                    <div className="p-4 md:p-6 space-y-3">
+                      <p className="text-sm font-medium text-[#6E6B67]">
+                        {t.products} ({items.length}):
+                      </p>
+
+                      {items.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]"
+                        >
+                          {/* Product Image */}
+                          {item.product_image_url ? (
+                            <div className="w-16 h-16 rounded bg-white border border-[#E4E1DD] overflow-hidden flex-shrink-0">
+                              <Image
+                                src={item.product_image_url}
+                                alt={item.product_title || 'Product'}
+                                width={64}
+                                height={64}
+                                className="object-contain w-full h-full"
+                                unoptimized
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-16 h-16 rounded bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
+                              <Package className="h-6 w-6 text-[#6E6B67]" />
+                            </div>
+                          )}
+
+                          {/* Product Info */}
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-[#2C2C2C] truncate">
+                              {item.product_title}
+                            </p>
+                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#6E6B67]">
+                              <span>{t.quantity}: {item.quantity}</span>
+                              {item.estimated_price && (
+                                <span className="font-medium text-[#75534B]">
+                                  {item.currency || 'MXN'} ${formatPrice((item.estimated_price || 0) * item.quantity)}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm font-semibold text-[#2C2C2C]">
-                          {request.currency}${formatPrice(totalAmount)}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-[#6E6B67]">
-                          {new Date(request.created_at).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4">{getStatusBadge(request.status)}</td>
-                        <td className="px-6 py-4">
-                          <button
-                            onClick={() => viewRequestDetails(request.id)}
-                            disabled={isLoadingDetail}
-                            className="text-sm font-medium text-[#75534B] hover:text-[#5D423C] transition-colors flex items-center gap-1 disabled:opacity-50"
-                          >
-                            {isLoadingDetail ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Eye className="h-4 w-4" />
+
+                          {/* Item Actions */}
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {item.url && !item.url.startsWith('catalog://') && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => window.open(item.url, '_blank')}
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                              </Button>
                             )}
-                            {t.view}
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Justification */}
+                      {request.justification && (
+                        <div className="mt-3 p-3 bg-white rounded-lg border border-[#E4E1DD]">
+                          <p className="text-xs font-medium text-[#6E6B67] uppercase mb-1">{t.justification}</p>
+                          <p className="text-sm text-[#2C2C2C]">{request.justification}</p>
+                        </div>
+                      )}
+
+                      {/* Rejection Reason */}
+                      {request.rejection_reason && (
+                        <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
+                          <div className="flex items-center gap-2 text-sm font-medium text-red-800 mb-1">
+                            <XCircle className="h-4 w-4" />
+                            {t.rejectionReason}
+                          </div>
+                          <p className="text-sm text-red-700">{request.rejection_reason}</p>
+                        </div>
+                      )}
+
+                      {/* Admin Notes */}
+                      {request.admin_notes && (
+                        <div className="mt-3 p-3 bg-[#75534B]/5 rounded-lg border border-[#75534B]/20">
+                          <div className="flex items-center gap-2 text-sm font-medium text-[#75534B] mb-1">
+                            <MessageSquare className="h-4 w-4" />
+                            {t.adminNotes}
+                          </div>
+                          <p className="text-sm text-[#6E6B67]">{request.admin_notes}</p>
+                        </div>
+                      )}
+
+                      {/* Purchase Info (visible when purchased) */}
+                      {request.status === 'purchased' && (request.purchase_notes || request.order_number) && (
+                        <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                          <div className="flex items-center gap-2 text-sm font-medium text-green-800 mb-2">
+                            <FileText className="h-4 w-4" />
+                            {t.purchaseInfo}
+                          </div>
+                          {request.order_number && (
+                            <p className="text-sm text-green-700">
+                              <span className="font-medium">{t.orderNumber}:</span> {request.order_number}
+                            </p>
+                          )}
+                          {request.purchased_by && (
+                            <p className="text-sm text-green-700">
+                              <span className="font-medium">{t.purchasedBy}:</span> {request.purchased_by.name}
+                            </p>
+                          )}
+                          {request.purchase_notes && (
+                            <p className="text-sm text-green-700 mt-1">{request.purchase_notes}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Request Footer */}
+                    <div className="px-4 md:px-6 py-4 bg-[#F9F8F6] border-t border-[#E4E1DD]">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                          <p className="text-sm text-[#6E6B67]">{t.total}</p>
+                          <p className="text-xl font-bold text-[#75534B]">
+                            {request.currency} ${formatPrice(total)}
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => viewRequestDetails(request.id)}
+                          disabled={isLoadingDetail}
+                        >
+                          {isLoadingDetail ? (
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          ) : (
+                            <FileText className="h-4 w-4 mr-2" />
+                          )}
+                          {t.viewDetails}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </div>
@@ -397,14 +510,15 @@ export default function RequestsPage() {
       {selectedRequest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-3xl rounded-xl bg-white shadow-2xl max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
             <div className="bg-gradient-to-r from-[#75534B] to-[#5D423C] p-6 rounded-t-xl flex items-center justify-between flex-shrink-0">
               <div>
                 <h2 className="text-2xl text-white font-semibold mb-1">
                   {selectedRequest.request_number}
                 </h2>
-                <p className="text-white/80 text-sm line-clamp-1">
-                  {selectedRequest.product_title || 'Product Request'}
-                </p>
+                <div className="flex items-center gap-2">
+                  {getStatusBadge(selectedRequest.status)}
+                </div>
               </div>
               <button
                 onClick={() => setSelectedRequest(null)}
@@ -414,30 +528,40 @@ export default function RequestsPage() {
               </button>
             </div>
 
+            {/* Modal Content */}
             <div className="p-6 space-y-4 overflow-y-auto flex-1">
               {/* Items List */}
-              {selectedRequest.items && selectedRequest.items.length > 0 ? (
-                <div className="space-y-4">
-                  <p className="text-sm font-semibold text-[#2C2C2C]">{t.items} ({selectedRequest.items.length})</p>
-                  {selectedRequest.items.map((item, idx) => (
-                    <div key={item.id || idx} className="flex gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]">
-                      {item.product_image_url && (
-                        <div className="w-16 h-16 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
-                          <img
+              <div>
+                <p className="text-sm font-semibold text-[#2C2C2C] mb-3">
+                  {t.products} ({getProductItems(selectedRequest).length})
+                </p>
+                <div className="space-y-3">
+                  {getProductItems(selectedRequest).map((item, idx) => (
+                    <div key={idx} className="flex gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]">
+                      {item.product_image_url ? (
+                        <div className="w-20 h-20 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          <Image
                             src={item.product_image_url}
-                            alt={item.product_title}
-                            className="max-w-full max-h-full object-contain"
+                            alt={item.product_title || 'Product'}
+                            width={80}
+                            height={80}
+                            className="object-contain"
+                            unoptimized
                           />
+                        </div>
+                      ) : (
+                        <div className="w-20 h-20 rounded-lg bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
+                          <Package className="h-8 w-8 text-[#6E6B67]" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-[#2C2C2C] text-sm line-clamp-2">
+                        <h4 className="font-medium text-[#2C2C2C] line-clamp-2">
                           {item.product_title || 'Product'}
                         </h4>
-                        <div className="flex items-center gap-4 mt-1">
-                          <span className="text-xs text-[#6E6B67]">{t.quantity}: {item.quantity}</span>
+                        <div className="flex items-center gap-4 mt-2">
+                          <span className="text-sm text-[#6E6B67]">{t.quantity}: {item.quantity}</span>
                           {item.estimated_price && (
-                            <span className="text-xs font-medium text-[#75534B]">
+                            <span className="text-sm font-semibold text-[#75534B]">
                               {item.currency || 'MXN'} ${formatPrice(item.estimated_price)}
                             </span>
                           )}
@@ -447,15 +571,16 @@ export default function RequestsPage() {
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-[#3A6EA5] hover:underline mt-1 inline-block"
+                            className="text-xs text-[#3A6EA5] hover:underline mt-2 inline-flex items-center gap-1"
                           >
-                            Ver enlace
+                            <ExternalLink className="h-3 w-3" />
+                            Ver producto
                           </a>
                         )}
                       </div>
                       <div className="flex-shrink-0 text-right">
                         {item.estimated_price && (
-                          <p className="font-semibold text-[#2C2C2C]">
+                          <p className="font-bold text-[#2C2C2C]">
                             ${formatPrice(item.estimated_price * item.quantity)}
                           </p>
                         )}
@@ -463,77 +588,35 @@ export default function RequestsPage() {
                     </div>
                   ))}
                 </div>
-              ) : (
-                /* Legacy single product display */
-                <div className="flex gap-4">
-                  {selectedRequest.product_image_url && (
-                    <div className="w-24 h-24 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
-                      <img
-                        src={selectedRequest.product_image_url}
-                        alt={selectedRequest.product_title}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-[#2C2C2C] mb-1">
-                      {selectedRequest.product_title || 'Product'}
-                    </h4>
-                    {selectedRequest.product_description && (
-                      <p className="text-sm text-[#6E6B67] line-clamp-2">
-                        {selectedRequest.product_description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
+              </div>
 
-              {/* Details Grid */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#E4E1DD]">
-                <div>
-                  <p className="text-sm text-[#6E6B67]">{t.status}</p>
-                  {getStatusBadge(selectedRequest.status)}
-                </div>
-                <div>
-                  <p className="text-sm text-[#6E6B67]">{t.date}</p>
-                  <p className="font-medium text-[#2C2C2C]">{new Date(selectedRequest.created_at).toLocaleDateString()}</p>
-                </div>
+              {/* Total */}
+              <div className="pt-4 border-t border-[#E4E1DD] flex justify-between items-center">
+                <span className="text-lg font-semibold text-[#2C2C2C]">{t.total}:</span>
+                <span className="text-2xl font-bold text-[#75534B]">
+                  {selectedRequest.currency} ${formatPrice(calculateTotal(selectedRequest))}
+                </span>
               </div>
 
               {/* Justification */}
               {selectedRequest.justification && (
-                <div>
-                  <p className="text-sm text-[#6E6B67]">Justification</p>
-                  <p className="font-medium text-[#2C2C2C]">{selectedRequest.justification}</p>
+                <div className="p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]">
+                  <p className="text-xs font-medium text-[#6E6B67] uppercase mb-1">{t.justification}</p>
+                  <p className="text-sm text-[#2C2C2C]">{selectedRequest.justification}</p>
                 </div>
               )}
 
-              <div className="pt-4 border-t border-[#E4E1DD] flex justify-between items-center">
-                <span className="text-lg font-semibold text-[#2C2C2C]">{t.total}:</span>
-                <span className="text-2xl font-bold text-[#75534B]">
-                  {selectedRequest.currency}${formatPrice(selectedRequest.total_estimated || (selectedRequest.estimated_price || 0) * selectedRequest.quantity)}
-                </span>
-              </div>
-
-              {/* Rejection reason if rejected */}
+              {/* Rejection Reason */}
               {selectedRequest.rejection_reason && (
-                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-sm font-medium text-red-800">{t.rejectionReason}:</p>
                   <p className="text-sm text-red-700">{selectedRequest.rejection_reason}</p>
                 </div>
               )}
 
-              {/* Notes if present */}
-              {selectedRequest.notes && (
-                <div className="mt-4 p-3 bg-[#F9F8F6] border border-[#E4E1DD] rounded-lg">
-                  <p className="text-sm font-medium text-[#2C2C2C]">{t.notes}:</p>
-                  <p className="text-sm text-[#6E6B67]">{selectedRequest.notes}</p>
-                </div>
-              )}
-
-              {/* Admin/Internal Notes - visible to all relevant users */}
+              {/* Admin Notes */}
               {selectedRequest.admin_notes && (
-                <div className="mt-4 p-3 bg-[#75534B]/5 border border-[#75534B]/20 rounded-lg">
+                <div className="p-3 bg-[#75534B]/5 border border-[#75534B]/20 rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
                     <MessageSquare className="h-4 w-4 text-[#75534B]" />
                     <p className="text-sm font-medium text-[#75534B]">{t.adminNotes}:</p>
@@ -542,91 +625,77 @@ export default function RequestsPage() {
                 </div>
               )}
 
-              {/* Purchase Information - visible when purchased */}
+              {/* Purchase Info */}
               {selectedRequest.status === 'purchased' && (selectedRequest.purchase_notes || selectedRequest.order_number || selectedRequest.purchased_by) && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+                <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
                       <FileText className="h-4 w-4 text-green-700" />
                     </div>
                     <p className="text-base font-semibold text-green-800">{t.purchaseInfo}</p>
                   </div>
-                  <div className="space-y-3 pl-10">
+                  <div className="space-y-2 pl-10">
                     {selectedRequest.order_number && (
-                      <div>
-                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">{t.orderNumber}</span>
-                        <p className="text-sm font-medium text-green-800 mt-0.5">{selectedRequest.order_number}</p>
-                      </div>
+                      <p className="text-sm text-green-700">
+                        <span className="font-medium">{t.orderNumber}:</span> {selectedRequest.order_number}
+                      </p>
                     )}
                     {selectedRequest.purchased_by && (
-                      <div>
-                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">{t.purchasedBy}</span>
-                        <p className="text-sm text-green-800 mt-0.5">{selectedRequest.purchased_by.name}</p>
-                      </div>
+                      <p className="text-sm text-green-700">
+                        <span className="font-medium">{t.purchasedBy}:</span> {selectedRequest.purchased_by.name}
+                      </p>
                     )}
                     {selectedRequest.purchase_notes && (
-                      <div className="pt-3 border-t border-green-200">
-                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">{t.purchaseNotes}</span>
-                        <p className="text-sm text-green-800 mt-1 whitespace-pre-wrap break-words leading-relaxed">{selectedRequest.purchase_notes}</p>
-                      </div>
+                      <p className="text-sm text-green-700 pt-2 border-t border-green-200">
+                        {selectedRequest.purchase_notes}
+                      </p>
                     )}
                   </div>
                 </div>
               )}
 
               {/* History Timeline */}
-              <div className="mt-6 pt-4 border-t border-[#E4E1DD]">
-                <p className="text-sm font-semibold text-[#2C2C2C] mb-3">{t.history}</p>
-                {selectedRequest.history && selectedRequest.history.length > 0 ? (
-                  <div className="relative">
-                    {/* Timeline line */}
-                    <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-[#E4E1DD]" />
-
-                    <div className="space-y-4">
-                      {selectedRequest.history.map((historyItem, idx) => (
-                        <div key={historyItem.id || idx} className="relative pl-8">
-                          {/* Timeline dot */}
-                          <div
-                            className="absolute left-1 top-1 w-4 h-4 rounded-full bg-white border-2 flex items-center justify-center"
-                            style={{ borderColor: getActionColor(historyItem.action) }}
-                          >
-                            <div
-                              className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: getActionColor(historyItem.action) }}
-                            />
+              {selectedRequest.history && selectedRequest.history.length > 0 && (
+                <div className="pt-4 border-t border-[#E4E1DD]">
+                  <p className="text-sm font-semibold text-[#2C2C2C] mb-3">{t.history}</p>
+                  <div className="space-y-3">
+                    {selectedRequest.history.map((historyItem, idx) => (
+                      <div key={historyItem.id || idx} className="flex gap-3 items-start">
+                        <div className="flex-shrink-0 mt-0.5">
+                          {getActionIcon(historyItem.action)}
+                        </div>
+                        <div className="flex-1 bg-[#F9F8F6] rounded-lg p-3">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-sm text-[#2C2C2C]">
+                              {t.historyActions[historyItem.action as keyof typeof t.historyActions] || historyItem.action}
+                            </span>
+                            <span className="text-xs text-[#9B9792]">
+                              {new Date(historyItem.created_at).toLocaleString()}
+                            </span>
                           </div>
-
-                          <div className="bg-[#F9F8F6] rounded-lg p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              {getActionIcon(historyItem.action)}
-                              <span className="font-medium text-sm text-[#2C2C2C]">
-                                {t.historyActions[historyItem.action as keyof typeof t.historyActions] || historyItem.action}
-                              </span>
-                            </div>
-
-                            {historyItem.comment && (
-                              <p className="text-sm text-[#6E6B67] mb-1">{historyItem.comment}</p>
-                            )}
-
-                            <div className="flex items-center gap-2 text-xs text-[#9B9792]">
-                              <User className="h-3 w-3" />
-                              <span>
-                                {historyItem.user?.name || `User #${historyItem.user_id}`}
-                              </span>
-                              <span>•</span>
-                              <span>
-                                {new Date(historyItem.created_at).toLocaleString()}
-                              </span>
-                            </div>
+                          {historyItem.comment && (
+                            <p className="text-sm text-[#6E6B67] mt-1">{historyItem.comment}</p>
+                          )}
+                          <div className="flex items-center gap-1 text-xs text-[#9B9792] mt-1">
+                            <User className="h-3 w-3" />
+                            {historyItem.user?.name || `User #${historyItem.user_id}`}
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
-                ) : (
-                  <p className="text-sm text-[#9B9792]">{t.noHistory}</p>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-[#E4E1DD] flex justify-end flex-shrink-0">
+              <Button
+                variant="outline"
+                onClick={() => setSelectedRequest(null)}
+              >
+                {t.close}
+              </Button>
             </div>
           </div>
         </div>

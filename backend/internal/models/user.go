@@ -96,9 +96,9 @@ func (u *User) CanApprove() bool {
 	return u.Role == RoleGeneralManager
 }
 
-// CanViewApprovals returns true if user can view pending approvals (read-only for admin)
+// CanViewApprovals returns true if user can view all approvals (admin, purchase_admin, GM)
 func (u *User) CanViewApprovals() bool {
-	return u.Role == RoleGeneralManager || u.Role == RoleAdmin
+	return u.Role == RoleGeneralManager || u.Role == RoleAdmin || u.Role == RolePurchaseAdmin
 }
 
 func (u *User) CanManageUsers() bool {

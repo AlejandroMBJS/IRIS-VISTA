@@ -34,8 +34,8 @@ const menuItems: MenuItem[] = [
   { icon: ExternalLink, labelKey: 'newPurchase', href: '/purchase/new' },
   { icon: ClipboardList, labelKey: 'requests', href: '/requests' },
 
-  // Approvals - GM can approve, Admin can view
-  { icon: CheckSquare, labelKey: 'approvals', href: '/approvals', roles: ['general_manager', 'admin'], badgeKey: 'pending_approvals' },
+  // Approvals - GM can approve, Admin + Purchase Admin can view
+  { icon: CheckSquare, labelKey: 'approvals', href: '/approvals', roles: ['general_manager', 'admin', 'purchase_admin'], badgeKey: 'pending_approvals' },
 
   // Approved Orders - Admin + Purchase Admin
   { icon: DollarSign, labelKey: 'orders', href: '/admin/orders', roles: ['admin', 'purchase_admin'], badgeKey: 'pending_orders' },

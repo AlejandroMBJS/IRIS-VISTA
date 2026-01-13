@@ -44,6 +44,11 @@ type ProductResponse struct {
 	ClickUpID     string                `json:"clickup_id"`
 	Source        string                `json:"source"`
 	IsActive      bool                  `json:"is_active"`
+	// E-commerce fields
+	ProductURL    string                `json:"product_url"`
+	IsEcommerce   bool                  `json:"is_ecommerce"`
+	ASIN          string                `json:"asin"`
+	Brand         string                `json:"brand"`
 	Images        []ProductImageResponse `json:"images,omitempty"`
 }
 
@@ -77,6 +82,11 @@ type CreateProductRequest struct {
 	ImageURL      string              `json:"image_url"`
 	ImageEmoji    string              `json:"image_emoji"`
 	ClickUpID     string              `json:"clickup_id"`
+	// E-commerce fields
+	ProductURL    string              `json:"product_url"`
+	IsEcommerce   bool                `json:"is_ecommerce"`
+	ASIN          string              `json:"asin"`
+	Brand         string              `json:"brand"`
 	Images        []ProductImageInput `json:"images"`
 }
 
@@ -109,6 +119,11 @@ type UpdateProductRequest struct {
 	ImageEmoji    string              `json:"image_emoji"`
 	ClickUpID     string              `json:"clickup_id"`
 	IsActive      *bool               `json:"is_active"`
+	// E-commerce fields
+	ProductURL    string              `json:"product_url"`
+	IsEcommerce   *bool               `json:"is_ecommerce"`
+	ASIN          string              `json:"asin"`
+	Brand         string              `json:"brand"`
 	Images        []ProductImageInput `json:"images"`
 }
 
@@ -150,6 +165,11 @@ func productToResponse(p models.Product) ProductResponse {
 		ClickUpID:     p.ClickUpID,
 		Source:        string(p.Source),
 		IsActive:      p.IsActive,
+		// E-commerce fields
+		ProductURL:    p.ProductURL,
+		IsEcommerce:   p.IsEcommerce,
+		ASIN:          p.ASIN,
+		Brand:         p.Brand,
 		Images:        images,
 	}
 }
@@ -305,6 +325,11 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		ClickUpID:     req.ClickUpID,
 		Source:        models.SourceInternal,
 		IsActive:      true,
+		// E-commerce fields (optional)
+		ProductURL:    req.ProductURL,
+		IsEcommerce:   req.IsEcommerce,
+		ASIN:          req.ASIN,
+		Brand:         req.Brand,
 	}
 
 	if err := h.db.Create(&product).Error; err != nil {
@@ -417,6 +442,19 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 	}
 	if req.IsActive != nil {
 		product.IsActive = *req.IsActive
+	}
+	// E-commerce fields (optional)
+	if req.ProductURL != "" {
+		product.ProductURL = req.ProductURL
+	}
+	if req.IsEcommerce != nil {
+		product.IsEcommerce = *req.IsEcommerce
+	}
+	if req.ASIN != "" {
+		product.ASIN = req.ASIN
+	}
+	if req.Brand != "" {
+		product.Brand = req.Brand
 	}
 
 	if err := h.db.Save(&product).Error; err != nil {

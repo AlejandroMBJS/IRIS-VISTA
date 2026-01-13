@@ -171,7 +171,8 @@ export function AmazonSection({ language }: AmazonSectionProps) {
   }, [config, email, marketplace, isActive, password]);
 
   const handleSave = async () => {
-    if (!email) {
+    // Email is required only if enabling the integration
+    if (isActive && !email) {
       setMessage({ type: 'error', text: 'Email is required' });
       return;
     }
@@ -181,7 +182,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
 
     try {
       const data: { email: string; marketplace?: string; is_active?: boolean; password?: string } = {
-        email,
+        email: email || config?.email || '',
         marketplace,
         is_active: isActive,
       };
@@ -341,6 +342,24 @@ export function AmazonSection({ language }: AmazonSectionProps) {
             <span className="text-sm font-medium">{message.text}</span>
           </div>
         )}
+
+        {/* Save button - always visible when there are changes */}
+        {hasChanges && (
+          <div className="mt-4">
+            <Button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="w-full bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90"
+            >
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <Save className="h-4 w-4 mr-2" />
+              )}
+              {isSaving ? t.saving : t.saveChanges}
+            </Button>
+          </div>
+        )}
       </div>
 
       {!isActive ? (
@@ -490,23 +509,6 @@ export function AmazonSection({ language }: AmazonSectionProps) {
         </>
       )}
 
-      {/* Save button for toggle changes when disabled */}
-      {!isActive && hasChanges && (
-        <div className="rounded-xl border border-[#E4E1DD] bg-white p-4">
-          <Button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="w-full bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90"
-          >
-            {isSaving ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            ) : (
-              <Save className="h-4 w-4 mr-2" />
-            )}
-            {isSaving ? t.saving : t.saveChanges}
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

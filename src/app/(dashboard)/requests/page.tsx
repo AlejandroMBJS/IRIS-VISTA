@@ -334,42 +334,58 @@ export default function RequestsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {requests.map((request) => (
-                    <tr
-                      key={request.id}
-                      className="border-b border-[#E4E1DD] last:border-0 hover:bg-[#F9F8F6] transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <span className="text-sm font-semibold text-[#2C2C2C]">
-                          {request.request_number}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-[#6E6B67] max-w-[200px] truncate">
-                        {request.product_title || 'Product'}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-[#2C2C2C]">
-                        {request.currency}${formatPrice(request.estimated_price || 0)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-[#6E6B67]">
-                        {new Date(request.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4">{getStatusBadge(request.status)}</td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => viewRequestDetails(request.id)}
-                          disabled={isLoadingDetail}
-                          className="text-sm font-medium text-[#75534B] hover:text-[#5D423C] transition-colors flex items-center gap-1 disabled:opacity-50"
-                        >
-                          {isLoadingDetail ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                          {t.view}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {requests.map((request) => {
+                    // Calculate total from items if available
+                    const itemCount = request.items?.length || 1;
+                    const displayTitle = itemCount > 1
+                      ? `${itemCount} ${t.items}`
+                      : (request.items?.[0]?.product_title || request.product_title || 'Product');
+                    const totalAmount = request.total_estimated || request.estimated_price || 0;
+
+                    return (
+                      <tr
+                        key={request.id}
+                        className="border-b border-[#E4E1DD] last:border-0 hover:bg-[#F9F8F6] transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <span className="text-sm font-semibold text-[#2C2C2C]">
+                            {request.request_number}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-[#6E6B67] max-w-[200px]">
+                          <div className="flex items-center gap-2">
+                            {itemCount > 1 && (
+                              <Badge className="bg-[#75534B]/10 text-[#75534B] border-[#75534B]/30 text-xs">
+                                {itemCount}
+                              </Badge>
+                            )}
+                            <span className="truncate">{displayTitle}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm font-semibold text-[#2C2C2C]">
+                          {request.currency}${formatPrice(totalAmount)}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-[#6E6B67]">
+                          {new Date(request.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4">{getStatusBadge(request.status)}</td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => viewRequestDetails(request.id)}
+                            disabled={isLoadingDetail}
+                            className="text-sm font-medium text-[#75534B] hover:text-[#5D423C] transition-colors flex items-center gap-1 disabled:opacity-50"
+                          >
+                            {isLoadingDetail ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                            {t.view}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -399,38 +415,88 @@ export default function RequestsPage() {
             </div>
 
             <div className="p-6 space-y-4 overflow-y-auto flex-1">
-              {/* Product Details */}
-              <div className="flex gap-4">
-                {selectedRequest.product_image_url && (
-                  <div className="w-24 h-24 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    <img
-                      src={selectedRequest.product_image_url}
-                      alt={selectedRequest.product_title}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <h4 className="font-semibold text-[#2C2C2C] mb-1">
-                    {selectedRequest.product_title || 'Product'}
-                  </h4>
-                  {selectedRequest.product_description && (
-                    <p className="text-sm text-[#6E6B67] line-clamp-2">
-                      {selectedRequest.product_description}
-                    </p>
-                  )}
+              {/* Items List */}
+              {selectedRequest.items && selectedRequest.items.length > 0 ? (
+                <div className="space-y-4">
+                  <p className="text-sm font-semibold text-[#2C2C2C]">{t.items} ({selectedRequest.items.length})</p>
+                  {selectedRequest.items.map((item, idx) => (
+                    <div key={item.id || idx} className="flex gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]">
+                      {item.product_image_url && (
+                        <div className="w-16 h-16 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          <img
+                            src={item.product_image_url}
+                            alt={item.product_title}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-[#2C2C2C] text-sm line-clamp-2">
+                          {item.product_title || 'Product'}
+                        </h4>
+                        <div className="flex items-center gap-4 mt-1">
+                          <span className="text-xs text-[#6E6B67]">{t.quantity}: {item.quantity}</span>
+                          {item.estimated_price && (
+                            <span className="text-xs font-medium text-[#75534B]">
+                              {item.currency || 'MXN'} ${formatPrice(item.estimated_price)}
+                            </span>
+                          )}
+                        </div>
+                        {item.url && !item.url.startsWith('catalog://') && (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-[#3A6EA5] hover:underline mt-1 inline-block"
+                          >
+                            Ver enlace
+                          </a>
+                        )}
+                      </div>
+                      <div className="flex-shrink-0 text-right">
+                        {item.estimated_price && (
+                          <p className="font-semibold text-[#2C2C2C]">
+                            ${formatPrice(item.estimated_price * item.quantity)}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              ) : (
+                /* Legacy single product display */
+                <div className="flex gap-4">
+                  {selectedRequest.product_image_url && (
+                    <div className="w-24 h-24 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <img
+                        src={selectedRequest.product_image_url}
+                        alt={selectedRequest.product_title}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-[#2C2C2C] mb-1">
+                      {selectedRequest.product_title || 'Product'}
+                    </h4>
+                    {selectedRequest.product_description && (
+                      <p className="text-sm text-[#6E6B67] line-clamp-2">
+                        {selectedRequest.product_description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Details Grid */}
               <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#E4E1DD]">
                 <div>
-                  <p className="text-sm text-[#6E6B67]">{t.quantity}</p>
-                  <p className="font-medium text-[#2C2C2C]">{selectedRequest.quantity}</p>
-                </div>
-                <div>
                   <p className="text-sm text-[#6E6B67]">{t.status}</p>
                   {getStatusBadge(selectedRequest.status)}
+                </div>
+                <div>
+                  <p className="text-sm text-[#6E6B67]">{t.date}</p>
+                  <p className="font-medium text-[#2C2C2C]">{new Date(selectedRequest.created_at).toLocaleDateString()}</p>
                 </div>
               </div>
 
@@ -442,27 +508,10 @@ export default function RequestsPage() {
                 </div>
               )}
 
-              {/* Product URL */}
-              {selectedRequest.url && (
-                <div>
-                  <a
-                    href={selectedRequest.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-[#3A6EA5] hover:underline flex items-center gap-1"
-                  >
-                    View Product Link
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                </div>
-              )}
-
               <div className="pt-4 border-t border-[#E4E1DD] flex justify-between items-center">
                 <span className="text-lg font-semibold text-[#2C2C2C]">{t.total}:</span>
                 <span className="text-2xl font-bold text-[#75534B]">
-                  {selectedRequest.currency}${formatPrice((selectedRequest.estimated_price || 0) * selectedRequest.quantity)}
+                  {selectedRequest.currency}${formatPrice(selectedRequest.total_estimated || (selectedRequest.estimated_price || 0) * selectedRequest.quantity)}
                 </span>
               </div>
 

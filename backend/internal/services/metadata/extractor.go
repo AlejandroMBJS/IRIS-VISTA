@@ -437,16 +437,55 @@ func (e *Extractor) extractMercadoLibre(doc *goquery.Document, metadata *Product
 		}
 	}
 
-	// Price - multiple selectors
+	// Price - MercadoLibre splits price into fraction and cents
+	if metadata.Price == nil {
+		// Try to get the full price from the container that has both parts
+		priceContainerSelectors := []string{
+			".andes-money-amount",
+			".ui-pdp-price__second-line .andes-money-amount",
+			".price-tag",
+		}
+		for _, selector := range priceContainerSelectors {
+			container := doc.Find(selector).First()
+			if container.Length() == 0 {
+				continue
+			}
+
+			// Get fraction (integer part)
+			fraction := strings.TrimSpace(container.Find(".andes-money-amount__fraction, .price-tag-fraction").First().Text())
+			// Get cents (decimal part)
+			cents := strings.TrimSpace(container.Find(".andes-money-amount__cents, .price-tag-cents").First().Text())
+
+			if fraction != "" {
+				priceStr := fraction
+				if cents != "" {
+					priceStr = fraction + "." + cents
+				}
+				if price, err := e.parsePrice(priceStr); err == nil && price > 0 {
+					metadata.Price = &price
+					break
+				}
+			}
+		}
+	}
+
+	// Fallback: try simple selectors
 	if metadata.Price == nil {
 		priceSelectors := []string{
-			".andes-money-amount__fraction",
-			".price-tag-fraction",
-			"span[class*='price'] span[class*='fraction']",
-			".ui-pdp-price__second-line .andes-money-amount__fraction",
+			"[itemprop='price']",
+			".ui-pdp-price__main-container .andes-money-amount",
 		}
 		for _, selector := range priceSelectors {
-			if priceText := strings.TrimSpace(doc.Find(selector).First().Text()); priceText != "" {
+			el := doc.Find(selector).First()
+			// Try content attribute (schema.org)
+			if content, exists := el.Attr("content"); exists && content != "" {
+				if price, err := e.parsePrice(content); err == nil && price > 0 {
+					metadata.Price = &price
+					break
+				}
+			}
+			// Try text
+			if priceText := strings.TrimSpace(el.Text()); priceText != "" {
 				if price, err := e.parsePrice(priceText); err == nil && price > 0 {
 					metadata.Price = &price
 					break

@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -150,10 +151,34 @@ func (pr *PurchaseRequest) HasAmazonItems() bool {
 }
 
 // GenerateRequestNumber generates a unique purchase request number (PR-YYYY-XXXX)
+// Uses MAX to find the highest number used this year, ensuring numbers are never reused
 func GenerateRequestNumber(db *gorm.DB) string {
-	var count int64
 	year := time.Now().Year()
-	db.Model(&PurchaseRequest{}).Where("STRFTIME('%Y', created_at) = ?", fmt.Sprintf("%d", year)).Count(&count)
+	prefix := fmt.Sprintf("PR-%d-", year)
+
+	// Find the highest PR number for this year
+	var lastRequest PurchaseRequest
+	err := db.Where("request_number LIKE ?", prefix+"%").
+		Order("request_number DESC").
+		First(&lastRequest).Error
+
+	if err != nil {
+		// No requests this year yet, start at 0001
+		return fmt.Sprintf("PR-%d-%04d", year, 1)
+	}
+
+	// Extract the sequence number from the last request number
+	// Format is PR-YYYY-XXXX, so we need the last 4 characters
+	lastNum := lastRequest.RequestNumber
+	if len(lastNum) >= 4 {
+		seqStr := lastNum[len(lastNum)-4:]
+		seq, _ := strconv.Atoi(seqStr)
+		return fmt.Sprintf("PR-%d-%04d", year, seq+1)
+	}
+
+	// Fallback: count all requests (shouldn't happen with proper data)
+	var count int64
+	db.Model(&PurchaseRequest{}).Where("request_number LIKE ?", prefix+"%").Count(&count)
 	return fmt.Sprintf("PR-%d-%04d", year, count+1)
 }
 

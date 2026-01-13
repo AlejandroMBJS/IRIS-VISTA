@@ -12,6 +12,10 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Set backend URL for build
+ARG BACKEND_URL=http://backend:8087
+ENV BACKEND_URL=${BACKEND_URL}
+
 # Build the application
 RUN npm run build
 

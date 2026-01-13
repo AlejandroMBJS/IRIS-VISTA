@@ -523,7 +523,7 @@ export const requestsApi = {
 
 // Approvals API
 export const approvalsApi = {
-  listPending: async (params?: { page?: number; per_page?: number; status?: string }) => {
+  listPending: async (params?: { page?: number; per_page?: number; status?: string; my_actions?: boolean }) => {
     const response = await api.get<ApiResponse<PurchaseRequest[]>>('/approvals', { params });
     return response.data;
   },

@@ -33,9 +33,9 @@ import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 
 type ViewMode = 'cards' | 'table';
 
-// Get display number - PO number if approved/purchased, otherwise request number
+// Get display number - PO number if approved/purchased/delivered, otherwise request number
 const getDisplayNumber = (request: PurchaseRequest): string => {
-  if ((request.status === 'approved' || request.status === 'purchased') && request.po_number) {
+  if ((request.status === 'approved' || request.status === 'purchased' || request.status === 'delivered') && request.po_number) {
     return request.po_number;
   }
   return request.request_number;
@@ -53,6 +53,7 @@ export default function ApprovalsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
+  const [showMyActions, setShowMyActions] = useState(false);
 
   // Only general_manager can approve/reject - admin can only view
   const canApprove = user?.role === 'general_manager';
@@ -112,6 +113,8 @@ export default function ApprovalsPage() {
       viewProduct: 'View Product',
       search: 'Search requests...',
       refresh: 'Refresh',
+      myApprovals: 'My Approvals',
+      myApprovalsHint: 'Show only requests I approved/rejected',
       confirmApproval: 'Confirm Approval',
       confirmApprovalMessage: 'Are you sure you want to approve this request?',
       confirmRejection: 'Confirm Rejection',
@@ -125,6 +128,8 @@ export default function ApprovalsPage() {
         rejected: 'Rejected',
         info_requested: 'Info Requested',
         purchased: 'Purchased',
+        delivered: 'Delivered',
+        cancelled: 'Cancelled',
         all: 'All',
       },
     },
@@ -182,6 +187,8 @@ export default function ApprovalsPage() {
       viewProduct: '查看产品',
       search: '搜索请求...',
       refresh: '刷新',
+      myApprovals: '我的审批',
+      myApprovalsHint: '仅显示我批准/拒绝的请求',
       confirmApproval: '确认批准',
       confirmApprovalMessage: '您确定要批准此请求吗？',
       confirmRejection: '确认拒绝',
@@ -195,6 +202,8 @@ export default function ApprovalsPage() {
         rejected: '已拒绝',
         info_requested: '需要信息',
         purchased: '已购买',
+        delivered: '已交付',
+        cancelled: '已取消',
         all: '全部',
       },
     },
@@ -252,6 +261,8 @@ export default function ApprovalsPage() {
       viewProduct: 'Ver Producto',
       search: 'Buscar solicitudes...',
       refresh: 'Actualizar',
+      myApprovals: 'Mis Aprobaciones',
+      myApprovalsHint: 'Mostrar solo solicitudes que aprobé/rechacé',
       confirmApproval: 'Confirmar Aprobación',
       confirmApprovalMessage: '¿Está seguro de aprobar esta solicitud?',
       confirmRejection: 'Confirmar Rechazo',
@@ -265,6 +276,8 @@ export default function ApprovalsPage() {
         rejected: 'Rechazado',
         info_requested: 'Info Solicitada',
         purchased: 'Comprado',
+        delivered: 'Entregado',
+        cancelled: 'Cancelado',
         all: 'Todas',
       },
     },
@@ -274,12 +287,16 @@ export default function ApprovalsPage() {
 
   useEffect(() => {
     fetchApprovals();
-  }, [selectedTab]);
+  }, [selectedTab, showMyActions]);
 
   const fetchApprovals = async () => {
     setIsLoading(true);
     try {
-      const response = await approvalsApi.listPending({ per_page: 50, status: selectedTab });
+      const response = await approvalsApi.listPending({
+        per_page: 50,
+        status: selectedTab,
+        my_actions: showMyActions || undefined
+      });
       setApprovals(response.data || []);
     } catch (error) {
       console.error('Failed to fetch approvals:', error);
@@ -295,6 +312,8 @@ export default function ApprovalsPage() {
       rejected: { bg: '#FEE2E2', text: '#DC2626', icon: <X className="h-3 w-3" /> },
       info_requested: { bg: '#DBEAFE', text: '#2563EB', icon: <MessageSquare className="h-3 w-3" /> },
       purchased: { bg: '#D1FAE5', text: '#059669', icon: <CheckCircle className="h-3 w-3" /> },
+      delivered: { bg: '#C7D2FE', text: '#4F46E5', icon: <Package className="h-3 w-3" /> },
+      cancelled: { bg: '#F3F4F6', text: '#6B7280', icon: <X className="h-3 w-3" /> },
     };
     const s = statusMap[status] || statusMap.pending;
     return (
@@ -491,7 +510,7 @@ export default function ApprovalsPage() {
           <div className="mb-6 flex flex-col md:flex-row gap-4">
             {/* Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-              {(['all', 'pending', 'approved', 'rejected'] as const).map((tab) => (
+              {(['all', 'pending', 'approved', 'purchased', 'delivered', 'rejected', 'cancelled'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setSelectedTab(tab)}
@@ -511,16 +530,35 @@ export default function ApprovalsPage() {
               ))}
             </div>
 
-            {/* Search */}
-            <div className="flex-1 md:max-w-xs md:ml-auto">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder={t.search}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
+            {/* My Approvals Toggle + Search */}
+            <div className="flex flex-1 gap-4 items-center md:ml-auto md:max-w-lg">
+              {/* My Approvals Toggle */}
+              {canApprove && (
+                <button
+                  onClick={() => setShowMyActions(!showMyActions)}
+                  className={`whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-all flex items-center gap-2 ${
+                    showMyActions
+                      ? 'bg-[#75534B] text-white'
+                      : 'bg-white text-[#6E6B67] border border-[#E4E1DD] hover:bg-[#F9F8F6]'
+                  }`}
+                  title={t.myApprovalsHint}
+                >
+                  <User className="h-4 w-4" />
+                  {t.myApprovals}
+                </button>
+              )}
+
+              {/* Search */}
+              <div className="flex-1 min-w-0">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder={t.search}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
               </div>
             </div>
           </div>

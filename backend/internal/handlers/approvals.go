@@ -40,6 +40,7 @@ func (h *ApprovalHandler) ListPendingApprovals(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	perPage, _ := strconv.Atoi(c.DefaultQuery("per_page", "20"))
 	status := c.DefaultQuery("status", "pending")
+	myActions := c.DefaultQuery("my_actions", "false") == "true"
 
 	offset := (page - 1) * perPage
 
@@ -47,13 +48,25 @@ func (h *ApprovalHandler) ListPendingApprovals(c *gin.Context) {
 		Preload("Requester").
 		Preload("Items")
 
+	// Filter to show only requests acted on by current user
+	if myActions {
+		userID := middleware.GetUserID(c)
+		query = query.Where("approved_by_id = ? OR rejected_by_id = ?", userID, userID)
+	}
+
 	// Filter by status
 	switch status {
 	case "pending":
 		query = query.Where("status = ?", models.StatusPending)
 	case "approved":
-		// Include both approved and purchased statuses
-		query = query.Where("status IN ?", []models.RequestStatus{models.StatusApproved, models.StatusPurchased})
+		// Only show approved status (not purchased/delivered)
+		query = query.Where("status = ?", models.StatusApproved)
+	case "purchased":
+		query = query.Where("status = ?", models.StatusPurchased)
+	case "delivered":
+		query = query.Where("status = ?", models.StatusDelivered)
+	case "cancelled":
+		query = query.Where("status = ?", models.StatusCancelled)
 	case "rejected":
 		query = query.Where("status = ?", models.StatusRejected)
 	case "info_requested":
@@ -153,8 +166,8 @@ func (h *ApprovalHandler) ApproveRequest(c *gin.Context) {
 	request.ApprovedByID = &userID
 	request.ApprovedAt = &now
 
-	// Generate PO number when approved
-	request.PONumber = models.GeneratePONumber(h.db)
+	// Generate PO number when approved (converts PR-YYYY-XXXX to PO-YYYY-XXXX)
+	request.PONumber = models.GeneratePONumber(request.RequestNumber)
 
 	// If it's an Amazon URL, try to add to cart
 	if request.IsAmazonURL && h.amazonSvc != nil {

@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -156,17 +157,12 @@ func GenerateRequestNumber(db *gorm.DB) string {
 	return fmt.Sprintf("PR-%d-%04d", year, count+1)
 }
 
-// GeneratePONumber generates a unique purchase order number (PO-YYYY-XXXX)
+// GeneratePONumber generates a purchase order number from the request number
+// This converts PR-YYYY-XXXX to PO-YYYY-XXXX so both numbers match
 // This is called when a request is approved
-func GeneratePONumber(db *gorm.DB) *string {
-	var count int64
-	year := time.Now().Year()
-	// Count approved requests that have a PO number this year
-	db.Model(&PurchaseRequest{}).
-		Where("po_number IS NOT NULL AND po_number != ''").
-		Where("STRFTIME('%Y', approved_at) = ?", fmt.Sprintf("%d", year)).
-		Count(&count)
-	poNumber := fmt.Sprintf("PO-%d-%04d", year, count+1)
+func GeneratePONumber(requestNumber string) *string {
+	// Simply replace PR- prefix with PO- prefix to keep the same number
+	poNumber := strings.Replace(requestNumber, "PR-", "PO-", 1)
 	return &poNumber
 }
 

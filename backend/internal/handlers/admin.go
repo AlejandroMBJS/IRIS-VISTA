@@ -452,6 +452,137 @@ func (h *AdminHandler) UpdateOrderNotes(c *gin.Context) {
 	response.SuccessWithMessage(c, "Notes updated", requestToResponse(request))
 }
 
+// MarkAsDelivered marks a purchased order as delivered
+func (h *AdminHandler) MarkAsDelivered(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		response.BadRequest(c, "Invalid request ID")
+		return
+	}
+
+	var input struct {
+		Notes string `json:"notes"`
+	}
+	c.ShouldBindJSON(&input)
+
+	userID := middleware.GetUserID(c)
+
+	var request models.PurchaseRequest
+	if err := h.db.First(&request, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.NotFound(c, "Request not found")
+		} else {
+			response.InternalServerError(c, "Failed to fetch request")
+		}
+		return
+	}
+
+	if !request.CanBeMarkedDelivered() {
+		response.BadRequest(c, "Only purchased orders can be marked as delivered")
+		return
+	}
+
+	oldStatus := request.Status
+	now := time.Now()
+	request.Status = models.StatusDelivered
+	request.DeliveredByID = &userID
+	request.DeliveredAt = &now
+	request.DeliveryNotes = input.Notes
+
+	err = h.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Save(&request).Error; err != nil {
+			return err
+		}
+
+		comment := "Order marked as delivered"
+		if input.Notes != "" {
+			comment = input.Notes
+		}
+		history := models.NewHistory(request.ID, userID, models.ActionDelivered, oldStatus, models.StatusDelivered, comment)
+		return tx.Create(history).Error
+	})
+
+	if err != nil {
+		response.InternalServerError(c, "Failed to mark as delivered")
+		return
+	}
+
+	// Reload with relations
+	h.db.
+		Preload("Requester").
+		Preload("ApprovedBy").
+		Preload("PurchasedBy").
+		Preload("DeliveredBy").
+		First(&request, request.ID)
+
+	response.SuccessWithMessage(c, "Order marked as delivered", requestToResponse(request))
+}
+
+// CancelOrder cancels an approved or purchased order
+func (h *AdminHandler) CancelOrder(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		response.BadRequest(c, "Invalid request ID")
+		return
+	}
+
+	var input struct {
+		Notes string `json:"notes" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, "Cancellation reason is required")
+		return
+	}
+
+	userID := middleware.GetUserID(c)
+
+	var request models.PurchaseRequest
+	if err := h.db.First(&request, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.NotFound(c, "Request not found")
+		} else {
+			response.InternalServerError(c, "Failed to fetch request")
+		}
+		return
+	}
+
+	if !request.CanBeCancelledAfterPurchase() {
+		response.BadRequest(c, "This order cannot be cancelled")
+		return
+	}
+
+	oldStatus := request.Status
+	now := time.Now()
+	request.Status = models.StatusCancelled
+	request.CancelledByID = &userID
+	request.CancelledAt = &now
+	request.CancellationNotes = input.Notes
+
+	err = h.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Save(&request).Error; err != nil {
+			return err
+		}
+
+		history := models.NewHistory(request.ID, userID, models.ActionCancelled, oldStatus, models.StatusCancelled, input.Notes)
+		return tx.Create(history).Error
+	})
+
+	if err != nil {
+		response.InternalServerError(c, "Failed to cancel order")
+		return
+	}
+
+	// Reload with relations
+	h.db.
+		Preload("Requester").
+		Preload("ApprovedBy").
+		Preload("PurchasedBy").
+		Preload("CancelledBy").
+		First(&request, request.ID)
+
+	response.SuccessWithMessage(c, "Order cancelled", requestToResponse(request))
+}
+
 // GetDashboardStats returns admin dashboard statistics
 func (h *AdminHandler) GetDashboardStats(c *gin.Context) {
 	var stats struct {

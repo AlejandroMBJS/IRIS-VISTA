@@ -22,6 +22,8 @@ import {
   MessageSquare,
   Save,
   Edit3,
+  Truck,
+  XCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -50,7 +52,14 @@ export default function ApprovedOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<PurchaseRequest | null>(null);
   const [purchaseNotes, setPurchaseNotes] = useState('');
   const [orderNumber, setOrderNumber] = useState('');
+  const [orderNumberError, setOrderNumberError] = useState('');
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+
+  // Status change modals
+  const [showDeliveredModal, setShowDeliveredModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [statusChangeNotes, setStatusChangeNotes] = useState('');
+  const [cancelNotesError, setCancelNotesError] = useState('');
 
   // Admin notes state
   const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
@@ -90,11 +99,21 @@ export default function ApprovedOrdersPage() {
       refresh: 'Refresh',
       export: 'Export',
       confirmPurchase: 'Confirm Purchase',
-      orderNumberPlaceholder: 'Order/PO Number (optional)',
+      orderNumberPlaceholder: 'Order/PO Number',
+      orderNumberRequired: 'Order number is required',
       purchaseNotesPlaceholder: 'Purchase notes (tracking, delivery date, etc.)',
       notifyRequester: 'Notify requester',
       cancel: 'Cancel',
       confirmPurchaseBtn: 'Confirm Purchase',
+      markDelivered: 'Mark Delivered',
+      cancelOrder: 'Cancel Order',
+      confirmDelivery: 'Confirm Delivery',
+      confirmCancellation: 'Confirm Cancellation',
+      deliveryNotes: 'Delivery notes (optional)',
+      cancellationReason: 'Cancellation reason',
+      cancellationRequired: 'Cancellation reason is required',
+      delivered: 'Delivered',
+      cancelled: 'Cancelled',
       itemsInCart: 'in cart',
       viewDetails: 'View Details',
       origin: 'Origin',
@@ -136,11 +155,21 @@ export default function ApprovedOrdersPage() {
       refresh: '刷新',
       export: '导出',
       confirmPurchase: '确认购买',
-      orderNumberPlaceholder: '订单/PO号（可选）',
+      orderNumberPlaceholder: '订单/PO号',
+      orderNumberRequired: '订单号必填',
       purchaseNotesPlaceholder: '购买备注（追踪号、交货日期等）',
       notifyRequester: '通知申请人',
       cancel: '取消',
       confirmPurchaseBtn: '确认购买',
+      markDelivered: '标记已交付',
+      cancelOrder: '取消订单',
+      confirmDelivery: '确认交付',
+      confirmCancellation: '确认取消',
+      deliveryNotes: '交付备注（可选）',
+      cancellationReason: '取消原因',
+      cancellationRequired: '取消原因必填',
+      delivered: '已交付',
+      cancelled: '已取消',
       itemsInCart: '在购物车',
       viewDetails: '查看详情',
       origin: '来源',
@@ -182,11 +211,21 @@ export default function ApprovedOrdersPage() {
       refresh: 'Actualizar',
       export: 'Exportar',
       confirmPurchase: 'Confirmar Compra',
-      orderNumberPlaceholder: 'Número de Orden/PO (opcional)',
+      orderNumberPlaceholder: 'Número de Orden/PO',
+      orderNumberRequired: 'Número de orden requerido',
       purchaseNotesPlaceholder: 'Notas de compra (tracking, fecha de entrega, etc.)',
       notifyRequester: 'Notificar al solicitante',
       cancel: 'Cancelar',
       confirmPurchaseBtn: 'Confirmar Compra',
+      markDelivered: 'Marcar Entregado',
+      cancelOrder: 'Cancelar Pedido',
+      confirmDelivery: 'Confirmar Entrega',
+      confirmCancellation: 'Confirmar Cancelación',
+      deliveryNotes: 'Notas de entrega (opcional)',
+      cancellationReason: 'Razón de cancelación',
+      cancellationRequired: 'Razón de cancelación requerida',
+      delivered: 'Entregado',
+      cancelled: 'Cancelado',
       itemsInCart: 'en carrito',
       viewDetails: 'Ver Detalles',
       origin: 'Origen',
@@ -235,6 +274,14 @@ export default function ApprovedOrdersPage() {
 
   const handleMarkPurchased = async () => {
     if (!selectedOrder) return;
+
+    // Validate order number is required
+    if (!orderNumber.trim()) {
+      setOrderNumberError(t.orderNumberRequired);
+      return;
+    }
+
+    setOrderNumberError('');
     setProcessingId(selectedOrder.id);
     try {
       await adminApi.markAsPurchased(selectedOrder.id, purchaseNotes, orderNumber);
@@ -245,6 +292,46 @@ export default function ApprovedOrdersPage() {
       fetchOrders();
     } catch (error) {
       console.error('Failed to mark as purchased:', error);
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleMarkDelivered = async () => {
+    if (!selectedOrder) return;
+    setProcessingId(selectedOrder.id);
+    try {
+      await adminApi.markAsDelivered(selectedOrder.id, statusChangeNotes);
+      setShowDeliveredModal(false);
+      setSelectedOrder(null);
+      setStatusChangeNotes('');
+      fetchOrders();
+    } catch (error) {
+      console.error('Failed to mark as delivered:', error);
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleCancelOrder = async () => {
+    if (!selectedOrder) return;
+
+    // Validate cancellation reason is required
+    if (!statusChangeNotes.trim()) {
+      setCancelNotesError(t.cancellationRequired);
+      return;
+    }
+
+    setCancelNotesError('');
+    setProcessingId(selectedOrder.id);
+    try {
+      await adminApi.cancelOrder(selectedOrder.id, statusChangeNotes);
+      setShowCancelModal(false);
+      setSelectedOrder(null);
+      setStatusChangeNotes('');
+      fetchOrders();
+    } catch (error) {
+      console.error('Failed to cancel order:', error);
     } finally {
       setProcessingId(null);
     }
@@ -356,6 +443,22 @@ export default function ApprovedOrdersPage() {
   };
 
   const getOrderStatusBadge = (order: PurchaseRequest) => {
+    if (order.status === 'delivered') {
+      return (
+        <Badge className="bg-emerald-100 text-emerald-800">
+          <Truck className="h-3 w-3 mr-1" />
+          {t.delivered}
+        </Badge>
+      );
+    }
+    if (order.status === 'cancelled') {
+      return (
+        <Badge className="bg-red-100 text-red-800">
+          <XCircle className="h-3 w-3 mr-1" />
+          {t.cancelled}
+        </Badge>
+      );
+    }
     if (order.status === 'purchased') {
       return (
         <Badge className="bg-green-100 text-green-800">
@@ -723,7 +826,7 @@ export default function ApprovedOrdersPage() {
                               {order.currency}${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </p>
                           </div>
-                          {order.status !== 'purchased' && (
+                          {order.status !== 'purchased' && order.status !== 'delivered' && order.status !== 'cancelled' && (
                             <div>
                               <p className="text-sm text-[#6E6B67]">{t.progress}</p>
                               <div className="flex items-center gap-2">
@@ -743,7 +846,7 @@ export default function ApprovedOrdersPage() {
 
                         {/* Actions */}
                         <div className="flex flex-wrap gap-2">
-                          {order.status !== 'purchased' && (
+                          {order.status !== 'purchased' && order.status !== 'delivered' && order.status !== 'cancelled' && (
                             <>
                               {/* Only show Add All to Cart when Amazon is enabled */}
                               {isAmazonEnabled && items.some(i => i.is_amazon_url && !i.added_to_cart) && (
@@ -780,6 +883,37 @@ export default function ApprovedOrdersPage() {
                               </Button>
                             </>
                           )}
+                          {/* Status change buttons for purchased orders */}
+                          {order.status === 'purchased' && (
+                            <>
+                              <Button
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedOrder(order);
+                                  setStatusChangeNotes('');
+                                  setShowDeliveredModal(true);
+                                }}
+                              >
+                                <Truck className="h-4 w-4 mr-2" />
+                                {t.markDelivered}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-red-300 text-red-600 hover:bg-red-50"
+                                onClick={() => {
+                                  setSelectedOrder(order);
+                                  setStatusChangeNotes('');
+                                  setCancelNotesError('');
+                                  setShowCancelModal(true);
+                                }}
+                              >
+                                <XCircle className="h-4 w-4 mr-2" />
+                                {t.cancelOrder}
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -806,6 +940,7 @@ export default function ApprovedOrdersPage() {
                     setSelectedOrder(null);
                     setPurchaseNotes('');
                     setOrderNumber('');
+                    setOrderNumberError('');
                   }}
                   className="text-gray-400 hover:text-gray-600"
                 >
@@ -840,13 +975,20 @@ export default function ApprovedOrdersPage() {
               {/* Order Number */}
               <div>
                 <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
-                  {t.orderNumberPlaceholder}
+                  {t.orderNumberPlaceholder} <span className="text-red-500">*</span>
                 </label>
                 <Input
                   value={orderNumber}
-                  onChange={(e) => setOrderNumber(e.target.value)}
+                  onChange={(e) => {
+                    setOrderNumber(e.target.value);
+                    if (e.target.value.trim()) setOrderNumberError('');
+                  }}
                   placeholder="AMZ-123456789"
+                  className={orderNumberError ? 'border-red-500' : ''}
                 />
+                {orderNumberError && (
+                  <p className="mt-1 text-sm text-red-500">{orderNumberError}</p>
+                )}
               </div>
 
               {/* Purchase Notes */}
@@ -878,6 +1020,7 @@ export default function ApprovedOrdersPage() {
                   setSelectedOrder(null);
                   setPurchaseNotes('');
                   setOrderNumber('');
+                  setOrderNumberError('');
                 }}
               >
                 {t.cancel}
@@ -893,6 +1036,168 @@ export default function ApprovedOrdersPage() {
                   <CheckCircle className="h-4 w-4 mr-2" />
                 )}
                 {t.confirmPurchaseBtn}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mark as Delivered Modal */}
+      {showDeliveredModal && selectedOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
+            <div className="p-6 border-b border-[#E4E1DD]">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-[#2C2C2C]">
+                  {t.confirmDelivery}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowDeliveredModal(false);
+                    setSelectedOrder(null);
+                    setStatusChangeNotes('');
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* Order Summary */}
+              <div className="bg-[#F9F8F6] rounded-lg p-4 border border-[#E4E1DD]">
+                <p className="text-sm text-[#6E6B67]">{getDisplayNumber(selectedOrder)}</p>
+                <p className="font-medium text-[#2C2C2C]">{selectedOrder.requester?.name}</p>
+                {selectedOrder.order_number && (
+                  <p className="text-sm text-[#6E6B67] mt-1">
+                    Order #: {selectedOrder.order_number}
+                  </p>
+                )}
+              </div>
+
+              {/* Delivery Notes */}
+              <div>
+                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                  {t.deliveryNotes}
+                </label>
+                <textarea
+                  value={statusChangeNotes}
+                  onChange={(e) => setStatusChangeNotes(e.target.value)}
+                  placeholder={t.deliveryNotes}
+                  rows={3}
+                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                />
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-[#E4E1DD] flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowDeliveredModal(false);
+                  setSelectedOrder(null);
+                  setStatusChangeNotes('');
+                }}
+              >
+                {t.cancel}
+              </Button>
+              <Button
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                onClick={handleMarkDelivered}
+                disabled={processingId !== null}
+              >
+                {processingId !== null ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Truck className="h-4 w-4 mr-2" />
+                )}
+                {t.markDelivered}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel Order Modal */}
+      {showCancelModal && selectedOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
+            <div className="p-6 border-b border-[#E4E1DD]">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-[#2C2C2C]">
+                  {t.confirmCancellation}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowCancelModal(false);
+                    setSelectedOrder(null);
+                    setStatusChangeNotes('');
+                    setCancelNotesError('');
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* Order Summary */}
+              <div className="bg-[#F9F8F6] rounded-lg p-4 border border-[#E4E1DD]">
+                <p className="text-sm text-[#6E6B67]">{getDisplayNumber(selectedOrder)}</p>
+                <p className="font-medium text-[#2C2C2C]">{selectedOrder.requester?.name}</p>
+                {selectedOrder.order_number && (
+                  <p className="text-sm text-[#6E6B67] mt-1">
+                    Order #: {selectedOrder.order_number}
+                  </p>
+                )}
+              </div>
+
+              {/* Cancellation Reason */}
+              <div>
+                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                  {t.cancellationReason} <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={statusChangeNotes}
+                  onChange={(e) => {
+                    setStatusChangeNotes(e.target.value);
+                    if (e.target.value.trim()) setCancelNotesError('');
+                  }}
+                  placeholder={t.cancellationReason}
+                  rows={3}
+                  className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 ${cancelNotesError ? 'border-red-500' : 'border-[#E4E1DD]'}`}
+                />
+                {cancelNotesError && (
+                  <p className="mt-1 text-sm text-red-500">{cancelNotesError}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-[#E4E1DD] flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowCancelModal(false);
+                  setSelectedOrder(null);
+                  setStatusChangeNotes('');
+                  setCancelNotesError('');
+                }}
+              >
+                {t.cancel}
+              </Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={handleCancelOrder}
+                disabled={processingId !== null}
+              >
+                {processingId !== null ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <XCircle className="h-4 w-4 mr-2" />
+                )}
+                {t.cancelOrder}
               </Button>
             </div>
           </div>

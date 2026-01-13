@@ -246,6 +246,8 @@ func main() {
 		{
 			orders.GET("/approved-orders", adminHandler.GetApprovedOrders)
 			orders.PATCH("/orders/:id/purchased", adminHandler.MarkAsPurchased)
+			orders.PATCH("/orders/:id/delivered", adminHandler.MarkAsDelivered)
+			orders.PATCH("/orders/:id/cancel", adminHandler.CancelOrder)
 			orders.POST("/orders/:id/retry-cart", adminHandler.RetryAddToCart)
 			orders.PATCH("/orders/:id/notes", adminHandler.UpdateOrderNotes)
 		}

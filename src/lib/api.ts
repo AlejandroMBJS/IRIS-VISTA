@@ -514,6 +514,22 @@ export const adminApi = {
     return response.data.data!;
   },
 
+  // Mark order as delivered
+  markAsDelivered: async (id: number, notes?: string): Promise<PurchaseRequest> => {
+    const response = await api.patch<ApiResponse<PurchaseRequest>>(`/admin/orders/${id}/delivered`, {
+      notes
+    });
+    return response.data.data!;
+  },
+
+  // Cancel order
+  cancelOrder: async (id: number, notes: string): Promise<PurchaseRequest> => {
+    const response = await api.patch<ApiResponse<PurchaseRequest>>(`/admin/orders/${id}/cancel`, {
+      notes
+    });
+    return response.data.data!;
+  },
+
   // Purchase Config
   getPurchaseConfig: async (): Promise<PurchaseConfig> => {
     const response = await api.get<ApiResponse<PurchaseConfig>>('/admin/purchase-config');

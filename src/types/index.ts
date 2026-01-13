@@ -114,7 +114,7 @@ export interface CartItem {
 }
 
 // Request types - Simplified URL-based model
-export type RequestStatus = 'pending' | 'approved' | 'rejected' | 'info_requested' | 'purchased';
+export type RequestStatus = 'pending' | 'approved' | 'rejected' | 'info_requested' | 'purchased' | 'delivered' | 'cancelled';
 export type Urgency = 'normal' | 'urgent';
 
 export interface RequestHistory {
@@ -204,6 +204,18 @@ export interface PurchaseRequest {
   purchased_at?: string;
   purchase_notes?: string;
   order_number?: string;
+
+  // Delivery info
+  delivered_by?: User;
+  delivered_by_id?: number;
+  delivered_at?: string;
+  delivery_notes?: string;
+
+  // Cancellation info
+  cancelled_by?: User;
+  cancelled_by_id?: number;
+  cancelled_at?: string;
+  cancellation_notes?: string;
 
   // Admin notes (visible to admin, purchase_admin, gm, and requester)
   admin_notes?: string;

@@ -15,6 +15,8 @@ const (
 	StatusRejected      RequestStatus = "rejected"
 	StatusInfoRequested RequestStatus = "info_requested"
 	StatusPurchased     RequestStatus = "purchased"
+	StatusDelivered     RequestStatus = "delivered"
+	StatusCancelled     RequestStatus = "cancelled"
 )
 
 type Urgency string
@@ -78,6 +80,18 @@ type PurchaseRequest struct {
 	PurchasedAt   *time.Time `json:"purchased_at,omitempty"`
 	PurchaseNotes string     `gorm:"type:text" json:"purchase_notes,omitempty"`
 	OrderNumber   string     `gorm:"size:100" json:"order_number,omitempty"`
+
+	// Delivery completion (when order is delivered)
+	DeliveredByID *uint      `json:"delivered_by_id,omitempty"`
+	DeliveredBy   *User      `gorm:"foreignKey:DeliveredByID" json:"delivered_by,omitempty"`
+	DeliveredAt   *time.Time `json:"delivered_at,omitempty"`
+	DeliveryNotes string     `gorm:"type:text" json:"delivery_notes,omitempty"`
+
+	// Cancellation (when order is cancelled after purchase)
+	CancelledByID     *uint      `json:"cancelled_by_id,omitempty"`
+	CancelledBy       *User      `gorm:"foreignKey:CancelledByID" json:"cancelled_by,omitempty"`
+	CancelledAt       *time.Time `json:"cancelled_at,omitempty"`
+	CancellationNotes string     `gorm:"type:text" json:"cancellation_notes,omitempty"`
 
 	// Admin notes (visible to admin, purchase_admin, gm, and requester)
 	AdminNotes string `gorm:"type:text" json:"admin_notes,omitempty"`
@@ -179,6 +193,16 @@ func (pr *PurchaseRequest) CanRequestInfo() bool {
 // CanBeMarkedPurchased checks if the request can be marked as purchased
 func (pr *PurchaseRequest) CanBeMarkedPurchased() bool {
 	return pr.Status == StatusApproved
+}
+
+// CanBeMarkedDelivered checks if the request can be marked as delivered
+func (pr *PurchaseRequest) CanBeMarkedDelivered() bool {
+	return pr.Status == StatusPurchased
+}
+
+// CanBeCancelledAfterPurchase checks if the request can be cancelled after purchase
+func (pr *PurchaseRequest) CanBeCancelledAfterPurchase() bool {
+	return pr.Status == StatusPurchased || pr.Status == StatusApproved
 }
 
 // IsPending checks if the request is pending

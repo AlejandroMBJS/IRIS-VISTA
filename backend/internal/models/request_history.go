@@ -15,6 +15,7 @@ const (
 	ActionCancelled HistoryAction = "cancelled"
 	ActionProcessed HistoryAction = "processed"
 	ActionCompleted HistoryAction = "completed"
+	ActionDelivered HistoryAction = "delivered"
 )
 
 type RequestHistory struct {

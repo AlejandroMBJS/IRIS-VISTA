@@ -133,6 +133,16 @@ type RequestResponse struct {
 	PurchaseNotes string        `json:"purchase_notes,omitempty"`
 	OrderNumber   string        `json:"order_number,omitempty"`
 
+	// Delivery info
+	DeliveredBy   *UserResponse `json:"delivered_by,omitempty"`
+	DeliveredAt   *time.Time    `json:"delivered_at,omitempty"`
+	DeliveryNotes string        `json:"delivery_notes,omitempty"`
+
+	// Cancellation info
+	CancelledBy       *UserResponse `json:"cancelled_by,omitempty"`
+	CancelledAt       *time.Time    `json:"cancelled_at,omitempty"`
+	CancellationNotes string        `json:"cancellation_notes,omitempty"`
+
 	// Admin notes (visible to admin, purchase_admin, gm, and requester)
 	AdminNotes string `json:"admin_notes,omitempty"`
 
@@ -195,6 +205,10 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 		PurchasedAt:        r.PurchasedAt,
 		PurchaseNotes:      r.PurchaseNotes,
 		OrderNumber:        r.OrderNumber,
+		DeliveredAt:        r.DeliveredAt,
+		DeliveryNotes:      r.DeliveryNotes,
+		CancelledAt:        r.CancelledAt,
+		CancellationNotes:  r.CancellationNotes,
 		AdminNotes:         r.AdminNotes,
 		CreatedAt:          r.CreatedAt,
 		UpdatedAt:          r.UpdatedAt,
@@ -257,6 +271,24 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 			Email: r.PurchasedBy.Email,
 			Name:  r.PurchasedBy.Name,
 			Role:  string(r.PurchasedBy.Role),
+		}
+	}
+
+	if r.DeliveredBy != nil && r.DeliveredBy.ID != 0 {
+		resp.DeliveredBy = &UserResponse{
+			ID:    r.DeliveredBy.ID,
+			Email: r.DeliveredBy.Email,
+			Name:  r.DeliveredBy.Name,
+			Role:  string(r.DeliveredBy.Role),
+		}
+	}
+
+	if r.CancelledBy != nil && r.CancelledBy.ID != 0 {
+		resp.CancelledBy = &UserResponse{
+			ID:    r.CancelledBy.ID,
+			Email: r.CancelledBy.Email,
+			Name:  r.CancelledBy.Name,
+			Role:  string(r.CancelledBy.Role),
 		}
 	}
 

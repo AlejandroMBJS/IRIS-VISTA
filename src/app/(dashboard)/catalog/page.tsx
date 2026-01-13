@@ -3,11 +3,16 @@
 import { useState, useEffect } from 'react';
 import { Search, ShoppingCart, AlertCircle, CheckCircle, X, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { productsApi, requestsApi } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import type { Product, CreateRequestInput } from '@/types';
+
+// Local cart item for catalog (different from e-commerce cart)
+interface LocalCartItem {
+  product: Product;
+  quantity: number;
+}
 
 // Format price to show all significant decimals (minimum 2)
 const formatPrice = (price: number): string => {
@@ -22,12 +27,14 @@ const formatPrice = (price: number): string => {
 
 export default function CatalogPage() {
   const { language } = useLanguage();
-  const { addToCart, items: cartItems, clearCart } = useCart();
   const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  // Local cart state for catalog (separate from e-commerce cart)
+  const [cartItems, setCartItems] = useState<LocalCartItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [showSubmitModal, setShowSubmitModal] = useState(false);
@@ -234,6 +241,41 @@ export default function CatalogPage() {
         </Badge>
       );
     }
+  };
+
+  // Local cart functions
+  const addToCart = (product: Product, quantity: number = 1) => {
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [...prev, { product, quantity }];
+    });
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
+  const updateQuantity = (productId: number, quantity: number) => {
+    if (quantity <= 0) {
+      setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
+      return;
+    }
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.product.id === productId ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const removeFromCart = (productId: number) => {
+    setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
   };
 
   const handleAddToCart = (product: Product) => {

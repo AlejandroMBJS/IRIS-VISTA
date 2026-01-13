@@ -481,24 +481,33 @@ export default function RequestsPage() {
 
               {/* Purchase Information - visible when purchased */}
               {selectedRequest.status === 'purchased' && (selectedRequest.purchase_notes || selectedRequest.order_number || selectedRequest.purchased_by) && (
-                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <FileText className="h-4 w-4 text-green-700" />
-                    <p className="text-sm font-medium text-green-800">{t.purchaseInfo}:</p>
+                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+                      <FileText className="h-4 w-4 text-green-700" />
+                    </div>
+                    <p className="text-base font-semibold text-green-800">{t.purchaseInfo}</p>
                   </div>
-                  {selectedRequest.order_number && (
-                    <p className="text-sm text-green-700 mb-1">
-                      <span className="font-medium">{t.orderNumber}:</span> {selectedRequest.order_number}
-                    </p>
-                  )}
-                  {selectedRequest.purchased_by && (
-                    <p className="text-sm text-green-700 mb-1">
-                      <span className="font-medium">{t.purchasedBy}:</span> {selectedRequest.purchased_by.name}
-                    </p>
-                  )}
-                  {selectedRequest.purchase_notes && (
-                    <p className="text-sm text-green-700">{selectedRequest.purchase_notes}</p>
-                  )}
+                  <div className="space-y-3 pl-10">
+                    {selectedRequest.order_number && (
+                      <div>
+                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">{t.orderNumber}</span>
+                        <p className="text-sm font-medium text-green-800 mt-0.5">{selectedRequest.order_number}</p>
+                      </div>
+                    )}
+                    {selectedRequest.purchased_by && (
+                      <div>
+                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">{t.purchasedBy}</span>
+                        <p className="text-sm text-green-800 mt-0.5">{selectedRequest.purchased_by.name}</p>
+                      </div>
+                    )}
+                    {selectedRequest.purchase_notes && (
+                      <div className="pt-3 border-t border-green-200">
+                        <span className="text-xs font-medium text-green-600 uppercase tracking-wide">Notas de Compra</span>
+                        <p className="text-sm text-green-800 mt-1 whitespace-pre-wrap break-words leading-relaxed">{selectedRequest.purchase_notes}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 

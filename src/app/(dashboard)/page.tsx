@@ -630,126 +630,207 @@ export default function HomePage() {
   // ============ EMPLOYEE DASHBOARD (default) ============
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
-      {/* Header */}
-      <section className="bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 md:px-8 py-8">
-        <div className="mx-auto max-w-7xl">
-          <h1 className="text-2xl md:text-3xl text-white font-semibold">
-            {t.welcome}, {user?.name || 'User'}
-          </h1>
-          <p className="text-white/80 mt-1">{t.employeeSubtitle}</p>
-        </div>
-      </section>
+      {/* Hero Header */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#75534B] via-[#8A6056] to-[#5D423C] px-4 md:px-8 py-10 md:py-12">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
 
-      {/* Stats */}
-      <section className="px-4 md:px-8 py-6">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.myRequestsOverview}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-5 border border-[#E4E1DD] shadow-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <FileText className="h-5 w-5 text-blue-600" />
-                </div>
-              </div>
-              <p className="text-2xl font-bold text-[#2C2C2C]">{myRequests.length}</p>
-              <p className="text-sm text-[#6E6B67]">{t.activeRequests}</p>
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <p className="text-white/70 text-sm font-medium mb-1">{t.employeeSubtitle}</p>
+              <h1 className="text-3xl md:text-4xl text-white font-bold">
+                {t.welcome}, {user?.name?.split(' ')[0] || 'User'}
+              </h1>
             </div>
 
-            <div className="bg-white rounded-xl p-5 border border-[#E4E1DD] shadow-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center">
-                  <Clock className="h-5 w-5 text-yellow-600" />
-                </div>
-              </div>
-              <p className="text-2xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'pending').length}</p>
-              <p className="text-sm text-[#6E6B67]">{t.pending}</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-5 border border-[#E4E1DD] shadow-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                </div>
-              </div>
-              <p className="text-2xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'approved' || r.status === 'purchased').length}</p>
-              <p className="text-sm text-[#6E6B67]">{t.approved}</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-5 border border-[#E4E1DD] shadow-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-                  <XCircle className="h-5 w-5 text-red-600" />
-                </div>
-              </div>
-              <p className="text-2xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'rejected').length}</p>
-              <p className="text-sm text-[#6E6B67]">{t.rejected}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Actions */}
-      <section className="px-4 md:px-8 py-6">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.quickActions}</h2>
-          <div className="grid grid-cols-2 gap-4">
+            {/* Quick Create Button in Header */}
             <Link
               href="/purchase/new"
-              className="bg-gradient-to-r from-[#75534B] to-[#5D423C] rounded-xl p-5 text-white hover:shadow-lg transition-shadow group"
+              className="inline-flex items-center gap-3 bg-white text-[#75534B] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
             >
-              <Plus className="h-6 w-6 mb-3 group-hover:scale-110 transition-transform" />
-              <p className="font-medium">{t.createRequest}</p>
-            </Link>
-
-            <Link
-              href="/requests"
-              className="bg-white rounded-xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#75534B] transition-all group"
-            >
-              <ClipboardList className="h-6 w-6 text-[#75534B] mb-3 group-hover:scale-110 transition-transform" />
-              <p className="font-medium text-[#2C2C2C]">{t.viewMyRequests}</p>
+              <div className="w-8 h-8 rounded-lg bg-[#75534B]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Plus className="h-5 w-5" />
+              </div>
+              {t.createRequest}
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Recent Requests */}
-      <section className="px-4 md:px-8 py-6">
+      {/* Stats Cards */}
+      <section className="px-4 md:px-8 -mt-6">
         <div className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.recentRequests}</h2>
-            <Link href="/requests" className="text-sm text-[#75534B] hover:underline flex items-center gap-1">
-              {t.viewAll} <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+                  <FileText className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Total</span>
+              </div>
+              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.length}</p>
+              <p className="text-sm text-[#6E6B67] mt-1">{t.activeRequests}</p>
+            </div>
 
-          {myRequests.length === 0 ? (
-            <div className="bg-white rounded-xl p-8 border border-[#E4E1DD] text-center">
-              <FileText className="h-12 w-12 text-[#E4E1DD] mx-auto mb-3" />
-              <p className="text-[#6E6B67] mb-4">{t.noRequests}</p>
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
+                  <Clock className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">En espera</span>
+              </div>
+              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'pending').length}</p>
+              <p className="text-sm text-[#6E6B67] mt-1">{t.pending}</p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
+                  <CheckCircle className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Listo</span>
+              </div>
+              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'approved' || r.status === 'purchased').length}</p>
+              <p className="text-sm text-[#6E6B67] mt-1">{t.approved}</p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-sm">
+                  <XCircle className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">Rechazado</span>
+              </div>
+              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'rejected').length}</p>
+              <p className="text-sm text-[#6E6B67] mt-1">{t.rejected}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content Grid */}
+      <section className="px-4 md:px-8 py-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* Recent Requests - Takes 2 columns */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.recentRequests}</h2>
+                <Link href="/requests" className="text-sm text-[#75534B] hover:text-[#5D423C] font-medium flex items-center gap-1 transition-colors">
+                  {t.viewAll} <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              {myRequests.length === 0 ? (
+                <div className="bg-white rounded-2xl p-10 border border-[#E4E1DD] text-center shadow-sm">
+                  <div className="w-16 h-16 rounded-2xl bg-[#F9F8F6] flex items-center justify-center mx-auto mb-4">
+                    <FileText className="h-8 w-8 text-[#9B9792]" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-[#2C2C2C] mb-2">Sin solicitudes</h3>
+                  <p className="text-[#6E6B67] mb-6 max-w-sm mx-auto">{t.noRequests}</p>
+                  <Link
+                    href="/purchase/new"
+                    className="inline-flex items-center gap-2 bg-[#75534B] text-white px-5 py-2.5 rounded-xl font-medium hover:bg-[#5D423C] transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                    {t.createRequest}
+                  </Link>
+                </div>
+              ) : (
+                <div className="bg-white rounded-2xl border border-[#E4E1DD] overflow-hidden shadow-sm">
+                  {myRequests.slice(0, 5).map((request, idx) => (
+                    <Link
+                      key={request.id}
+                      href="/requests"
+                      className={`block p-4 hover:bg-[#F9F8F6] transition-colors ${idx !== Math.min(myRequests.length, 5) - 1 ? 'border-b border-[#E4E1DD]' : ''}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        {/* Product Image/Icon */}
+                        <div className="w-12 h-12 rounded-xl bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          {request.product_image_url ? (
+                            <img src={request.product_image_url} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <Package className="h-5 w-5 text-[#9B9792]" />
+                          )}
+                        </div>
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="font-semibold text-[#2C2C2C] text-sm">{request.request_number}</p>
+                            {getStatusBadge(request.status)}
+                          </div>
+                          <p className="text-sm text-[#6E6B67] truncate">{request.product_title || `${request.product_count} productos`}</p>
+                        </div>
+
+                        {/* Price */}
+                        <div className="text-right flex-shrink-0">
+                          <p className="font-bold text-[#2C2C2C]">
+                            ${((request.estimated_price || 0) * request.quantity).toLocaleString()}
+                          </p>
+                          <p className="text-xs text-[#9B9792]">{request.currency || 'MXN'}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Quick Actions Sidebar */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.quickActions}</h2>
+
+              {/* Main CTA */}
               <Link
                 href="/purchase/new"
-                className="inline-flex items-center gap-2 bg-[#75534B] text-white px-4 py-2 rounded-lg hover:bg-[#5D423C] transition-colors"
+                className="block bg-gradient-to-br from-[#75534B] to-[#5D423C] rounded-2xl p-6 text-white hover:shadow-xl transition-all group relative overflow-hidden"
               >
-                <Plus className="h-4 w-4" />
-                {t.createRequest}
-              </Link>
-            </div>
-          ) : (
-            <div className="bg-white rounded-xl border border-[#E4E1DD] overflow-hidden">
-              {myRequests.slice(0, 5).map((request, idx) => (
-                <div key={request.id} className={`p-4 flex items-center justify-between ${idx !== Math.min(myRequests.length, 5) - 1 ? 'border-b border-[#E4E1DD]' : ''}`}>
-                  <div className="flex-1">
-                    <p className="font-medium text-[#2C2C2C]">{request.request_number}</p>
-                    <p className="text-sm text-[#6E6B67]">{request.product_title || `${request.product_count} items`}</p>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <Plus className="h-6 w-6" />
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-[#2C2C2C] mb-1">${((request.estimated_price || 0) * request.quantity).toLocaleString()}</p>
-                    {getStatusBadge(request.status)}
+                  <h3 className="font-semibold text-lg mb-1">{t.createRequest}</h3>
+                  <p className="text-white/70 text-sm">Solicita productos de cualquier tienda en línea</p>
+                </div>
+              </Link>
+
+              {/* Secondary Action */}
+              <Link
+                href="/requests"
+                className="block bg-white rounded-2xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#75534B] transition-all group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-[#75534B]/10 flex items-center justify-center group-hover:bg-[#75534B]/20 transition-colors">
+                    <ClipboardList className="h-5 w-5 text-[#75534B]" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-[#2C2C2C]">{t.viewMyRequests}</h3>
+                    <p className="text-sm text-[#6E6B67]">Ver historial completo</p>
                   </div>
                 </div>
-              ))}
+              </Link>
+
+              {/* Help Card */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <AlertCircle className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-blue-900 text-sm mb-1">¿Necesitas ayuda?</h3>
+                    <p className="text-xs text-blue-700 leading-relaxed">
+                      Puedes solicitar productos de Amazon, MercadoLibre o cualquier tienda en línea. Solo pega el enlace del producto.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </section>
     </div>

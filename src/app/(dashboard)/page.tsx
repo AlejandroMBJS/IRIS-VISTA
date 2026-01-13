@@ -94,6 +94,17 @@ export default function HomePage() {
       date: 'Date',
       requester: 'Requester',
       viewDetails: 'View Details',
+      // Employee Dashboard badges/labels
+      totalBadge: 'Total',
+      waitingBadge: 'Waiting',
+      readyBadge: 'Ready',
+      rejectedBadge: 'Rejected',
+      noRequestsTitle: 'No requests',
+      products: 'products',
+      requestFromStore: 'Request products from any online store',
+      viewFullHistory: 'View full history',
+      needHelp: 'Need help?',
+      helpText: 'You can request products from Amazon, MercadoLibre or any online store. Just paste the product link.',
     },
     zh: {
       welcome: '欢迎回来',
@@ -147,6 +158,16 @@ export default function HomePage() {
       date: '日期',
       requester: '申请人',
       viewDetails: '查看详情',
+      totalBadge: '总计',
+      waitingBadge: '等待中',
+      readyBadge: '已完成',
+      rejectedBadge: '已拒绝',
+      noRequestsTitle: '暂无请求',
+      products: '个产品',
+      requestFromStore: '从任何在线商店请求产品',
+      viewFullHistory: '查看完整历史',
+      needHelp: '需要帮助？',
+      helpText: '您可以从亚马逊、MercadoLibre或任何在线商店请求产品。只需粘贴产品链接即可。',
     },
     es: {
       welcome: 'Bienvenido',
@@ -200,6 +221,16 @@ export default function HomePage() {
       date: 'Fecha',
       requester: 'Solicitante',
       viewDetails: 'Ver Detalles',
+      totalBadge: 'Total',
+      waitingBadge: 'En espera',
+      readyBadge: 'Listo',
+      rejectedBadge: 'Rechazado',
+      noRequestsTitle: 'Sin solicitudes',
+      products: 'productos',
+      requestFromStore: 'Solicita productos de cualquier tienda en línea',
+      viewFullHistory: 'Ver historial completo',
+      needHelp: '¿Necesitas ayuda?',
+      helpText: 'Puedes solicitar productos de Amazon, MercadoLibre o cualquier tienda en línea. Solo pega el enlace del producto.',
     },
   };
 
@@ -631,7 +662,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#75534B] via-[#8A6056] to-[#5D423C] px-4 md:px-8 py-10 md:py-12">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#75534B] via-[#8A6056] to-[#5D423C] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -660,7 +691,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats Cards */}
-      <section className="px-4 md:px-8 -mt-6">
+      <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
@@ -668,7 +699,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                   <FileText className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Total</span>
+                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{t.totalBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.length}</p>
               <p className="text-sm text-[#6E6B67] mt-1">{t.activeRequests}</p>
@@ -679,7 +710,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                   <Clock className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">En espera</span>
+                <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">{t.waitingBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'pending').length}</p>
               <p className="text-sm text-[#6E6B67] mt-1">{t.pending}</p>
@@ -690,7 +721,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                   <CheckCircle className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Listo</span>
+                <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">{t.readyBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'approved' || r.status === 'purchased').length}</p>
               <p className="text-sm text-[#6E6B67] mt-1">{t.approved}</p>
@@ -701,7 +732,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-sm">
                   <XCircle className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">Rechazado</span>
+                <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{t.rejectedBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'rejected').length}</p>
               <p className="text-sm text-[#6E6B67] mt-1">{t.rejected}</p>
@@ -729,7 +760,7 @@ export default function HomePage() {
                   <div className="w-16 h-16 rounded-2xl bg-[#F9F8F6] flex items-center justify-center mx-auto mb-4">
                     <FileText className="h-8 w-8 text-[#9B9792]" />
                   </div>
-                  <h3 className="text-lg font-semibold text-[#2C2C2C] mb-2">Sin solicitudes</h3>
+                  <h3 className="text-lg font-semibold text-[#2C2C2C] mb-2">{t.noRequestsTitle}</h3>
                   <p className="text-[#6E6B67] mb-6 max-w-sm mx-auto">{t.noRequests}</p>
                   <Link
                     href="/purchase/new"
@@ -763,7 +794,7 @@ export default function HomePage() {
                             <p className="font-semibold text-[#2C2C2C] text-sm">{request.request_number}</p>
                             {getStatusBadge(request.status)}
                           </div>
-                          <p className="text-sm text-[#6E6B67] truncate">{request.product_title || `${request.product_count} productos`}</p>
+                          <p className="text-sm text-[#6E6B67] truncate">{request.product_title || `${request.product_count} ${t.products}`}</p>
                         </div>
 
                         {/* Price */}
@@ -795,7 +826,7 @@ export default function HomePage() {
                     <Plus className="h-6 w-6" />
                   </div>
                   <h3 className="font-semibold text-lg mb-1">{t.createRequest}</h3>
-                  <p className="text-white/70 text-sm">Solicita productos de cualquier tienda en línea</p>
+                  <p className="text-white/70 text-sm">{t.requestFromStore}</p>
                 </div>
               </Link>
 
@@ -810,7 +841,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-[#2C2C2C]">{t.viewMyRequests}</h3>
-                    <p className="text-sm text-[#6E6B67]">Ver historial completo</p>
+                    <p className="text-sm text-[#6E6B67]">{t.viewFullHistory}</p>
                   </div>
                 </div>
               </Link>
@@ -822,9 +853,9 @@ export default function HomePage() {
                     <AlertCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-blue-900 text-sm mb-1">¿Necesitas ayuda?</h3>
+                    <h3 className="font-semibold text-blue-900 text-sm mb-1">{t.needHelp}</h3>
                     <p className="text-xs text-blue-700 leading-relaxed">
-                      Puedes solicitar productos de Amazon, MercadoLibre o cualquier tienda en línea. Solo pega el enlace del producto.
+                      {t.helpText}
                     </p>
                   </div>
                 </div>

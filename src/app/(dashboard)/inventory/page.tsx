@@ -3,6 +3,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Package, Plus, Search, Edit2, Trash2, Upload, X, AlertCircle, ImageIcon, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+// Format price to show all significant decimals (minimum 2)
+const formatPrice = (price: number): string => {
+  const priceStr = price.toString();
+  const decimalIndex = priceStr.indexOf('.');
+  if (decimalIndex === -1) {
+    return price.toFixed(2);
+  }
+  const decimals = priceStr.length - decimalIndex - 1;
+  return price.toFixed(Math.max(2, decimals));
+};
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/lib/api';
 import { Product, ProductImage, ApiResponse } from '@/types';
@@ -575,7 +586,7 @@ export default function InventoryPage() {
                         <td className="px-4 py-3 text-sm text-[#6E6B67]">{product.category}</td>
                         <td className="px-4 py-3 text-sm text-[#6E6B67]">{product.supplier}</td>
                         <td className="px-4 py-3 text-sm text-right text-[#2C2C2C]">
-                          {product.currency} {product.price.toFixed(2)}
+                          {product.currency} {formatPrice(product.price)}
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-2">

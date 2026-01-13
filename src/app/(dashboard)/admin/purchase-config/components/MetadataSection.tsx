@@ -5,6 +5,17 @@ import { Link2, Loader2, Check, AlertCircle, HelpCircle } from 'lucide-react';
 import { adminApi } from '@/lib/api';
 import type { PurchaseConfig, ProductMetadata } from '@/types';
 
+// Format price to show all significant decimals (minimum 2)
+const formatPrice = (price: number): string => {
+  const priceStr = price.toString();
+  const decimalIndex = priceStr.indexOf('.');
+  if (decimalIndex === -1) {
+    return price.toFixed(2);
+  }
+  const decimals = priceStr.length - decimalIndex - 1;
+  return price.toFixed(Math.max(2, decimals));
+};
+
 interface Props {
   config: PurchaseConfig;
   onChange: (updates: Partial<PurchaseConfig>) => void;
@@ -307,7 +318,7 @@ export function MetadataSection({ config, onChange, language }: Props) {
                   <p className="text-xs text-[#6E6B67] mt-1 line-clamp-2">{testResult.description}</p>
                   {testResult.price && (
                     <p className="text-sm font-semibold text-[#4BAF7E] mt-2">
-                      {testResult.currency} ${testResult.price.toFixed(2)}
+                      {testResult.currency} ${formatPrice(testResult.price)}
                     </p>
                   )}
                 </div>

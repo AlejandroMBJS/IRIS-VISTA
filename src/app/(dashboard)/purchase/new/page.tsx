@@ -33,6 +33,20 @@ const generateUUID = (): string => {
   });
 };
 
+// Format price to show all significant decimals (minimum 2)
+const formatPrice = (price: number): string => {
+  // Convert to string and check if it has more than 2 decimal places
+  const priceStr = price.toString();
+  const decimalIndex = priceStr.indexOf('.');
+  if (decimalIndex === -1) {
+    // No decimals, add .00
+    return price.toFixed(2);
+  }
+  const decimals = priceStr.length - decimalIndex - 1;
+  // Show all decimals, minimum 2
+  return price.toFixed(Math.max(2, decimals));
+};
+
 // Source type for products
 type ProductSource = 'catalog' | 'external';
 
@@ -526,8 +540,11 @@ export default function NewPurchaseRequestPage() {
     try {
       const items: CreatePurchaseRequestItemInput[] = products.map(product => {
         if (product.source === 'catalog' && product.catalogProduct) {
+          // Use product_url if available (e-commerce product), otherwise use a catalog reference
+          const productUrl = product.catalogProduct.product_url ||
+            `catalog://product/${product.catalogProduct.id}`;
           return {
-            url: product.catalogProduct.image_url || '',
+            url: productUrl,
             quantity: product.quantity,
             product_title: product.catalogProduct.name,
             product_image_url: product.catalogProduct.image_url,
@@ -802,7 +819,7 @@ export default function NewPurchaseRequestPage() {
                           </p>
                           <div className="flex items-center justify-between">
                             <span className="font-bold text-[#75534B]">
-                              ${product.price.toFixed(2)}
+                              ${formatPrice(product.price)}
                             </span>
                             <button
                               onClick={() => addCatalogProductToRequest(product)}
@@ -943,7 +960,7 @@ export default function NewPurchaseRequestPage() {
                           <p className="text-xs text-[#9B9792] mb-1">SKU: {product.catalogProduct.sku}</p>
                         )}
                         <p className="text-base font-bold text-[#75534B]">
-                          {product.catalogProduct.currency || 'MXN'} ${product.catalogProduct.price.toFixed(2)}
+                          {product.catalogProduct.currency || 'MXN'} ${formatPrice(product.catalogProduct.price)}
                         </p>
                       </div>
                       <div className="flex-shrink-0">
@@ -1184,7 +1201,7 @@ export default function NewPurchaseRequestPage() {
                 <div className="text-right">
                   {total > 0 ? (
                     <span className="text-lg font-bold text-[#75534B]">
-                      MXN ${total.toFixed(2)}
+                      MXN ${formatPrice(total)}
                     </span>
                   ) : (
                     <span className="text-[#9B9792]">{t.priceNotAvailable}</span>
@@ -1311,7 +1328,7 @@ export default function NewPurchaseRequestPage() {
                         </p>
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-[#75534B]">
-                            ${product.price.toFixed(2)}
+                            ${formatPrice(product.price)}
                           </span>
                           <button
                             onClick={() => addCatalogProductToRequest(product)}
@@ -1427,7 +1444,7 @@ export default function NewPurchaseRequestPage() {
                       <div className="text-right flex-shrink-0">
                         {info.price ? (
                           <p className="font-bold text-[#75534B]">
-                            ${(info.price * product.quantity).toFixed(2)}
+                            ${formatPrice(info.price * product.quantity)}
                           </p>
                         ) : (
                           <p className="text-xs text-[#9B9792]">-</p>
@@ -1460,7 +1477,7 @@ export default function NewPurchaseRequestPage() {
                   <span className="text-sm font-semibold text-[#2C2C2C]">{t.total}</span>
                   {total > 0 ? (
                     <span className="text-xl font-bold text-[#75534B]">
-                      MXN ${total.toFixed(2)}
+                      MXN ${formatPrice(total)}
                     </span>
                   ) : (
                     <span className="text-[#9B9792]">{t.priceNotAvailable}</span>

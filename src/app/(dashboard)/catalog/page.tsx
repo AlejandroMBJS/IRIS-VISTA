@@ -9,6 +9,17 @@ import { productsApi, requestsApi } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import type { Product, CreateRequestInput } from '@/types';
 
+// Format price to show all significant decimals (minimum 2)
+const formatPrice = (price: number): string => {
+  const priceStr = price.toString();
+  const decimalIndex = priceStr.indexOf('.');
+  if (decimalIndex === -1) {
+    return price.toFixed(2);
+  }
+  const decimals = priceStr.length - decimalIndex - 1;
+  return price.toFixed(Math.max(2, decimals));
+};
+
 export default function CatalogPage() {
   const { language } = useLanguage();
   const { addToCart, items: cartItems, clearCart } = useCart();
@@ -385,7 +396,7 @@ export default function CatalogPage() {
 
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-lg font-semibold text-[#2C2C2C]">
-                    {product.currency}${product.price.toFixed(2)}
+                    {product.currency}${formatPrice(product.price)}
                   </span>
                   {getStockBadge(product)}
                 </div>

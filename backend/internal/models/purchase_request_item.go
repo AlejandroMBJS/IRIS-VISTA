@@ -9,8 +9,8 @@ type PurchaseRequestItem struct {
 	ID        uint   `gorm:"primaryKey" json:"id"`
 	RequestID uint   `gorm:"not null;index" json:"request_id"`
 
-	// Product information (extracted from URL)
-	URL                string   `gorm:"not null;size:2000" json:"url"`
+	// Product information (extracted from URL or catalog)
+	URL                string   `gorm:"size:2000" json:"url"` // Optional for catalog products
 	ProductTitle       string   `gorm:"size:500" json:"product_title"`
 	ProductImageURL    string   `gorm:"size:2000" json:"product_image_url"`
 	ProductDescription string   `gorm:"type:text" json:"product_description"`

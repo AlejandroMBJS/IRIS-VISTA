@@ -31,7 +31,7 @@ func NewRequestHandler(db *gorm.DB) *RequestHandler {
 
 // CreateRequestItemInput represents a single product item in a multi-product request
 type CreateRequestItemInput struct {
-	URL                string   `json:"url" binding:"required,url"`
+	URL                string   `json:"url"` // URL is optional for catalog products
 	Quantity           int      `json:"quantity" binding:"required,gte=1"`
 	ProductTitle       string   `json:"product_title"`
 	ProductImageURL    string   `json:"product_image_url"`

@@ -8,6 +8,17 @@ import { requestsApi } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import type { PurchaseRequest } from '@/types';
 
+// Format price to show all significant decimals (minimum 2)
+const formatPrice = (price: number): string => {
+  const priceStr = price.toString();
+  const decimalIndex = priceStr.indexOf('.');
+  if (decimalIndex === -1) {
+    return price.toFixed(2);
+  }
+  const decimals = priceStr.length - decimalIndex - 1;
+  return price.toFixed(Math.max(2, decimals));
+};
+
 export default function RequestsPage() {
   const { language } = useLanguage();
   const [requests, setRequests] = useState<PurchaseRequest[]>([]);
@@ -337,7 +348,7 @@ export default function RequestsPage() {
                         {request.product_title || 'Product'}
                       </td>
                       <td className="px-6 py-4 text-sm font-semibold text-[#2C2C2C]">
-                        {request.currency}${(request.estimated_price || 0).toFixed(2)}
+                        {request.currency}${formatPrice(request.estimated_price || 0)}
                       </td>
                       <td className="px-6 py-4 text-sm text-[#6E6B67]">
                         {new Date(request.created_at).toLocaleDateString()}
@@ -451,7 +462,7 @@ export default function RequestsPage() {
               <div className="pt-4 border-t border-[#E4E1DD] flex justify-between items-center">
                 <span className="text-lg font-semibold text-[#2C2C2C]">{t.total}:</span>
                 <span className="text-2xl font-bold text-[#75534B]">
-                  {selectedRequest.currency}${((selectedRequest.estimated_price || 0) * selectedRequest.quantity).toFixed(2)}
+                  {selectedRequest.currency}${formatPrice((selectedRequest.estimated_price || 0) * selectedRequest.quantity)}
                 </span>
               </div>
 

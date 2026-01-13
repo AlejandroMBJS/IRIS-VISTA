@@ -31,13 +31,13 @@ func (s *NotificationService) NotifyRequestCreated(request *models.PurchaseReque
 		return err
 	}
 
-	title := fmt.Sprintf("Nueva solicitud de compra #%s", request.RequestNumber)
-	message := fmt.Sprintf("Nueva solicitud de %s por un total estimado de $%.2f MXN",
+	title := fmt.Sprintf("New purchase request #%s", request.RequestNumber)
+	message := fmt.Sprintf("New request from %s for an estimated total of $%.2f MXN",
 		request.Requester.Name, s.getTotalEstimated(request))
 
 	isUrgent := request.IsUrgent()
 	if isUrgent {
-		title = "🔴 " + title + " (URGENTE)"
+		title = "🔴 " + title + " (URGENT)"
 	}
 
 	notificationType := models.NotificationNewPendingRequest
@@ -71,8 +71,8 @@ func (s *NotificationService) NotifyRequestCreated(request *models.PurchaseReque
 
 // NotifyRequestApproved sends notification to requester when their request is approved
 func (s *NotificationService) NotifyRequestApproved(request *models.PurchaseRequest) error {
-	title := fmt.Sprintf("Solicitud #%s aprobada", request.RequestNumber)
-	message := "Tu solicitud de compra ha sido aprobada y está lista para ser procesada."
+	title := fmt.Sprintf("Request #%s approved", request.RequestNumber)
+	message := "Your purchase request has been approved and is ready to be processed."
 
 	notification := models.NewNotification(
 		request.RequesterID,
@@ -101,8 +101,8 @@ func (s *NotificationService) NotifyRequestApproved(request *models.PurchaseRequ
 
 // NotifyRequestRejected sends notification to requester when their request is rejected
 func (s *NotificationService) NotifyRequestRejected(request *models.PurchaseRequest, reason string) error {
-	title := fmt.Sprintf("Solicitud #%s rechazada", request.RequestNumber)
-	message := fmt.Sprintf("Tu solicitud de compra ha sido rechazada. Motivo: %s", reason)
+	title := fmt.Sprintf("Request #%s rejected", request.RequestNumber)
+	message := fmt.Sprintf("Your purchase request has been rejected. Reason: %s", reason)
 
 	notification := models.NewNotification(
 		request.RequesterID,
@@ -131,8 +131,8 @@ func (s *NotificationService) NotifyRequestRejected(request *models.PurchaseRequ
 
 // NotifyRequestInfoRequired sends notification to requester when more info is needed
 func (s *NotificationService) NotifyRequestInfoRequired(request *models.PurchaseRequest, note string) error {
-	title := fmt.Sprintf("Se requiere más información para #%s", request.RequestNumber)
-	message := fmt.Sprintf("El aprobador solicita información adicional: %s", note)
+	title := fmt.Sprintf("More information required for #%s", request.RequestNumber)
+	message := fmt.Sprintf("The approver requests additional information: %s", note)
 
 	notification := models.NewNotification(
 		request.RequesterID,
@@ -161,8 +161,8 @@ func (s *NotificationService) NotifyRequestInfoRequired(request *models.Purchase
 
 // NotifyRequestPurchased sends notification to requester when their order is purchased
 func (s *NotificationService) NotifyRequestPurchased(request *models.PurchaseRequest) error {
-	title := fmt.Sprintf("Pedido #%s completado", request.RequestNumber)
-	message := "Tu pedido ha sido marcado como comprado."
+	title := fmt.Sprintf("Order #%s completed", request.RequestNumber)
+	message := "Your order has been marked as purchased."
 
 	notification := models.NewNotification(
 		request.RequesterID,
@@ -198,8 +198,8 @@ func (s *NotificationService) NotifyNewApprovedOrder(request *models.PurchaseReq
 		return err
 	}
 
-	title := fmt.Sprintf("Nuevo pedido aprobado #%s", request.RequestNumber)
-	message := fmt.Sprintf("Pedido de %s listo para comprar. Total: $%.2f MXN",
+	title := fmt.Sprintf("New approved order #%s", request.RequestNumber)
+	message := fmt.Sprintf("Order from %s ready to purchase. Total: $%.2f MXN",
 		request.Requester.Name, s.getTotalEstimated(request))
 
 	for _, admin := range admins {

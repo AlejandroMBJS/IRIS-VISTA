@@ -186,7 +186,7 @@ func (s *EmailService) SendRequestApprovedEmail(user *models.User, request *mode
 		return nil // Silently skip if not configured
 	}
 
-	subject := fmt.Sprintf("Solicitud #%s Aprobada - IRIS Vista", request.RequestNumber)
+	subject := fmt.Sprintf("Request #%s Approved - IRIS Vista", request.RequestNumber)
 	htmlBody := s.buildApprovalEmail(request, user.Name)
 
 	return s.SendEmail([]string{user.Email}, subject, htmlBody, "")
@@ -199,7 +199,7 @@ func (s *EmailService) SendRequestRejectedEmail(user *models.User, request *mode
 		return nil
 	}
 
-	subject := fmt.Sprintf("Solicitud #%s Rechazada - IRIS Vista", request.RequestNumber)
+	subject := fmt.Sprintf("Request #%s Rejected - IRIS Vista", request.RequestNumber)
 	htmlBody := s.buildRejectionEmail(request, user.Name, reason)
 
 	return s.SendEmail([]string{user.Email}, subject, htmlBody, "")
@@ -212,7 +212,7 @@ func (s *EmailService) SendRequestInfoRequiredEmail(user *models.User, request *
 		return nil
 	}
 
-	subject := fmt.Sprintf("Información Requerida para #%s - IRIS Vista", request.RequestNumber)
+	subject := fmt.Sprintf("Information Required for #%s - IRIS Vista", request.RequestNumber)
 	htmlBody := s.buildInfoRequestEmail(request, user.Name, note)
 
 	return s.SendEmail([]string{user.Email}, subject, htmlBody, "")
@@ -232,9 +232,9 @@ func (s *EmailService) SendNewRequestEmail(approvers []models.User, request *mod
 		return nil
 	}
 
-	subject := fmt.Sprintf("Nueva Solicitud #%s - IRIS Vista", request.RequestNumber)
+	subject := fmt.Sprintf("New Request #%s - IRIS Vista", request.RequestNumber)
 	if isUrgent {
-		subject = fmt.Sprintf("[URGENTE] Nueva Solicitud #%s - IRIS Vista", request.RequestNumber)
+		subject = fmt.Sprintf("[URGENT] New Request #%s - IRIS Vista", request.RequestNumber)
 	}
 
 	for _, approver := range approvers {
@@ -255,7 +255,7 @@ func (s *EmailService) SendOrderPurchasedEmail(user *models.User, request *model
 		return nil
 	}
 
-	subject := fmt.Sprintf("Pedido #%s Completado - IRIS Vista", request.RequestNumber)
+	subject := fmt.Sprintf("Order #%s Completed - IRIS Vista", request.RequestNumber)
 	htmlBody := s.buildPurchasedEmail(request, user.Name)
 
 	return s.SendEmail([]string{user.Email}, subject, htmlBody, "")
@@ -289,22 +289,22 @@ func (s *EmailService) buildApprovalEmail(request *models.PurchaseRequest, userN
             <h1>IRIS Vista</h1>
         </div>
         <div class="content">
-            <p>Hola {{.UserName}},</p>
-            <div class="status">Tu solicitud de compra ha sido aprobada</div>
+            <p>Hello {{.UserName}},</p>
+            <div class="status">Your purchase request has been approved</div>
             <div class="detail-row">
-                <span class="detail-label">Número de solicitud</span>
+                <span class="detail-label">Request Number</span>
                 <span class="detail-value">{{.RequestNumber}}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Producto</span>
+                <span class="detail-label">Product</span>
                 <span class="detail-value">{{.ProductTitle}}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Cantidad</span>
+                <span class="detail-label">Quantity</span>
                 <span class="detail-value">{{.Quantity}}</span>
             </div>
-            <p>Tu solicitud está ahora lista para ser procesada por el equipo de compras.</p>
-            <a href="{{.ActionURL}}" class="btn">Ver Solicitud</a>
+            <p>Your request is now ready to be processed by the purchasing team.</p>
+            <a href="{{.ActionURL}}" class="btn">View Request</a>
         </div>
         <div class="footer">
             <p>IRIS Vista - Supply Chain & Procurement</p>
@@ -348,15 +348,15 @@ func (s *EmailService) buildRejectionEmail(request *models.PurchaseRequest, user
             <h1>IRIS Vista</h1>
         </div>
         <div class="content">
-            <p>Hola {{.UserName}},</p>
-            <div class="status">Tu solicitud de compra ha sido rechazada</div>
-            <p><strong>Solicitud #{{.RequestNumber}}</strong>: {{.ProductTitle}}</p>
+            <p>Hello {{.UserName}},</p>
+            <div class="status">Your purchase request has been rejected</div>
+            <p><strong>Request #{{.RequestNumber}}</strong>: {{.ProductTitle}}</p>
             <div class="reason">
-                <div class="reason-label">Motivo del rechazo</div>
+                <div class="reason-label">Rejection Reason</div>
                 <div class="reason-text">{{.Reason}}</div>
             </div>
-            <p>Si tienes preguntas sobre esta decisión, contacta a tu gerente.</p>
-            <a href="{{.ActionURL}}" class="btn">Ver Solicitud</a>
+            <p>If you have questions about this decision, please contact your manager.</p>
+            <a href="{{.ActionURL}}" class="btn">View Request</a>
         </div>
         <div class="footer">
             <p>IRIS Vista - Supply Chain & Procurement</p>
@@ -400,15 +400,15 @@ func (s *EmailService) buildInfoRequestEmail(request *models.PurchaseRequest, us
             <h1>IRIS Vista</h1>
         </div>
         <div class="content">
-            <p>Hola {{.UserName}},</p>
-            <div class="status">Se requiere información adicional</div>
-            <p><strong>Solicitud #{{.RequestNumber}}</strong>: {{.ProductTitle}}</p>
+            <p>Hello {{.UserName}},</p>
+            <div class="status">Additional information required</div>
+            <p><strong>Request #{{.RequestNumber}}</strong>: {{.ProductTitle}}</p>
             <div class="note">
-                <div class="note-label">Información solicitada</div>
+                <div class="note-label">Information Requested</div>
                 <div class="note-text">{{.Note}}</div>
             </div>
-            <p>Por favor, actualiza tu solicitud con la información requerida.</p>
-            <a href="{{.ActionURL}}" class="btn">Actualizar Solicitud</a>
+            <p>Please update your request with the required information.</p>
+            <a href="{{.ActionURL}}" class="btn">Update Request</a>
         </div>
         <div class="footer">
             <p>IRIS Vista - Supply Chain & Procurement</p>
@@ -429,7 +429,7 @@ func (s *EmailService) buildInfoRequestEmail(request *models.PurchaseRequest, us
 func (s *EmailService) buildNewRequestEmail(request *models.PurchaseRequest, approverName string, isUrgent bool) string {
 	urgentBadge := ""
 	if isUrgent {
-		urgentBadge = `<span style="background: #dc2626; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; margin-left: 8px;">URGENTE</span>`
+		urgentBadge = `<span style="background: #dc2626; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; margin-left: 8px;">URGENT</span>`
 	}
 
 	tmpl := `
@@ -457,26 +457,26 @@ func (s *EmailService) buildNewRequestEmail(request *models.PurchaseRequest, app
             <h1>IRIS Vista</h1>
         </div>
         <div class="content">
-            <p>Hola {{.ApproverName}},</p>
-            <div class="status">Nueva solicitud pendiente de aprobación {{.UrgentBadge}}</div>
+            <p>Hello {{.ApproverName}},</p>
+            <div class="status">New request pending approval {{.UrgentBadge}}</div>
             <div class="detail-row">
-                <span class="detail-label">Número de solicitud</span>
+                <span class="detail-label">Request Number</span>
                 <span class="detail-value">{{.RequestNumber}}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Solicitante</span>
+                <span class="detail-label">Requester</span>
                 <span class="detail-value">{{.RequesterName}}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Producto</span>
+                <span class="detail-label">Product</span>
                 <span class="detail-value">{{.ProductTitle}}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Cantidad</span>
+                <span class="detail-label">Quantity</span>
                 <span class="detail-value">{{.Quantity}}</span>
             </div>
-            <p>Por favor, revisa y procesa esta solicitud.</p>
-            <a href="{{.ActionURL}}" class="btn">Revisar Solicitud</a>
+            <p>Please review and process this request.</p>
+            <a href="{{.ActionURL}}" class="btn">Review Request</a>
         </div>
         <div class="footer">
             <p>IRIS Vista - Supply Chain & Procurement</p>
@@ -527,22 +527,22 @@ func (s *EmailService) buildPurchasedEmail(request *models.PurchaseRequest, user
             <h1>IRIS Vista</h1>
         </div>
         <div class="content">
-            <p>Hola {{.UserName}},</p>
-            <div class="status">Tu pedido ha sido completado</div>
+            <p>Hello {{.UserName}},</p>
+            <div class="status">Your order has been completed</div>
             <div class="detail-row">
-                <span class="detail-label">Número de solicitud</span>
+                <span class="detail-label">Request Number</span>
                 <span class="detail-value">{{.RequestNumber}}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Producto</span>
+                <span class="detail-label">Product</span>
                 <span class="detail-value">{{.ProductTitle}}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Cantidad</span>
+                <span class="detail-label">Quantity</span>
                 <span class="detail-value">{{.Quantity}}</span>
             </div>
-            <p>El equipo de compras ha procesado tu pedido exitosamente.</p>
-            <a href="{{.ActionURL}}" class="btn">Ver Detalles</a>
+            <p>The purchasing team has successfully processed your order.</p>
+            <a href="{{.ActionURL}}" class="btn">View Details</a>
         </div>
         <div class="footer">
             <p>IRIS Vista - Supply Chain & Procurement</p>

@@ -788,7 +788,7 @@ export default function NewPurchaseRequestPage() {
                       </div>
                     </div>
 
-                    {/* Product Preview */}
+                    {/* Product Preview / Manual Entry */}
                     {product.metadata && (
                       <div className="bg-[#F9F8F6] rounded-lg p-4 mb-4">
                         <div className="flex items-center justify-between mb-3">
@@ -813,32 +813,64 @@ export default function NewPurchaseRequestPage() {
                         </div>
 
                         <div className="flex gap-4">
-                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
-                            {product.metadata.image_url ? (
-                              <img
-                                src={product.metadata.image_url}
-                                alt={product.metadata.title}
-                                className="max-w-full max-h-full object-contain"
-                              />
-                            ) : (
-                              <span className="text-[#9B9792] text-xs text-center px-2">{t.noImage}</span>
-                            )}
+                          <div className="flex flex-col items-center gap-1">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                              {product.metadata.image_url ? (
+                                <img
+                                  src={product.metadata.image_url}
+                                  alt={product.metadata.title}
+                                  className="max-w-full max-h-full object-contain"
+                                />
+                              ) : (
+                                <span className="text-[#9B9792] text-xs text-center px-2">{t.noImage}</span>
+                              )}
+                            </div>
+                            {/* Image URL input */}
+                            <input
+                              type="text"
+                              value={product.metadata.image_url || ''}
+                              onChange={(e) => {
+                                const newMetadata = { ...product.metadata!, image_url: e.target.value };
+                                updateProduct(product.id, 'metadata', newMetadata);
+                              }}
+                              placeholder="URL imagen"
+                              className="w-20 sm:w-24 text-[10px] text-[#6E6B67] bg-transparent border-b border-[#E4E1DD] focus:border-[#75534B] focus:outline-none text-center truncate"
+                            />
                           </div>
 
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-[#2C2C2C] line-clamp-2 mb-1 text-sm">
-                              {product.metadata.title || product.url}
-                            </h4>
+                            {/* Editable Title */}
+                            <input
+                              type="text"
+                              value={product.metadata.title || ''}
+                              onChange={(e) => {
+                                const newMetadata = { ...product.metadata!, title: e.target.value };
+                                updateProduct(product.id, 'metadata', newMetadata);
+                              }}
+                              placeholder={language === 'es' ? 'Nombre del producto' : language === 'zh' ? '产品名称' : 'Product name'}
+                              className="w-full font-semibold text-[#2C2C2C] text-sm bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-1"
+                            />
                             {product.metadata.description && (
                               <p className="text-xs text-[#6E6B67] line-clamp-2 mb-2 hidden sm:block">
                                 {product.metadata.description}
                               </p>
                             )}
-                            {product.metadata.price && (
-                              <p className="text-base font-bold text-[#75534B]">
-                                {product.metadata.currency || 'MXN'} ${product.metadata.price.toFixed(2)}
-                              </p>
-                            )}
+                            {/* Editable Price */}
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-[#6E6B67]">{product.metadata.currency || 'MXN'} $</span>
+                              <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={product.metadata.price || ''}
+                                onChange={(e) => {
+                                  const newMetadata = { ...product.metadata!, price: parseFloat(e.target.value) || null };
+                                  updateProduct(product.id, 'metadata', newMetadata);
+                                }}
+                                placeholder="0.00"
+                                className="w-24 text-base font-bold text-[#75534B] bg-transparent border-b border-[#E4E1DD] hover:border-[#75534B] focus:border-[#75534B] focus:outline-none"
+                              />
+                            </div>
                           </div>
 
                           <div className="flex-shrink-0">

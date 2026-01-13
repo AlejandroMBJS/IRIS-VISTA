@@ -46,7 +46,8 @@ export default function ApprovalsPage() {
   const { user } = useAuth();
   const [approvals, setApprovals] = useState<PurchaseRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState('pending');
+  // GM sees all requests by default, others see pending
+  const [selectedTab, setSelectedTab] = useState(user?.role === 'general_manager' ? 'all' : 'pending');
   const [selectedApproval, setSelectedApproval] = useState<PurchaseRequest | null>(null);
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,12 +59,13 @@ export default function ApprovalsPage() {
 
   const text = {
     en: {
-      title: 'Pending Approvals',
-      subtitle: 'Review and Approve Purchase Requests',
+      title: 'Approvals',
+      subtitle: 'Review and Manage Purchase Requests',
       pending: 'Pending',
       approved: 'Approved',
       rejected: 'Rejected',
       infoRequested: 'Info Requested',
+      all: 'All',
       prNumber: 'PR Number',
       requester: 'Requester',
       department: 'Department',
@@ -123,15 +125,17 @@ export default function ApprovalsPage() {
         rejected: 'Rejected',
         info_requested: 'Info Requested',
         purchased: 'Purchased',
+        all: 'All',
       },
     },
     zh: {
-      title: '待审批',
-      subtitle: '审核和批准采购请求',
+      title: '审批管理',
+      subtitle: '审核和管理采购请求',
       pending: '待审批',
       approved: '已批准',
       rejected: '已拒绝',
       infoRequested: '需要更多信息',
+      all: '全部',
       prNumber: 'PR编号',
       requester: '请求人',
       department: '部门',
@@ -191,15 +195,17 @@ export default function ApprovalsPage() {
         rejected: '已拒绝',
         info_requested: '需要信息',
         purchased: '已购买',
+        all: '全部',
       },
     },
     es: {
-      title: 'Aprobaciones Pendientes',
-      subtitle: 'Revisar y Aprobar Solicitudes de Compra',
+      title: 'Aprobaciones',
+      subtitle: 'Revisar y Gestionar Solicitudes de Compra',
       pending: 'Pendiente',
       approved: 'Aprobado',
       rejected: 'Rechazado',
       infoRequested: 'Info Solicitada',
+      all: 'Todas',
       prNumber: 'Número PR',
       requester: 'Solicitante',
       department: 'Departamento',
@@ -259,6 +265,7 @@ export default function ApprovalsPage() {
         rejected: 'Rechazado',
         info_requested: 'Info Solicitada',
         purchased: 'Comprado',
+        all: 'Todas',
       },
     },
   };
@@ -484,7 +491,7 @@ export default function ApprovalsPage() {
           <div className="mb-6 flex flex-col md:flex-row gap-4">
             {/* Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-              {(['pending', 'approved', 'rejected', 'info_requested'] as const).map((tab) => (
+              {(['all', 'pending', 'approved', 'rejected', 'info_requested'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setSelectedTab(tab)}

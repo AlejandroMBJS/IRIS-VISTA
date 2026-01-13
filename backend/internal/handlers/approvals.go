@@ -35,24 +35,46 @@ type ApprovalAction struct {
 	Comment string `json:"comment"`
 }
 
-// ListPendingApprovals returns a list of pending requests for approval
+// ListPendingApprovals returns a list of requests for approval (filtered by status)
 func (h *ApprovalHandler) ListPendingApprovals(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	perPage, _ := strconv.Atoi(c.DefaultQuery("per_page", "20"))
+	status := c.DefaultQuery("status", "pending")
 
 	offset := (page - 1) * perPage
 
 	query := h.db.Model(&models.PurchaseRequest{}).
-		Where("status = ?", models.StatusPending).
 		Preload("Requester").
 		Preload("Items")
+
+	// Filter by status
+	switch status {
+	case "pending":
+		query = query.Where("status = ?", models.StatusPending)
+	case "approved":
+		// Include both approved and purchased statuses
+		query = query.Where("status IN ?", []models.RequestStatus{models.StatusApproved, models.StatusPurchased})
+	case "rejected":
+		query = query.Where("status = ?", models.StatusRejected)
+	case "info_requested":
+		query = query.Where("status = ?", models.StatusInfoRequested)
+	case "all":
+		// No filter - show all
+	default:
+		query = query.Where("status = ?", models.StatusPending)
+	}
 
 	var total int64
 	query.Count(&total)
 
 	var requests []models.PurchaseRequest
-	if err := query.Offset(offset).Limit(perPage).Order("urgency DESC, created_at ASC").Find(&requests).Error; err != nil {
-		response.InternalServerError(c, "Failed to fetch pending approvals")
+	// Order by urgency for pending, by date for others
+	orderClause := "created_at DESC"
+	if status == "pending" {
+		orderClause = "urgency DESC, created_at ASC"
+	}
+	if err := query.Offset(offset).Limit(perPage).Order(orderClause).Find(&requests).Error; err != nil {
+		response.InternalServerError(c, "Failed to fetch approvals")
 		return
 	}
 

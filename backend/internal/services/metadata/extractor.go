@@ -1,7 +1,9 @@
 package metadata
 
 import (
+	"compress/gzip"
 	"fmt"
+	"io"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -48,10 +50,21 @@ func (e *Extractor) ExtractFromURL(url string) (*ProductMetadata, error) {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	// Set headers to appear as a regular browser
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-	req.Header.Set("Accept-Language", "es-MX,es;q=0.9,en;q=0.8")
+	// Set headers to appear as a regular browser - more complete headers
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
+	req.Header.Set("Accept-Language", "es-MX,es;q=0.9,en-US;q=0.8,en;q=0.7")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
+	req.Header.Set("Cache-Control", "no-cache")
+	req.Header.Set("Pragma", "no-cache")
+	req.Header.Set("Sec-Ch-Ua", `"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"`)
+	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
+	req.Header.Set("Sec-Ch-Ua-Platform", `"Windows"`)
+	req.Header.Set("Sec-Fetch-Dest", "document")
+	req.Header.Set("Sec-Fetch-Mode", "navigate")
+	req.Header.Set("Sec-Fetch-Site", "none")
+	req.Header.Set("Sec-Fetch-User", "?1")
+	req.Header.Set("Upgrade-Insecure-Requests", "1")
 
 	resp, err := e.client.Do(req)
 	if err != nil {
@@ -63,7 +76,18 @@ func (e *Extractor) ExtractFromURL(url string) (*ProductMetadata, error) {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	// Handle gzip encoding
+	var reader io.Reader = resp.Body
+	if resp.Header.Get("Content-Encoding") == "gzip" {
+		gzReader, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create gzip reader: %w", err)
+		}
+		defer gzReader.Close()
+		reader = gzReader
+	}
+
+	doc, err := goquery.NewDocumentFromReader(reader)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse HTML: %w", err)
 	}
@@ -222,24 +246,44 @@ func (e *Extractor) extractSiteSpecific(doc *goquery.Document, url string, metad
 
 // extractAmazon extracts Amazon-specific data
 func (e *Extractor) extractAmazon(doc *goquery.Document, metadata *ProductMetadata) {
-	// Title from product title
+	// Title from product title - multiple selectors
 	if metadata.Title == "" {
-		metadata.Title = strings.TrimSpace(doc.Find("#productTitle").Text())
+		titleSelectors := []string{
+			"#productTitle",
+			"#title span",
+			"span#productTitle",
+			"h1#title span",
+			"h1.a-size-large",
+		}
+		for _, selector := range titleSelectors {
+			if title := strings.TrimSpace(doc.Find(selector).First().Text()); title != "" {
+				metadata.Title = title
+				break
+			}
+		}
 	}
 
-	// Price
+	// Price - try many different selectors (Amazon changes these frequently)
 	if metadata.Price == nil {
-		// Try different price selectors
 		priceSelectors := []string{
 			".a-price .a-offscreen",
 			"#priceblock_ourprice",
 			"#priceblock_dealprice",
+			"#priceblock_saleprice",
 			".a-price-whole",
 			"#price_inside_buybox",
+			"#corePrice_feature_div .a-offscreen",
+			"#corePriceDisplay_desktop_feature_div .a-offscreen",
+			".apexPriceToPay .a-offscreen",
+			"#apex_offerDisplay_desktop .a-offscreen",
+			".reinventPricePriceToPayMargin .a-offscreen",
+			"span.a-price span.a-offscreen",
+			"#tp_price_block_total_price_ww .a-offscreen",
+			".priceToPay .a-offscreen",
 		}
 		for _, selector := range priceSelectors {
 			if priceText := strings.TrimSpace(doc.Find(selector).First().Text()); priceText != "" {
-				if price, err := e.parsePrice(priceText); err == nil {
+				if price, err := e.parsePrice(priceText); err == nil && price > 0 {
 					metadata.Price = &price
 					break
 				}
@@ -247,39 +291,104 @@ func (e *Extractor) extractAmazon(doc *goquery.Document, metadata *ProductMetada
 		}
 	}
 
-	// Image
+	// Image - try multiple selectors and attributes
 	if metadata.ImageURL == "" {
-		if src, exists := doc.Find("#landingImage").Attr("src"); exists {
-			metadata.ImageURL = src
+		imageSelectors := []string{
+			"#landingImage",
+			"#imgBlkFront",
+			"#main-image",
+			"#ebooksImgBlkFront",
+			".a-dynamic-image",
+			"#imgTagWrapperId img",
+			"#imageBlock img",
+		}
+		for _, selector := range imageSelectors {
+			el := doc.Find(selector).First()
+			// Try data-a-dynamic-image first (contains high-res images)
+			if jsonStr, exists := el.Attr("data-a-dynamic-image"); exists && jsonStr != "" {
+				if imgURL := e.extractAmazonImageFromJSON(jsonStr); imgURL != "" {
+					metadata.ImageURL = imgURL
+					break
+				}
+			}
+			// Try data-old-hires
+			if src, exists := el.Attr("data-old-hires"); exists && src != "" {
+				metadata.ImageURL = src
+				break
+			}
+			// Try src
+			if src, exists := el.Attr("src"); exists && src != "" && !strings.HasPrefix(src, "data:") {
+				metadata.ImageURL = src
+				break
+			}
 		}
 	}
 
 	if metadata.SiteName == "" {
 		metadata.SiteName = "Amazon"
 	}
+
+	if metadata.Currency == "" {
+		metadata.Currency = "MXN"
+	}
 }
 
 // extractMercadoLibre extracts MercadoLibre-specific data
 func (e *Extractor) extractMercadoLibre(doc *goquery.Document, metadata *ProductMetadata) {
-	// Title
+	// Title - multiple selectors
 	if metadata.Title == "" {
-		metadata.Title = strings.TrimSpace(doc.Find(".ui-pdp-title").Text())
-	}
-
-	// Price
-	if metadata.Price == nil {
-		priceText := strings.TrimSpace(doc.Find(".andes-money-amount__fraction").First().Text())
-		if priceText != "" {
-			if price, err := e.parsePrice(priceText); err == nil {
-				metadata.Price = &price
+		titleSelectors := []string{
+			".ui-pdp-title",
+			"h1.ui-pdp-title",
+			".item-title__primary",
+			"h1[class*='title']",
+		}
+		for _, selector := range titleSelectors {
+			if title := strings.TrimSpace(doc.Find(selector).First().Text()); title != "" {
+				metadata.Title = title
+				break
 			}
 		}
 	}
 
-	// Image
+	// Price - multiple selectors
+	if metadata.Price == nil {
+		priceSelectors := []string{
+			".andes-money-amount__fraction",
+			".price-tag-fraction",
+			"span[class*='price'] span[class*='fraction']",
+			".ui-pdp-price__second-line .andes-money-amount__fraction",
+		}
+		for _, selector := range priceSelectors {
+			if priceText := strings.TrimSpace(doc.Find(selector).First().Text()); priceText != "" {
+				if price, err := e.parsePrice(priceText); err == nil && price > 0 {
+					metadata.Price = &price
+					break
+				}
+			}
+		}
+	}
+
+	// Image - multiple selectors and attributes
 	if metadata.ImageURL == "" {
-		if src, exists := doc.Find(".ui-pdp-image").Attr("src"); exists {
-			metadata.ImageURL = src
+		imageSelectors := []string{
+			".ui-pdp-image",
+			".ui-pdp-gallery__figure img",
+			"figure.ui-pdp-gallery__figure img",
+			"img[data-zoom]",
+			".gallery-image img",
+		}
+		for _, selector := range imageSelectors {
+			el := doc.Find(selector).First()
+			// Try data-zoom first (high-res)
+			if src, exists := el.Attr("data-zoom"); exists && src != "" {
+				metadata.ImageURL = src
+				break
+			}
+			if src, exists := el.Attr("src"); exists && src != "" && !strings.HasPrefix(src, "data:") {
+				metadata.ImageURL = src
+				break
+			}
 		}
 	}
 

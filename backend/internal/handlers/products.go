@@ -544,3 +544,135 @@ func (h *ProductHandler) UpdateStock(c *gin.Context) {
 
 	response.Success(c, productToResponse(product))
 }
+
+// BulkImportProduct represents a single product in bulk import
+type BulkImportProduct struct {
+	SKU           string  `json:"sku" binding:"required"`
+	Name          string  `json:"name" binding:"required"`
+	NameZh        string  `json:"name_zh"`
+	NameEs        string  `json:"name_es"`
+	Description   string  `json:"description"`
+	Category      string  `json:"category" binding:"required"`
+	Model         string  `json:"model"`
+	Specification string  `json:"specification"`
+	SpecZh        string  `json:"spec_zh"`
+	SpecEs        string  `json:"spec_es"`
+	Supplier      string  `json:"supplier"`
+	SupplierCode  string  `json:"supplier_code"`
+	Price         float64 `json:"price"`
+	Currency      string  `json:"currency"`
+	Stock         int     `json:"stock"`
+	MinStock      int     `json:"min_stock"`
+	MaxStock      int     `json:"max_stock"`
+	Location      string  `json:"location"`
+	ImageURL      string  `json:"image_url"`
+	IsActive      *bool   `json:"is_active"`
+	IsEcommerce   bool    `json:"is_ecommerce"`
+	ProductURL    string  `json:"product_url"`
+	Brand         string  `json:"brand"`
+	ASIN          string  `json:"asin"`
+}
+
+// BulkProductImportRequest is the request body for bulk product import
+type BulkProductImportRequest struct {
+	Products []BulkImportProduct `json:"products" binding:"required,min=1"`
+}
+
+// BulkProductImportResult represents the result of a single product import
+type BulkProductImportResult struct {
+	Row     int    `json:"row"`
+	SKU     string `json:"sku"`
+	Name    string `json:"name"`
+	Success bool   `json:"success"`
+	Error   string `json:"error,omitempty"`
+}
+
+// BulkImportProducts imports multiple products at once
+func (h *ProductHandler) BulkImportProducts(c *gin.Context) {
+	var req BulkProductImportRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "Invalid request: "+err.Error())
+		return
+	}
+
+	results := make([]BulkProductImportResult, len(req.Products))
+	successCount := 0
+
+	for i, p := range req.Products {
+		result := BulkProductImportResult{
+			Row:  i + 2, // Row number in CSV (1-indexed, +1 for header)
+			SKU:  p.SKU,
+			Name: p.Name,
+		}
+
+		// Check if SKU already exists
+		var existingProduct models.Product
+		if err := h.db.Where("sku = ?", p.SKU).First(&existingProduct).Error; err == nil {
+			result.Error = "SKU already exists"
+			results[i] = result
+			continue
+		}
+
+		currency := p.Currency
+		if currency == "" {
+			currency = "MXN"
+		}
+
+		// Determine IsActive (default to true)
+		isActive := true
+		if p.IsActive != nil {
+			isActive = *p.IsActive
+		}
+
+		// Determine Source based on IsEcommerce
+		source := models.SourceInternal
+		if p.IsEcommerce {
+			source = models.SourceExternal
+		}
+
+		product := models.Product{
+			SKU:           p.SKU,
+			Name:          p.Name,
+			NameZh:        p.NameZh,
+			NameEs:        p.NameEs,
+			Description:   p.Description,
+			Category:      p.Category,
+			Model:         p.Model,
+			Specification: p.Specification,
+			SpecZh:        p.SpecZh,
+			SpecEs:        p.SpecEs,
+			Supplier:      p.Supplier,
+			SupplierCode:  p.SupplierCode,
+			Price:         p.Price,
+			Currency:      currency,
+			Stock:         p.Stock,
+			MinStock:      p.MinStock,
+			MaxStock:      p.MaxStock,
+			Location:      p.Location,
+			ImageURL:      p.ImageURL,
+			Source:        source,
+			IsActive:      isActive,
+			IsEcommerce:   p.IsEcommerce,
+			ProductURL:    p.ProductURL,
+			Brand:         p.Brand,
+			ASIN:          p.ASIN,
+		}
+
+		if err := h.db.Create(&product).Error; err != nil {
+			result.Error = "Failed to create product: " + err.Error()
+			results[i] = result
+			continue
+		}
+
+		result.Success = true
+		results[i] = result
+		successCount++
+	}
+
+	response.SuccessWithMessage(c, "Bulk import completed", map[string]interface{}{
+		"total":   len(req.Products),
+		"success": successCount,
+		"failed":  len(req.Products) - successCount,
+		"results": results,
+	})
+}

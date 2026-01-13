@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Package, Plus, Search, Edit2, Trash2, Upload, X, AlertCircle, ImageIcon, ExternalLink } from 'lucide-react';
+import { Package, Plus, Search, Edit2, Trash2, Upload, X, AlertCircle, ImageIcon, ExternalLink, Download, FileSpreadsheet } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 // Format price to show all significant decimals (minimum 2)
@@ -15,7 +15,7 @@ const formatPrice = (price: number): string => {
   return price.toFixed(Math.max(2, decimals));
 };
 import { useAuth } from '@/contexts/AuthContext';
-import api from '@/lib/api';
+import api, { productsApi } from '@/lib/api';
 import { Product, ProductImage, ApiResponse } from '@/types';
 
 interface ProductFormData {
@@ -108,6 +108,18 @@ export default function InventoryPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
 
+  // CSV Import state
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [csvText, setCsvText] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importResults, setImportResults] = useState<{
+    total: number;
+    success: number;
+    failed: number;
+    results: Array<{ row: number; sku: string; success: boolean; error?: string }>;
+  } | null>(null);
+  const csvFileInputRef = useRef<HTMLInputElement>(null);
+
   const canEdit = user?.role === 'admin' || user?.role === 'supply_chain_manager';
 
   const text = {
@@ -167,6 +179,18 @@ export default function InventoryPage() {
       asin: 'Amazon ASIN',
       brand: 'Brand',
       ecommerceHint: 'Mark as e-commerce if this product is purchased from an online store',
+      // Import translations
+      importProducts: 'Import Products',
+      importFromCSV: 'Import from CSV',
+      downloadTemplate: 'Download Template',
+      pasteCSV: 'Or paste CSV data here',
+      csvFormat: 'CSV format: sku,name,category,model,specification,supplier,supplier_code,price,currency,stock,min_stock,max_stock,location,description,is_active,is_ecommerce,product_url,brand,asin',
+      import: 'Import',
+      importSuccess: 'Import completed',
+      imported: 'imported',
+      failed: 'failed',
+      row: 'Row',
+      close: 'Close',
     },
     zh: {
       title: '库存管理',
@@ -224,6 +248,18 @@ export default function InventoryPage() {
       asin: 'Amazon ASIN',
       brand: '品牌',
       ecommerceHint: '如果此产品从在线商店购买，请标记为电商产品',
+      // Import translations
+      importProducts: '导入产品',
+      importFromCSV: '从CSV导入',
+      downloadTemplate: '下载模板',
+      pasteCSV: '或在此粘贴CSV数据',
+      csvFormat: 'CSV格式：sku,name,category,model,specification,supplier,supplier_code,price,currency,stock,min_stock,max_stock,location,description,is_active,is_ecommerce,product_url,brand,asin',
+      import: '导入',
+      importSuccess: '导入完成',
+      imported: '已导入',
+      failed: '失败',
+      row: '行',
+      close: '关闭',
     },
     es: {
       title: 'Gestión de Inventario',
@@ -281,6 +317,18 @@ export default function InventoryPage() {
       asin: 'Amazon ASIN',
       brand: 'Marca',
       ecommerceHint: 'Marcar como e-commerce si este producto se compra de una tienda en línea',
+      // Import translations
+      importProducts: 'Importar Productos',
+      importFromCSV: 'Importar desde CSV',
+      downloadTemplate: 'Descargar Plantilla',
+      pasteCSV: 'O pegue datos CSV aquí',
+      csvFormat: 'Formato CSV: sku,name,category,model,specification,supplier,supplier_code,price,currency,stock,min_stock,max_stock,location,description,is_active,is_ecommerce,product_url,brand,asin',
+      import: 'Importar',
+      importSuccess: 'Importación completada',
+      imported: 'importados',
+      failed: 'fallidos',
+      row: 'Fila',
+      close: 'Cerrar',
     },
   };
 
@@ -499,6 +547,145 @@ export default function InventoryPage() {
     }
   };
 
+  // CSV Import functions
+  const handleDownloadTemplate = () => {
+    const headers = 'sku,name,category,model,specification,supplier,supplier_code,price,currency,stock,min_stock,max_stock,location,description,is_active,is_ecommerce,product_url,brand,asin';
+    const example1 = 'SKU001,Wireless Mouse,Electronics,WM-100,2.4GHz wireless,Logitech,LOG-001,25.99,USD,100,10,500,Warehouse A,Ergonomic wireless mouse,true,true,https://amazon.com/dp/B123,Logitech,B0123456';
+    const example2 = 'SKU002,USB Cable,Accessories,USB-C-1M,USB-C to USB-A 1m,Anker,ANK-002,12.50,USD,200,20,1000,Warehouse B,High speed charging cable,true,false,,,';
+    const csvContent = `${headers}\n${example1}\n${example2}`;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'products_import_template.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleCsvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setCsvText(event.target?.result as string || '');
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const handleImport = async () => {
+    if (!csvText.trim()) return;
+
+    setImporting(true);
+    setImportResults(null);
+
+    try {
+      const lines = csvText.trim().split('\n');
+      if (lines.length < 2) {
+        setError('CSV must have a header row and at least one data row');
+        setImporting(false);
+        return;
+      }
+
+      const products: Array<{
+        sku: string;
+        name: string;
+        category: string;
+        model: string;
+        specification: string;
+        supplier: string;
+        supplier_code: string;
+        price: number;
+        currency: string;
+        stock: number;
+        min_stock: number;
+        max_stock: number;
+        location: string;
+        description: string;
+        is_active: boolean;
+        is_ecommerce: boolean;
+        product_url: string;
+        brand: string;
+        asin: string;
+      }> = [];
+
+      // Skip header row
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Parse CSV line (handle quoted fields)
+        const values: string[] = [];
+        let current = '';
+        let inQuotes = false;
+        for (let j = 0; j < line.length; j++) {
+          const char = line[j];
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim());
+
+        if (values.length >= 3) {
+          products.push({
+            sku: values[0] || '',
+            name: values[1] || '',
+            category: values[2] || '',
+            model: values[3] || '',
+            specification: values[4] || '',
+            supplier: values[5] || '',
+            supplier_code: values[6] || '',
+            price: parseFloat(values[7]) || 0,
+            currency: values[8] || 'USD',
+            stock: parseInt(values[9]) || 0,
+            min_stock: parseInt(values[10]) || 0,
+            max_stock: parseInt(values[11]) || 0,
+            location: values[12] || '',
+            description: values[13] || '',
+            is_active: values[14]?.toLowerCase() !== 'false',
+            is_ecommerce: values[15]?.toLowerCase() === 'true',
+            product_url: values[16] || '',
+            brand: values[17] || '',
+            asin: values[18] || '',
+          });
+        }
+      }
+
+      if (products.length === 0) {
+        setError('No valid products found in CSV');
+        setImporting(false);
+        return;
+      }
+
+      const response = await productsApi.bulkImport(products);
+      setImportResults(response);
+
+      if (response.success > 0) {
+        fetchProducts();
+      }
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to import products');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleCloseImportModal = () => {
+    setShowImportModal(false);
+    setCsvText('');
+    setImportResults(null);
+    if (csvFileInputRef.current) {
+      csvFileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
@@ -511,13 +698,22 @@ export default function InventoryPage() {
             <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
           </div>
           {canEdit && (
-            <button
-              onClick={() => handleOpenModal()}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-white shadow-md hover:opacity-90 transition-all"
-            >
-              <Plus className="h-5 w-5" />
-              {t.addProduct}
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowImportModal(true)}
+                className="flex items-center gap-2 rounded-xl border border-[#75534B] px-6 py-3 text-[#75534B] hover:bg-[#75534B]/10 transition-all"
+              >
+                <FileSpreadsheet className="h-5 w-5" />
+                {t.importProducts}
+              </button>
+              <button
+                onClick={() => handleOpenModal()}
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-white shadow-md hover:opacity-90 transition-all"
+              >
+                <Plus className="h-5 w-5" />
+                {t.addProduct}
+              </button>
+            </div>
           )}
         </div>
       </section>
@@ -1094,6 +1290,96 @@ export default function InventoryPage() {
               >
                 {t.yes}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-[#E4E1DD] px-6 py-4 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-[#2C2C2C]">{t.importFromCSV}</h2>
+              <button onClick={handleCloseImportModal} className="p-2 hover:bg-[#F9F8F6] rounded-lg">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* Download Template */}
+              <div>
+                <button
+                  onClick={handleDownloadTemplate}
+                  className="flex items-center gap-2 px-4 py-2 border border-[#75534B] text-[#75534B] rounded-lg hover:bg-[#75534B]/10 transition-colors"
+                >
+                  <Download className="h-5 w-5" />
+                  {t.downloadTemplate}
+                </button>
+              </div>
+
+              {/* CSV Format Info */}
+              <p className="text-xs text-[#6E6B67] bg-[#F9F8F6] p-3 rounded-lg break-all">{t.csvFormat}</p>
+
+              {/* File Upload */}
+              <div>
+                <input
+                  ref={csvFileInputRef}
+                  type="file"
+                  accept=".csv"
+                  onChange={handleCsvFileChange}
+                  className="block w-full text-sm text-[#6E6B67] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-[#E4E1DD] file:text-sm file:font-medium file:bg-white file:text-[#75534B] hover:file:bg-[#F9F8F6]"
+                />
+              </div>
+
+              {/* CSV Textarea */}
+              <div>
+                <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.pasteCSV}</label>
+                <textarea
+                  value={csvText}
+                  onChange={(e) => setCsvText(e.target.value)}
+                  rows={10}
+                  className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B] font-mono text-sm"
+                  placeholder="sku,name,category,..."
+                />
+              </div>
+
+              {/* Import Results */}
+              {importResults && (
+                <div className={`p-4 rounded-lg ${importResults.failed > 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-green-50 border border-green-200'}`}>
+                  <p className="font-medium text-[#2C2C2C] mb-2">
+                    {t.importSuccess}: {importResults.success} {t.imported}, {importResults.failed} {t.failed}
+                  </p>
+                  {importResults.results.filter(r => !r.success).length > 0 && (
+                    <div className="mt-2 space-y-1 max-h-40 overflow-y-auto">
+                      {importResults.results.filter(r => !r.success).map((result, idx) => (
+                        <p key={idx} className="text-sm text-red-600">
+                          {t.row} {result.row}: {result.sku} - {result.error}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="sticky bottom-0 bg-white border-t border-[#E4E1DD] px-6 py-4 flex justify-end gap-3">
+              <button
+                onClick={handleCloseImportModal}
+                className="px-6 py-2 border border-[#E4E1DD] rounded-lg text-[#6E6B67] hover:bg-[#F9F8F6] transition-colors"
+              >
+                {importResults ? t.close : t.cancel}
+              </button>
+              {!importResults && (
+                <button
+                  onClick={handleImport}
+                  disabled={importing || !csvText.trim()}
+                  className="px-6 py-2 bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white rounded-lg shadow-md hover:opacity-90 transition-all disabled:opacity-50"
+                >
+                  {importing ? '...' : t.import}
+                </button>
+              )}
             </div>
           </div>
         </div>

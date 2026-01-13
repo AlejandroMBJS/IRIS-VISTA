@@ -16,6 +16,9 @@ import {
   XCircle,
   UserCheck,
   UserX,
+  Upload,
+  Download,
+  FileText,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usersApi } from '@/lib/api';
@@ -54,6 +57,17 @@ export default function UsersPage() {
     cost_center: '',
     department: '',
   });
+
+  // CSV Import state
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [csvText, setCsvText] = useState('');
+  const [importResults, setImportResults] = useState<{
+    total: number;
+    success: number;
+    failed: number;
+    results: Array<{ employee_number: string; email: string; success: boolean; error?: string }>;
+  } | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
 
   const text = {
     en: {
@@ -103,6 +117,16 @@ export default function UsersPage() {
         general_manager: 'General Manager',
         employee: 'Employee',
       },
+      importUsers: 'Import Users',
+      downloadTemplate: 'Download Template',
+      importFromCSV: 'Import from CSV',
+      csvPlaceholder: 'Paste CSV data here or upload a file...\n\nFormat: employee_number,email,password,name,role,company_code,cost_center,department',
+      uploadFile: 'Upload CSV File',
+      import: 'Import',
+      importSuccess: 'Import completed',
+      imported: 'imported',
+      failed: 'failed',
+      close: 'Close',
     },
     zh: {
       title: '用户管理',
@@ -151,6 +175,16 @@ export default function UsersPage() {
         general_manager: '总经理',
         employee: '员工',
       },
+      importUsers: '导入用户',
+      downloadTemplate: '下载模板',
+      importFromCSV: '从CSV导入',
+      csvPlaceholder: '在此粘贴CSV数据或上传文件...\n\n格式: employee_number,email,password,name,role,company_code,cost_center,department',
+      uploadFile: '上传CSV文件',
+      import: '导入',
+      importSuccess: '导入完成',
+      imported: '已导入',
+      failed: '失败',
+      close: '关闭',
     },
     es: {
       title: 'Gestion de Usuarios',
@@ -199,6 +233,16 @@ export default function UsersPage() {
         general_manager: 'Gerente General',
         employee: 'Empleado',
       },
+      importUsers: 'Importar Usuarios',
+      downloadTemplate: 'Descargar Plantilla',
+      importFromCSV: 'Importar desde CSV',
+      csvPlaceholder: 'Pegue datos CSV aqui o suba un archivo...\n\nFormato: employee_number,email,password,name,role,company_code,cost_center,department',
+      uploadFile: 'Subir Archivo CSV',
+      import: 'Importar',
+      importSuccess: 'Importacion completada',
+      imported: 'importados',
+      failed: 'fallidos',
+      close: 'Cerrar',
     },
   };
 
@@ -358,6 +402,75 @@ export default function UsersPage() {
     }
   };
 
+  // Download CSV template
+  const handleDownloadTemplate = () => {
+    const headers = 'employee_number,email,password,name,role,company_code,cost_center,department';
+    const example1 = 'EMP001,john.doe@company.com,Password123,John Doe,employee,COMP01,CC001,Engineering';
+    const example2 = 'EMP002,jane.smith@company.com,Password123,Jane Smith,purchase_admin,COMP01,CC002,Purchasing';
+    const csvContent = `${headers}\n${example1}\n${example2}`;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'users_import_template.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  // Handle file upload
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setCsvText(content);
+    };
+    reader.readAsText(file);
+    e.target.value = ''; // Reset input
+  };
+
+  // Parse CSV and import users
+  const handleImport = async () => {
+    if (!csvText.trim()) return;
+
+    setIsImporting(true);
+    setImportResults(null);
+
+    try {
+      const lines = csvText.trim().split('\n');
+      const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
+
+      const users = lines.slice(1).filter(line => line.trim()).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        const user: Record<string, string> = {};
+        headers.forEach((header, index) => {
+          user[header] = values[index] || '';
+        });
+        return {
+          employee_number: user.employee_number || '',
+          email: user.email || '',
+          password: user.password || '',
+          name: user.name || '',
+          role: user.role || 'employee',
+          company_code: user.company_code || '',
+          cost_center: user.cost_center || '',
+          department: user.department || '',
+        };
+      });
+
+      const results = await usersApi.bulkImport(users);
+      setImportResults(results);
+      fetchUsers();
+    } catch (error) {
+      console.error('Failed to import users:', error);
+      alert('Failed to import users');
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -399,13 +512,26 @@ export default function UsersPage() {
             </h1>
             <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
           </div>
-          <button
-            onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
-          >
-            <Plus className="h-5 w-5" />
-            {t.addUser}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                setShowImportModal(true);
+                setCsvText('');
+                setImportResults(null);
+              }}
+              className="flex items-center gap-2 rounded-lg border border-[#75534B] px-5 py-3 text-[#75534B] font-medium transition-all hover:bg-[#75534B]/5 active:scale-95"
+            >
+              <Upload className="h-5 w-5" />
+              {t.importUsers}
+            </button>
+            <button
+              onClick={() => handleOpenModal()}
+              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
+            >
+              <Plus className="h-5 w-5" />
+              {t.addUser}
+            </button>
+          </div>
         </div>
       </section>
 
@@ -906,6 +1032,106 @@ export default function UsersPage() {
                 <XCircle className="h-4 w-4" />
                 {t.confirmReject}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-[#E4E1DD] flex items-center justify-between">
+              <div>
+                <h2 className="text-xl text-[#2C2C2C] font-semibold">{t.importFromCSV}</h2>
+              </div>
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="text-[#6E6B67] hover:text-[#2C2C2C] transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+              {/* Download Template Button */}
+              <button
+                onClick={handleDownloadTemplate}
+                className="flex items-center gap-2 text-[#75534B] font-medium hover:underline"
+              >
+                <Download className="h-4 w-4" />
+                {t.downloadTemplate}
+              </button>
+
+              {/* File Upload */}
+              <div>
+                <label className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-[#E4E1DD] rounded-lg cursor-pointer hover:border-[#75534B] transition-colors">
+                  <FileText className="h-5 w-5 text-[#6E6B67]" />
+                  <span className="text-[#6E6B67]">{t.uploadFile}</span>
+                  <input
+                    type="file"
+                    accept=".csv,.txt"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              {/* CSV Textarea */}
+              <textarea
+                value={csvText}
+                onChange={(e) => setCsvText(e.target.value)}
+                placeholder={t.csvPlaceholder}
+                rows={10}
+                className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] font-mono transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              />
+
+              {/* Import Results */}
+              {importResults && (
+                <div className="rounded-lg border border-[#E4E1DD] bg-[#F9F8F6] p-4">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <span className="font-medium text-green-600">{importResults.success} {t.imported}</span>
+                    </div>
+                    {importResults.failed > 0 && (
+                      <div className="flex items-center gap-2">
+                        <XCircle className="h-5 w-5 text-red-500" />
+                        <span className="font-medium text-red-500">{importResults.failed} {t.failed}</span>
+                      </div>
+                    )}
+                  </div>
+                  {importResults.results.some(r => r.error) && (
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {importResults.results.filter(r => r.error).map((r, i) => (
+                        <div key={i} className="text-sm text-red-600 bg-red-50 p-2 rounded">
+                          <span className="font-medium">{r.employee_number || r.email}:</span> {r.error}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="p-6 border-t border-[#E4E1DD] flex justify-end gap-3">
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="px-6 py-3 text-[#6E6B67] font-medium transition-colors hover:text-[#2C2C2C]"
+              >
+                {t.close}
+              </button>
+              {!importResults && (
+                <button
+                  onClick={handleImport}
+                  disabled={isImporting || !csvText.trim()}
+                  className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {isImporting && <Loader2 className="h-4 w-4 animate-spin" />}
+                  <Upload className="h-4 w-4" />
+                  {t.import}
+                </button>
+              )}
             </div>
           </div>
         </div>

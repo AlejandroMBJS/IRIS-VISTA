@@ -1225,7 +1225,7 @@ export default function NewPurchaseRequestPage() {
                               }}
                               placeholder={t.productDescription}
                               rows={2}
-                              className="w-full text-xs text-[#6E6B67] bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-2 resize-none hidden sm:block"
+                              className="w-full text-xs text-[#6E6B67] bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-2 resize-none"
                             />
                             {/* Editable Price */}
                             <div className="flex items-center gap-2">

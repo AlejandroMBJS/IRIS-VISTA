@@ -106,6 +106,7 @@ func main() {
 			users.GET("/pending/count", userHandler.GetPendingUsersCount)
 			users.GET("/:id", userHandler.GetUser)
 			users.POST("", userHandler.CreateUser)
+			users.POST("/bulk-import", userHandler.BulkImportUsers)
 			users.PUT("/:id", userHandler.UpdateUser)
 			users.DELETE("/:id", userHandler.DeleteUser)
 			users.PATCH("/:id/toggle", userHandler.ToggleUserStatus)
@@ -135,6 +136,7 @@ func main() {
 		productsMgmt.Use(middleware.RequireAdminOrSupplyChain())
 		{
 			productsMgmt.POST("", productHandler.CreateProduct)
+			productsMgmt.POST("/bulk-import", productHandler.BulkImportProducts)
 			productsMgmt.PUT("/:id", productHandler.UpdateProduct)
 			productsMgmt.DELETE("/:id", productHandler.DeleteProduct)
 			productsMgmt.PATCH("/:id/stock", productHandler.UpdateStock)

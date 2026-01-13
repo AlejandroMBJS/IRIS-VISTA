@@ -179,6 +179,40 @@ export const usersApi = {
     const response = await api.post<ApiResponse<User>>(`/users/${id}/reject`, data);
     return response.data.data!;
   },
+
+  bulkImport: async (users: Array<{
+    employee_number: string;
+    email: string;
+    password: string;
+    name: string;
+    role: string;
+    company_code?: string;
+    cost_center?: string;
+    department?: string;
+  }>): Promise<{
+    total: number;
+    success: number;
+    failed: number;
+    results: Array<{
+      employee_number: string;
+      email: string;
+      success: boolean;
+      error?: string;
+    }>;
+  }> => {
+    const response = await api.post<ApiResponse<{
+      total: number;
+      success: number;
+      failed: number;
+      results: Array<{
+        employee_number: string;
+        email: string;
+        success: boolean;
+        error?: string;
+      }>;
+    }>>('/users/bulk-import', { users });
+    return response.data.data!;
+  },
 };
 
 // Products API
@@ -224,6 +258,58 @@ export const productsApi = {
 
   updateStock: async (id: number, stock: number): Promise<Product> => {
     const response = await api.patch<ApiResponse<Product>>(`/products/${id}/stock`, { stock });
+    return response.data.data!;
+  },
+
+  bulkImport: async (products: Array<{
+    sku: string;
+    name: string;
+    name_zh?: string;
+    name_es?: string;
+    description?: string;
+    category: string;
+    model?: string;
+    specification?: string;
+    spec_zh?: string;
+    spec_es?: string;
+    supplier?: string;
+    supplier_code?: string;
+    price?: number;
+    currency?: string;
+    stock?: number;
+    min_stock?: number;
+    max_stock?: number;
+    location?: string;
+    image_url?: string;
+    is_active?: boolean;
+    is_ecommerce?: boolean;
+    product_url?: string;
+    brand?: string;
+    asin?: string;
+  }>): Promise<{
+    total: number;
+    success: number;
+    failed: number;
+    results: Array<{
+      row: number;
+      sku: string;
+      name: string;
+      success: boolean;
+      error?: string;
+    }>;
+  }> => {
+    const response = await api.post<ApiResponse<{
+      total: number;
+      success: number;
+      failed: number;
+      results: Array<{
+        row: number;
+        sku: string;
+        name: string;
+        success: boolean;
+        error?: string;
+      }>;
+    }>>('/products/bulk-import', { products });
     return response.data.data!;
   },
 };

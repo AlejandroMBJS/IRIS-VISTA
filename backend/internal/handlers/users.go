@@ -575,3 +575,104 @@ func (h *UserHandler) RejectUser(c *gin.Context) {
 		Status:         string(user.Status),
 	})
 }
+
+// BulkImportUser represents a single user in bulk import
+type BulkImportUser struct {
+	EmployeeNumber string `json:"employee_number" binding:"required"`
+	Email          string `json:"email" binding:"required,email"`
+	Password       string `json:"password" binding:"required,min=6"`
+	Name           string `json:"name" binding:"required"`
+	Role           string `json:"role" binding:"required,oneof=admin purchase_admin supply_chain_manager general_manager employee"`
+	CompanyCode    string `json:"company_code"`
+	CostCenter     string `json:"cost_center"`
+	Department     string `json:"department"`
+}
+
+// BulkImportRequest is the request body for bulk user import
+type BulkImportRequest struct {
+	Users []BulkImportUser `json:"users" binding:"required,min=1"`
+}
+
+// BulkImportResult represents the result of a single user import
+type BulkImportResult struct {
+	EmployeeNumber string `json:"employee_number"`
+	Email          string `json:"email"`
+	Success        bool   `json:"success"`
+	Error          string `json:"error,omitempty"`
+}
+
+// BulkImportUsers imports multiple users at once
+func (h *UserHandler) BulkImportUsers(c *gin.Context) {
+	var req BulkImportRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "Invalid request: "+err.Error())
+		return
+	}
+
+	adminID := middleware.GetUserID(c)
+	now := time.Now()
+
+	results := make([]BulkImportResult, len(req.Users))
+	successCount := 0
+
+	for i, u := range req.Users {
+		result := BulkImportResult{
+			EmployeeNumber: u.EmployeeNumber,
+			Email:          u.Email,
+		}
+
+		// Check if employee number already exists
+		var existingUser models.User
+		if err := h.db.Where("employee_number = ?", u.EmployeeNumber).First(&existingUser).Error; err == nil {
+			result.Error = "Employee number already exists"
+			results[i] = result
+			continue
+		}
+
+		// Check if email already exists
+		if err := h.db.Where("email = ?", u.Email).First(&existingUser).Error; err == nil {
+			result.Error = "Email already exists"
+			results[i] = result
+			continue
+		}
+
+		// Hash password
+		hashedPassword, err := services.HashPassword(u.Password)
+		if err != nil {
+			result.Error = "Failed to hash password"
+			results[i] = result
+			continue
+		}
+
+		user := models.User{
+			EmployeeNumber: u.EmployeeNumber,
+			Email:          u.Email,
+			PasswordHash:   hashedPassword,
+			Name:           u.Name,
+			Role:           models.UserRole(u.Role),
+			CompanyCode:    u.CompanyCode,
+			CostCenter:     u.CostCenter,
+			Department:     u.Department,
+			Status:         models.UserStatusApproved,
+			ApprovedByID:   &adminID,
+			ApprovedAt:     &now,
+		}
+
+		if err := h.db.Create(&user).Error; err != nil {
+			result.Error = "Failed to create user: " + err.Error()
+			results[i] = result
+			continue
+		}
+
+		result.Success = true
+		results[i] = result
+		successCount++
+	}
+
+	response.SuccessWithMessage(c, "Bulk import completed", map[string]interface{}{
+		"total":    len(req.Users),
+		"success":  successCount,
+		"failed":   len(req.Users) - successCount,
+		"results":  results,
+	})
+}

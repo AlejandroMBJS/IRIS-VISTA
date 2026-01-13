@@ -991,18 +991,6 @@ export default function ApprovalsPage() {
                       )}
                       {t.reject}
                     </button>
-                    <button
-                      onClick={handleRequestInfo}
-                      disabled={isSubmitting || !comment}
-                      className="flex items-center justify-center gap-2 rounded-lg bg-[#3B82F6] px-5 py-3 text-white font-medium shadow-sm transition-all hover:bg-[#2563EB] active:scale-95 disabled:opacity-50"
-                    >
-                      {isSubmitting ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <MessageSquare className="h-5 w-5" />
-                      )}
-                      {t.requestInfo}
-                    </button>
                   </div>
                 </div>
               )}

@@ -24,6 +24,15 @@ import { purchaseRequestsApi, productsApi, type ProductMetadata, type CreatePurc
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types';
 
+// Generate UUID compatible with all browsers
+const generateUUID = (): string => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
 // Source type for products
 type ProductSource = 'catalog' | 'external';
 
@@ -44,7 +53,7 @@ interface ProductItem {
 
 // Create a new empty external product item
 const createEmptyExternalProduct = (): ProductItem => ({
-  id: crypto.randomUUID(),
+  id: generateUUID(),
   source: 'external',
   url: '',
   quantity: 1,
@@ -55,7 +64,7 @@ const createEmptyExternalProduct = (): ProductItem => ({
 
 // Create a catalog product item
 const createCatalogProduct = (product: Product): ProductItem => ({
-  id: crypto.randomUUID(),
+  id: generateUUID(),
   source: 'catalog',
   catalogProduct: product,
   url: '',

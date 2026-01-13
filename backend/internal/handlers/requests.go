@@ -130,6 +130,10 @@ type RequestResponse struct {
 	PurchasedBy   *UserResponse `json:"purchased_by,omitempty"`
 	PurchasedAt   *time.Time    `json:"purchased_at,omitempty"`
 	PurchaseNotes string        `json:"purchase_notes,omitempty"`
+	OrderNumber   string        `json:"order_number,omitempty"`
+
+	// Admin notes (visible to admin, purchase_admin, gm, and requester)
+	AdminNotes string `json:"admin_notes,omitempty"`
 
 	// History
 	History []RequestHistoryResponse `json:"history,omitempty"`
@@ -182,6 +186,8 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 		InfoRequestNote:    r.InfoRequestNote,
 		PurchasedAt:        r.PurchasedAt,
 		PurchaseNotes:      r.PurchaseNotes,
+		OrderNumber:        r.OrderNumber,
+		AdminNotes:         r.AdminNotes,
 		CreatedAt:          r.CreatedAt,
 		UpdatedAt:          r.UpdatedAt,
 	}

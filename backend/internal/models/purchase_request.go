@@ -73,6 +73,10 @@ type PurchaseRequest struct {
 	PurchasedBy   *User      `gorm:"foreignKey:PurchasedByID" json:"purchased_by,omitempty"`
 	PurchasedAt   *time.Time `json:"purchased_at,omitempty"`
 	PurchaseNotes string     `gorm:"type:text" json:"purchase_notes,omitempty"`
+	OrderNumber   string     `gorm:"size:100" json:"order_number,omitempty"`
+
+	// Admin notes (visible to admin, purchase_admin, gm, and requester)
+	AdminNotes string `gorm:"type:text" json:"admin_notes,omitempty"`
 
 	// Amazon automation status (legacy single-product)
 	IsAmazonURL       bool       `gorm:"default:false" json:"is_amazon_url"`

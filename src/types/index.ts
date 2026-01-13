@@ -238,6 +238,7 @@ export interface ApiResponse<T> {
 export interface DashboardStats {
   total_users: number;
   active_users: number;
+  pending_users: number;
   total_products: number;
   total_requests: number;
   pending_approvals: number;

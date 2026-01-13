@@ -274,7 +274,8 @@ func (h *AdminHandler) MarkAsPurchased(c *gin.Context) {
 	}
 
 	var input struct {
-		Notes string `json:"notes"`
+		Notes       string `json:"notes"`
+		OrderNumber string `json:"order_number"`
 	}
 	c.ShouldBindJSON(&input)
 
@@ -300,6 +301,7 @@ func (h *AdminHandler) MarkAsPurchased(c *gin.Context) {
 	request.PurchasedByID = &userID
 	request.PurchasedAt = &now
 	request.PurchaseNotes = input.Notes
+	request.OrderNumber = input.OrderNumber
 
 	err = h.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&request).Error; err != nil {
@@ -407,11 +409,55 @@ func (h *AdminHandler) RetryAddToCart(c *gin.Context) {
 	response.SuccessWithMessage(c, "Product added to Amazon cart", requestToResponse(request))
 }
 
+// UpdateOrderNotes updates admin notes for an order
+func (h *AdminHandler) UpdateOrderNotes(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		response.BadRequest(c, "Invalid request ID")
+		return
+	}
+
+	var input struct {
+		AdminNotes string `json:"admin_notes"`
+	}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, "Invalid request body")
+		return
+	}
+
+	var request models.PurchaseRequest
+	if err := h.db.First(&request, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.NotFound(c, "Request not found")
+		} else {
+			response.InternalServerError(c, "Failed to fetch request")
+		}
+		return
+	}
+
+	// Update admin notes
+	request.AdminNotes = input.AdminNotes
+	if err := h.db.Save(&request).Error; err != nil {
+		response.InternalServerError(c, "Failed to update notes")
+		return
+	}
+
+	// Reload with relations
+	h.db.
+		Preload("Requester").
+		Preload("ApprovedBy").
+		Preload("PurchasedBy").
+		First(&request, request.ID)
+
+	response.SuccessWithMessage(c, "Notes updated", requestToResponse(request))
+}
+
 // GetDashboardStats returns admin dashboard statistics
 func (h *AdminHandler) GetDashboardStats(c *gin.Context) {
 	var stats struct {
 		TotalUsers       int64 `json:"total_users"`
 		ActiveUsers      int64 `json:"active_users"`
+		PendingUsers     int64 `json:"pending_users"`
 		TotalProducts    int64 `json:"total_products"`
 		TotalRequests    int64 `json:"total_requests"`
 		PendingApprovals int64 `json:"pending_approvals"`
@@ -423,7 +469,8 @@ func (h *AdminHandler) GetDashboardStats(c *gin.Context) {
 	}
 
 	h.db.Model(&models.User{}).Count(&stats.TotalUsers)
-	h.db.Model(&models.User{}).Where("status = ?", "active").Count(&stats.ActiveUsers)
+	h.db.Model(&models.User{}).Where("status = ?", "approved").Count(&stats.ActiveUsers)
+	h.db.Model(&models.User{}).Where("status = ?", "pending").Count(&stats.PendingUsers)
 	h.db.Model(&models.Product{}).Where("is_active = ?", true).Count(&stats.TotalProducts)
 	h.db.Model(&models.PurchaseRequest{}).Count(&stats.TotalRequests)
 	h.db.Model(&models.PurchaseRequest{}).Where("status = ?", models.StatusPending).Count(&stats.PendingApprovals)

@@ -221,6 +221,7 @@ func main() {
 			orders.GET("/approved-orders", adminHandler.GetApprovedOrders)
 			orders.PATCH("/orders/:id/purchased", adminHandler.MarkAsPurchased)
 			orders.POST("/orders/:id/retry-cart", adminHandler.RetryAddToCart)
+			orders.PATCH("/orders/:id/notes", adminHandler.UpdateOrderNotes)
 		}
 
 		// Upload routes (admin/supply chain)

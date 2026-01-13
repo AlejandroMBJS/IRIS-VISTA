@@ -195,6 +195,10 @@ export interface PurchaseRequest {
   purchased_by_id?: number;
   purchased_at?: string;
   purchase_notes?: string;
+  order_number?: string;
+
+  // Admin notes (visible to admin, purchase_admin, gm, and requester)
+  admin_notes?: string;
 
   // History
   history?: RequestHistory[];

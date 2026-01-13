@@ -404,6 +404,14 @@ export const adminApi = {
     return response.data.data!;
   },
 
+  // Update admin notes for an order
+  updateOrderNotes: async (id: number, adminNotes: string): Promise<PurchaseRequest> => {
+    const response = await api.patch<ApiResponse<PurchaseRequest>>(`/admin/orders/${id}/notes`, {
+      admin_notes: adminNotes
+    });
+    return response.data.data!;
+  },
+
   // Purchase Config
   getPurchaseConfig: async (): Promise<PurchaseConfig> => {
     const response = await api.get<ApiResponse<PurchaseConfig>>('/admin/purchase-config');

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ClipboardList, Plus, Loader2, Eye, X, Clock, CheckCircle, XCircle, ArrowRight, User } from 'lucide-react';
+import { ClipboardList, Plus, Loader2, Eye, X, Clock, CheckCircle, XCircle, ArrowRight, User, MessageSquare, FileText, Package } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { requestsApi } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
@@ -59,6 +59,10 @@ export default function RequestsPage() {
       noHistory: 'No history available',
       rejectionReason: 'Rejection Reason',
       notes: 'Notes',
+      adminNotes: 'Internal Notes',
+      purchaseInfo: 'Purchase Information',
+      orderNumber: 'Order Number',
+      purchasedBy: 'Purchased by',
     },
     zh: {
       title: '我的请求',
@@ -103,6 +107,10 @@ export default function RequestsPage() {
       noHistory: '暂无历史记录',
       rejectionReason: '拒绝原因',
       notes: '备注',
+      adminNotes: '内部备注',
+      purchaseInfo: '购买信息',
+      orderNumber: '订单号',
+      purchasedBy: '购买人',
     },
     es: {
       title: 'Mis Solicitudes',
@@ -147,6 +155,10 @@ export default function RequestsPage() {
       noHistory: 'Sin historial disponible',
       rejectionReason: 'Motivo de Rechazo',
       notes: 'Notas',
+      adminNotes: 'Notas Internas',
+      purchaseInfo: 'Información de Compra',
+      orderNumber: 'Número de Orden',
+      purchasedBy: 'Comprado por',
     },
   };
 
@@ -453,6 +465,40 @@ export default function RequestsPage() {
                 <div className="mt-4 p-3 bg-[#F9F8F6] border border-[#E4E1DD] rounded-lg">
                   <p className="text-sm font-medium text-[#2C2C2C]">{t.notes}:</p>
                   <p className="text-sm text-[#6E6B67]">{selectedRequest.notes}</p>
+                </div>
+              )}
+
+              {/* Admin/Internal Notes - visible to all relevant users */}
+              {selectedRequest.admin_notes && (
+                <div className="mt-4 p-3 bg-[#75534B]/5 border border-[#75534B]/20 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <MessageSquare className="h-4 w-4 text-[#75534B]" />
+                    <p className="text-sm font-medium text-[#75534B]">{t.adminNotes}:</p>
+                  </div>
+                  <p className="text-sm text-[#6E6B67]">{selectedRequest.admin_notes}</p>
+                </div>
+              )}
+
+              {/* Purchase Information - visible when purchased */}
+              {selectedRequest.status === 'purchased' && (selectedRequest.purchase_notes || selectedRequest.order_number || selectedRequest.purchased_by) && (
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="h-4 w-4 text-green-700" />
+                    <p className="text-sm font-medium text-green-800">{t.purchaseInfo}:</p>
+                  </div>
+                  {selectedRequest.order_number && (
+                    <p className="text-sm text-green-700 mb-1">
+                      <span className="font-medium">{t.orderNumber}:</span> {selectedRequest.order_number}
+                    </p>
+                  )}
+                  {selectedRequest.purchased_by && (
+                    <p className="text-sm text-green-700 mb-1">
+                      <span className="font-medium">{t.purchasedBy}:</span> {selectedRequest.purchased_by.name}
+                    </p>
+                  )}
+                  {selectedRequest.purchase_notes && (
+                    <p className="text-sm text-green-700">{selectedRequest.purchase_notes}</p>
+                  )}
                 </div>
               )}
 

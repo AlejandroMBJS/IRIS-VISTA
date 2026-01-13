@@ -2,6 +2,7 @@ package metadata
 
 import (
 	"compress/gzip"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -137,7 +138,10 @@ func (e *Extractor) ExtractFromURL(url string) (*ProductMetadata, error) {
 		metadata.ImageURL = e.findFirstSignificantImage(doc, url)
 	}
 
-	// 6. Site-specific extractors
+	// 6. Try JSON-LD schema.org markup (very reliable for prices)
+	e.extractJSONLD(doc, metadata)
+
+	// 7. Site-specific extractors
 	e.extractSiteSpecific(doc, url, metadata)
 
 	// Clean up title (remove site name suffix if present)
@@ -234,12 +238,94 @@ func (e *Extractor) extractSiteSpecific(doc *goquery.Document, url string, metad
 		e.extractMercadoLibre(doc, metadata)
 	}
 
+	// Generic price extraction if still no price
+	if metadata.Price == nil {
+		e.extractGenericPrice(doc, metadata)
+	}
+
 	// Default currency if not set
 	if metadata.Currency == "" {
 		if strings.Contains(lowerURL, ".mx") {
 			metadata.Currency = "MXN"
 		} else if strings.Contains(lowerURL, ".com") {
 			metadata.Currency = "USD"
+		}
+	}
+}
+
+// extractGenericPrice tries generic selectors for price extraction
+func (e *Extractor) extractGenericPrice(doc *goquery.Document, metadata *ProductMetadata) {
+	// Common price selectors used by many e-commerce sites
+	priceSelectors := []string{
+		// Microdata/schema.org
+		`[itemprop="price"]`,
+		`[data-price]`,
+		`[data-product-price]`,
+		// Common class names
+		`.price`,
+		`.product-price`,
+		`.current-price`,
+		`.sale-price`,
+		`.final-price`,
+		`.regular-price`,
+		`.offer-price`,
+		`.price-current`,
+		`.price-value`,
+		`.product__price`,
+		`#product-price`,
+		`#price`,
+		// Spans and divs with price-related classes
+		`span[class*="price"]`,
+		`div[class*="price"]`,
+		`p[class*="price"]`,
+		// WooCommerce
+		`.woocommerce-Price-amount`,
+		// Shopify
+		`.product__price`,
+		`[data-product-price]`,
+		// BigCommerce
+		`.price--main`,
+		// Magento
+		`.price-box .price`,
+		// Generic money patterns
+		`[class*="money"]`,
+		`[class*="amount"]`,
+	}
+
+	for _, selector := range priceSelectors {
+		doc.Find(selector).Each(func(i int, s *goquery.Selection) {
+			if metadata.Price != nil {
+				return
+			}
+
+			// Try content attribute first (microdata)
+			if content, exists := s.Attr("content"); exists && content != "" {
+				if price, err := e.parsePrice(content); err == nil && price > 0 {
+					metadata.Price = &price
+					return
+				}
+			}
+
+			// Try data-price attribute
+			if dataPrice, exists := s.Attr("data-price"); exists && dataPrice != "" {
+				if price, err := e.parsePrice(dataPrice); err == nil && price > 0 {
+					metadata.Price = &price
+					return
+				}
+			}
+
+			// Try text content
+			priceText := strings.TrimSpace(s.Text())
+			if priceText != "" {
+				if price, err := e.parsePrice(priceText); err == nil && price > 0 {
+					metadata.Price = &price
+					return
+				}
+			}
+		})
+
+		if metadata.Price != nil {
+			break
 		}
 	}
 }
@@ -450,6 +536,144 @@ func (e *Extractor) extractAmazonImageFromJSON(jsonStr string) string {
 		return matches[1]
 	}
 	return ""
+}
+
+// extractJSONLD extracts product data from JSON-LD schema.org markup
+func (e *Extractor) extractJSONLD(doc *goquery.Document, metadata *ProductMetadata) {
+	doc.Find(`script[type="application/ld+json"]`).Each(func(i int, s *goquery.Selection) {
+		jsonStr := strings.TrimSpace(s.Text())
+		if jsonStr == "" {
+			return
+		}
+
+		// Try to parse as a single object
+		var data map[string]interface{}
+		if err := json.Unmarshal([]byte(jsonStr), &data); err == nil {
+			e.parseJSONLDObject(data, metadata)
+			return
+		}
+
+		// Try to parse as an array
+		var dataArray []map[string]interface{}
+		if err := json.Unmarshal([]byte(jsonStr), &dataArray); err == nil {
+			for _, item := range dataArray {
+				e.parseJSONLDObject(item, metadata)
+			}
+		}
+	})
+}
+
+// parseJSONLDObject parses a single JSON-LD object for product data
+func (e *Extractor) parseJSONLDObject(data map[string]interface{}, metadata *ProductMetadata) {
+	// Check @type
+	typeVal, _ := data["@type"].(string)
+
+	// Handle @graph structure
+	if graph, ok := data["@graph"].([]interface{}); ok {
+		for _, item := range graph {
+			if itemMap, ok := item.(map[string]interface{}); ok {
+				e.parseJSONLDObject(itemMap, metadata)
+			}
+		}
+		return
+	}
+
+	// Product type
+	if typeVal == "Product" || typeVal == "IndividualProduct" {
+		// Extract name/title
+		if metadata.Title == "" {
+			if name, ok := data["name"].(string); ok && name != "" {
+				metadata.Title = name
+			}
+		}
+
+		// Extract description
+		if metadata.Description == "" {
+			if desc, ok := data["description"].(string); ok && desc != "" {
+				metadata.Description = desc
+			}
+		}
+
+		// Extract image
+		if metadata.ImageURL == "" {
+			switch img := data["image"].(type) {
+			case string:
+				metadata.ImageURL = img
+			case []interface{}:
+				if len(img) > 0 {
+					if imgStr, ok := img[0].(string); ok {
+						metadata.ImageURL = imgStr
+					} else if imgMap, ok := img[0].(map[string]interface{}); ok {
+						if url, ok := imgMap["url"].(string); ok {
+							metadata.ImageURL = url
+						}
+					}
+				}
+			case map[string]interface{}:
+				if url, ok := img["url"].(string); ok {
+					metadata.ImageURL = url
+				}
+			}
+		}
+
+		// Extract offers/price
+		if metadata.Price == nil {
+			if offers, ok := data["offers"].(map[string]interface{}); ok {
+				e.parseJSONLDOffer(offers, metadata)
+			} else if offersArray, ok := data["offers"].([]interface{}); ok && len(offersArray) > 0 {
+				if offer, ok := offersArray[0].(map[string]interface{}); ok {
+					e.parseJSONLDOffer(offer, metadata)
+				}
+			}
+		}
+	}
+
+	// Offer type (standalone)
+	if typeVal == "Offer" || typeVal == "AggregateOffer" {
+		e.parseJSONLDOffer(data, metadata)
+	}
+}
+
+// parseJSONLDOffer extracts price from a JSON-LD Offer object
+func (e *Extractor) parseJSONLDOffer(offer map[string]interface{}, metadata *ProductMetadata) {
+	if metadata.Price != nil {
+		return
+	}
+
+	// Try price field
+	switch price := offer["price"].(type) {
+	case float64:
+		metadata.Price = &price
+	case int:
+		p := float64(price)
+		metadata.Price = &p
+	case string:
+		if p, err := e.parsePrice(price); err == nil && p > 0 {
+			metadata.Price = &p
+		}
+	}
+
+	// Try lowPrice for AggregateOffer
+	if metadata.Price == nil {
+		switch price := offer["lowPrice"].(type) {
+		case float64:
+			metadata.Price = &price
+		case int:
+			p := float64(price)
+			metadata.Price = &p
+		case string:
+			if p, err := e.parsePrice(price); err == nil && p > 0 {
+				metadata.Price = &p
+			}
+		}
+	}
+
+	// Extract currency
+	if metadata.Currency == "" {
+		if currency, ok := offer["priceCurrency"].(string); ok && currency != "" {
+			metadata.Currency = currency
+		}
+	}
 }
 
 // cleanTitle removes site name suffix from title

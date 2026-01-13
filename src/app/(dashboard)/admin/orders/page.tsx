@@ -19,6 +19,9 @@ import {
   Clock,
   FileText,
   Link2,
+  MessageSquare,
+  Save,
+  Edit3,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -40,6 +43,11 @@ export default function ApprovedOrdersPage() {
   const [purchaseNotes, setPurchaseNotes] = useState('');
   const [orderNumber, setOrderNumber] = useState('');
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+
+  // Admin notes state
+  const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
+  const [adminNotesInput, setAdminNotesInput] = useState<Record<number, string>>({});
+  const [savingNotesId, setSavingNotesId] = useState<number | null>(null);
 
   const text = {
     en: {
@@ -80,6 +88,11 @@ export default function ApprovedOrdersPage() {
       origin: 'Origin',
       external: 'External',
       catalog: 'Catalog',
+      adminNotes: 'Internal Notes',
+      adminNotesPlaceholder: 'Add internal notes (visible to admin & purchasing team)...',
+      saveNotes: 'Save',
+      editNotes: 'Edit',
+      orderInfo: 'Order Info',
     },
     zh: {
       title: '已批准订单',
@@ -119,6 +132,11 @@ export default function ApprovedOrdersPage() {
       origin: '来源',
       external: '外部',
       catalog: '目录',
+      adminNotes: '内部备注',
+      adminNotesPlaceholder: '添加内部备注（管理员和采购团队可见）...',
+      saveNotes: '保存',
+      editNotes: '编辑',
+      orderInfo: '订单信息',
     },
     es: {
       title: 'Pedidos Aprobados',
@@ -158,6 +176,11 @@ export default function ApprovedOrdersPage() {
       origin: 'Origen',
       external: 'Externo',
       catalog: 'Catálogo',
+      adminNotes: 'Notas Internas',
+      adminNotesPlaceholder: 'Agregar notas internas (visibles para admin y equipo de compras)...',
+      saveNotes: 'Guardar',
+      editNotes: 'Editar',
+      orderInfo: 'Info del Pedido',
     },
   };
 
@@ -218,6 +241,29 @@ export default function ApprovedOrdersPage() {
     } finally {
       setProcessingId(null);
     }
+  };
+
+  // Handle saving admin notes
+  const handleSaveAdminNotes = async (orderId: number) => {
+    setSavingNotesId(orderId);
+    try {
+      await adminApi.updateOrderNotes(orderId, adminNotesInput[orderId] || '');
+      setEditingNotesId(null);
+      fetchOrders();
+    } catch (error) {
+      console.error('Failed to save notes:', error);
+    } finally {
+      setSavingNotesId(null);
+    }
+  };
+
+  // Start editing notes
+  const startEditingNotes = (order: PurchaseRequest) => {
+    setAdminNotesInput(prev => ({
+      ...prev,
+      [order.id]: order.admin_notes || ''
+    }));
+    setEditingNotesId(order.id);
   };
 
   // Get product items (handles both multi-product and legacy)
@@ -543,6 +589,86 @@ export default function ApprovedOrdersPage() {
                           </div>
                         </div>
                       ))}
+
+                      {/* Admin Notes Section */}
+                      <div className="mt-4 p-3 bg-white rounded-lg border border-[#E4E1DD]">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2 text-sm font-medium text-[#2C2C2C]">
+                            <MessageSquare className="h-4 w-4 text-[#75534B]" />
+                            {t.adminNotes}
+                          </div>
+                          {editingNotesId !== order.id && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => startEditingNotes(order)}
+                              className="h-7 px-2"
+                            >
+                              <Edit3 className="h-3 w-3 mr-1" />
+                              {t.editNotes}
+                            </Button>
+                          )}
+                        </div>
+
+                        {editingNotesId === order.id ? (
+                          <div className="space-y-2">
+                            <textarea
+                              value={adminNotesInput[order.id] || ''}
+                              onChange={(e) => setAdminNotesInput(prev => ({
+                                ...prev,
+                                [order.id]: e.target.value
+                              }))}
+                              placeholder={t.adminNotesPlaceholder}
+                              rows={3}
+                              className="w-full rounded-lg border border-[#E4E1DD] bg-white px-3 py-2 text-sm text-[#2C2C2C] placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                            />
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setEditingNotesId(null)}
+                              >
+                                {t.cancel}
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={() => handleSaveAdminNotes(order.id)}
+                                disabled={savingNotesId === order.id}
+                                className="bg-[#75534B] hover:bg-[#5D423C]"
+                              >
+                                {savingNotesId === order.id ? (
+                                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                                ) : (
+                                  <Save className="h-3 w-3 mr-1" />
+                                )}
+                                {t.saveNotes}
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-[#6E6B67]">
+                            {order.admin_notes || t.adminNotesPlaceholder}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Purchase Info (visible when purchased) */}
+                      {order.status === 'purchased' && (order.purchase_notes || order.order_number) && (
+                        <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                          <div className="flex items-center gap-2 text-sm font-medium text-green-800 mb-2">
+                            <FileText className="h-4 w-4" />
+                            {t.orderInfo}
+                          </div>
+                          {order.order_number && (
+                            <p className="text-sm text-green-700">
+                              <span className="font-medium">Order #:</span> {order.order_number}
+                            </p>
+                          )}
+                          {order.purchase_notes && (
+                            <p className="text-sm text-green-700 mt-1">{order.purchase_notes}</p>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Order Footer */}
@@ -611,12 +737,6 @@ export default function ApprovedOrdersPage() {
                                 {t.markPurchased}
                               </Button>
                             </>
-                          )}
-                          {order.status === 'purchased' && order.purchase_notes && (
-                            <div className="text-sm text-[#6E6B67]">
-                              <FileText className="h-4 w-4 inline mr-1" />
-                              {order.purchase_notes}
-                            </div>
                           )}
                         </div>
                       </div>

@@ -855,6 +855,19 @@ export default function ApprovalsPage() {
                 </div>
               )}
 
+              {/* Admin/Internal Notes - visible to GM, admin, purchase_admin */}
+              {selectedApproval.admin_notes && (
+                <div className="rounded-lg bg-[#75534B]/5 p-4 border border-[#75534B]/20">
+                  <h3 className="text-sm font-semibold text-[#75534B] mb-2 flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Internal Notes
+                  </h3>
+                  <p className="text-sm text-[#6E6B67] whitespace-pre-wrap">
+                    {selectedApproval.admin_notes}
+                  </p>
+                </div>
+              )}
+
               {/* Workflow History */}
               {selectedApproval.history && selectedApproval.history.length > 0 && (
                 <div>

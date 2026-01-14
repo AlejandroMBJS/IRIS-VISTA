@@ -130,10 +130,10 @@ func main() {
 			products.GET("/:id", productHandler.GetProduct)
 		}
 
-		// Product management routes (admin/supply chain)
+		// Product management routes (admin/purchase_admin/supply chain)
 		productsMgmt := v1.Group("/products")
 		productsMgmt.Use(middleware.Auth(jwtService))
-		productsMgmt.Use(middleware.RequireAdminOrSupplyChain())
+		productsMgmt.Use(middleware.RequireInventoryAccess())
 		{
 			productsMgmt.POST("", productHandler.CreateProduct)
 			productsMgmt.POST("/bulk-import", productHandler.BulkImportProducts)
@@ -254,10 +254,10 @@ func main() {
 			orders.PATCH("/orders/:id/notes", adminHandler.UpdateOrderNotes)
 		}
 
-		// Upload routes (admin/supply chain)
+		// Upload routes (admin/purchase_admin/supply chain)
 		upload := v1.Group("/upload")
 		upload.Use(middleware.Auth(jwtService))
-		upload.Use(middleware.RequireAdminOrSupplyChain())
+		upload.Use(middleware.RequireInventoryAccess())
 		{
 			upload.GET("/requirements", uploadHandler.GetUploadRequirements)
 			upload.POST("/image", uploadHandler.UploadImage)

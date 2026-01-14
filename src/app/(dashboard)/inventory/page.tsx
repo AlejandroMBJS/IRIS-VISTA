@@ -120,7 +120,7 @@ export default function InventoryPage() {
   } | null>(null);
   const csvFileInputRef = useRef<HTMLInputElement>(null);
 
-  const canEdit = user?.role === 'admin' || user?.role === 'supply_chain_manager';
+  const canEdit = user?.role === 'admin' || user?.role === 'purchase_admin' || user?.role === 'supply_chain_manager';
 
   const text = {
     en: {

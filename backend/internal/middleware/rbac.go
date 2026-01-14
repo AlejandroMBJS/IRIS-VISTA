@@ -39,6 +39,11 @@ func RequireAdminOrSupplyChain() gin.HandlerFunc {
 	return RequireRole(models.RoleAdmin, models.RoleSupplyChainManager)
 }
 
+// RequireInventoryAccess requires admin, purchase_admin, or supply chain manager role
+func RequireInventoryAccess() gin.HandlerFunc {
+	return RequireRole(models.RoleAdmin, models.RolePurchaseAdmin, models.RoleSupplyChainManager)
+}
+
 // RequireApprover requires a role that can approve/reject requests
 // Only General Manager can approve - Admin cannot approve, only view
 func RequireApprover() gin.HandlerFunc {

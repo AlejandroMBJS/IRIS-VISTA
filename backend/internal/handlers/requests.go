@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"vista-backend/internal/middleware"
 	"vista-backend/internal/models"
@@ -174,13 +173,13 @@ type RequestResponse struct {
 	AdminNotes string `json:"admin_notes,omitempty"`
 
 	// Translated fields
-	JustificationTranslated     datatypes.JSON `json:"justification_translated,omitempty"`
-	RejectionReasonTranslated   datatypes.JSON `json:"rejection_reason_translated,omitempty"`
-	InfoRequestNoteTranslated   datatypes.JSON `json:"info_request_note_translated,omitempty"`
-	PurchaseNotesTranslated     datatypes.JSON `json:"purchase_notes_translated,omitempty"`
-	DeliveryNotesTranslated     datatypes.JSON `json:"delivery_notes_translated,omitempty"`
-	CancellationNotesTranslated datatypes.JSON `json:"cancellation_notes_translated,omitempty"`
-	AdminNotesTranslated        datatypes.JSON `json:"admin_notes_translated,omitempty"`
+	JustificationTranslated     models.JSONB `json:"justification_translated,omitempty"`
+	RejectionReasonTranslated   models.JSONB `json:"rejection_reason_translated,omitempty"`
+	InfoRequestNoteTranslated   models.JSONB `json:"info_request_note_translated,omitempty"`
+	PurchaseNotesTranslated     models.JSONB `json:"purchase_notes_translated,omitempty"`
+	DeliveryNotesTranslated     models.JSONB `json:"delivery_notes_translated,omitempty"`
+	CancellationNotesTranslated models.JSONB `json:"cancellation_notes_translated,omitempty"`
+	AdminNotesTranslated        models.JSONB `json:"admin_notes_translated,omitempty"`
 
 	// History
 	History []RequestHistoryResponse `json:"history,omitempty"`
@@ -191,15 +190,15 @@ type RequestResponse struct {
 }
 
 type RequestHistoryResponse struct {
-	ID                uint           `json:"id"`
-	UserID            uint           `json:"user_id"`
-	User              *UserResponse  `json:"user,omitempty"`
-	Action            string         `json:"action"`
-	Comment           string         `json:"comment"`
-	CommentTranslated datatypes.JSON `json:"comment_translated,omitempty"`
-	OldStatus         string         `json:"old_status"`
-	NewStatus         string         `json:"new_status"`
-	CreatedAt         time.Time      `json:"created_at"`
+	ID                uint          `json:"id"`
+	UserID            uint          `json:"user_id"`
+	User              *UserResponse `json:"user,omitempty"`
+	Action            string        `json:"action"`
+	Comment           string        `json:"comment"`
+	CommentTranslated models.JSONB  `json:"comment_translated,omitempty"`
+	OldStatus         string        `json:"old_status"`
+	NewStatus         string        `json:"new_status"`
+	CreatedAt         time.Time     `json:"created_at"`
 }
 
 func requestToResponse(r models.PurchaseRequest) RequestResponse {

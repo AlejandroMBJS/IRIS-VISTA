@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/datatypes"
 )
 
 type HistoryAction string
@@ -25,10 +23,10 @@ type RequestHistory struct {
 	RequestID uint          `gorm:"not null;index" json:"request_id"`
 	UserID    uint          `gorm:"not null" json:"user_id"`
 	User      User          `gorm:"foreignKey:UserID" json:"user"`
-	Action            HistoryAction  `gorm:"not null;size:30" json:"action"`
-	Comment           string         `gorm:"type:text" json:"comment"`
-	CommentTranslated datatypes.JSON `gorm:"type:json" json:"comment_translated,omitempty"`
-	OldStatus         RequestStatus  `gorm:"size:20" json:"old_status"`
+	Action            HistoryAction `gorm:"not null;size:30" json:"action"`
+	Comment           string        `gorm:"type:text" json:"comment"`
+	CommentTranslated JSONB         `gorm:"type:jsonb" json:"comment_translated,omitempty"`
+	OldStatus         RequestStatus `gorm:"size:20" json:"old_status"`
 	NewStatus RequestStatus `gorm:"size:20" json:"new_status"`
 	CreatedAt time.Time     `json:"created_at"`
 }

@@ -5,7 +5,8 @@ import (
 	"log"
 	"sync"
 
-	"gorm.io/datatypes"
+	"vista-backend/internal/models"
+
 	"gorm.io/gorm"
 )
 
@@ -27,7 +28,7 @@ func NewAsyncTranslator(db *gorm.DB) *AsyncTranslator {
 // TranslateFieldResult contains the initial translation and a channel for completion
 type TranslateFieldResult struct {
 	Translated *TranslatedText
-	JSON       datatypes.JSON
+	JSON       models.JSONB
 }
 
 // TranslateField translates text with priority for the user's language
@@ -74,7 +75,7 @@ func (at *AsyncTranslator) TranslateField(
 	jsonData, _ := json.Marshal(result)
 	initialResult := &TranslateFieldResult{
 		Translated: result,
-		JSON:       datatypes.JSON(jsonData),
+		JSON:       models.JSONB(jsonData),
 	}
 
 	// 2. ASYNCHRONOUS: Translate to remaining languages in background
@@ -133,7 +134,7 @@ func (at *AsyncTranslator) TranslateFieldSync(text string) (*TranslateFieldResul
 	jsonData, _ := json.Marshal(result)
 	return &TranslateFieldResult{
 		Translated: result,
-		JSON:       datatypes.JSON(jsonData),
+		JSON:       models.JSONB(jsonData),
 	}, nil
 }
 
@@ -167,17 +168,17 @@ func (at *AsyncTranslator) getLanguageField(t *TranslatedText, lang string) stri
 	return ""
 }
 
-// ToJSON converts TranslatedText to datatypes.JSON
-func ToJSON(t *TranslatedText) datatypes.JSON {
+// ToJSON converts TranslatedText to models.JSONB
+func ToJSON(t *TranslatedText) models.JSONB {
 	if t == nil {
 		return nil
 	}
 	data, _ := json.Marshal(t)
-	return datatypes.JSON(data)
+	return models.JSONB(data)
 }
 
-// FromJSON converts datatypes.JSON to TranslatedText
-func FromJSON(data datatypes.JSON) *TranslatedText {
+// FromJSON converts models.JSONB to TranslatedText
+func FromJSON(data models.JSONB) *TranslatedText {
 	if data == nil {
 		return nil
 	}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -925,6 +926,10 @@ func (s *Service) translateText(text string) *TranslatedText {
 
 	result := &TranslatedText{
 		Original: text,
+		// Initialize all fields with original text as fallback
+		En: text,
+		Zh: text,
+		Es: text,
 	}
 
 	// Detect source language using simple heuristic
@@ -933,25 +938,23 @@ func (s *Service) translateText(text string) *TranslatedText {
 	// Translate to each target language
 	targetLangs := []string{"en", "zh", "es"}
 	for _, targetLang := range targetLangs {
-		var translated string
-		if sourceLang == targetLang {
-			translated = text
-		} else {
-			var err error
-			translated, err = googleTranslate(text, sourceLang, targetLang)
-			if err != nil {
-				translated = text // Fallback to original
-			}
+		if sourceLang == targetLang || (sourceLang == "auto" && targetLang == "en") {
+			// Skip translation if source matches target
+			continue
 		}
 
-		switch targetLang {
-		case "en":
-			result.En = translated
-		case "zh":
-			result.Zh = translated
-		case "es":
-			result.Es = translated
+		translated, err := googleTranslate(text, sourceLang, targetLang)
+		if err == nil && translated != "" {
+			switch targetLang {
+			case "en":
+				result.En = translated
+			case "zh":
+				result.Zh = translated
+			case "es":
+				result.Es = translated
+			}
 		}
+		// On error, keep the original text (already set as fallback)
 	}
 
 	return result
@@ -984,10 +987,14 @@ func detectLanguage(text string) string {
 func googleTranslate(text, sourceLang, targetLang string) (string, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
 
-	// Build URL with query parameters
+	// Build URL with properly encoded query parameters
 	baseURL := "https://translate.googleapis.com/translate_a/single"
+
+	// Use url.QueryEscape for proper encoding of all special characters
+	encodedText := url.QueryEscape(text)
+
 	params := fmt.Sprintf("?client=gtx&sl=%s&tl=%s&dt=t&q=%s",
-		sourceLang, targetLang, strings.ReplaceAll(strings.ReplaceAll(text, " ", "%20"), "\n", "%20"))
+		sourceLang, targetLang, encodedText)
 
 	req, err := http.NewRequest("GET", baseURL+params, nil)
 	if err != nil {

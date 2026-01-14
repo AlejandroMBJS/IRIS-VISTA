@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   Package,
   Activity,
+  Truck,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -33,8 +34,11 @@ const menuItems: MenuItem[] = [
   { icon: ExternalLink, labelKey: 'newPurchase', href: '/purchase/new' },
   { icon: ClipboardList, labelKey: 'requests', href: '/requests' },
 
-  // Approvals - GM can approve, Admin + Purchase Admin can view (includes pending orders)
-  { icon: CheckSquare, labelKey: 'approvals', href: '/approvals', roles: ['general_manager', 'admin', 'purchase_admin'], badgeKey: 'pending_combined' },
+  // Approvals - GM only sees pending approvals badge (only GM can approve)
+  { icon: CheckSquare, labelKey: 'approvals', href: '/approvals', roles: ['general_manager'], badgeKey: 'pending_approvals' },
+
+  // Orders - Supply Chain, Admin, Purchase Admin see pending orders to purchase/deliver
+  { icon: Truck, labelKey: 'orders', href: '/admin/orders', roles: ['admin', 'purchase_admin', 'supply_chain_manager'], badgeKey: 'pending_orders' },
 
   // Inventory - Admin + Purchase Admin + Supply Chain Manager
   { icon: Package, labelKey: 'inventory', href: '/inventory', roles: ['admin', 'purchase_admin', 'supply_chain_manager'] },
@@ -154,11 +158,7 @@ export function Sidebar() {
   // Get badge count for a menu item
   const getBadgeCount = (item: MenuItem): number => {
     if (!item.badgeKey || !pendingCounts) return 0;
-    // Combined badge for approvals (pending_approvals + pending_orders)
-    if (item.badgeKey === 'pending_combined') {
-      return (pendingCounts.pending_approvals || 0) + (pendingCounts.pending_orders || 0);
-    }
-    return pendingCounts[item.badgeKey] || 0;
+    return pendingCounts[item.badgeKey as keyof PendingCounts] || 0;
   };
 
   return (

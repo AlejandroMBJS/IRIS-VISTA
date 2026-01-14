@@ -260,7 +260,19 @@ export default function ApprovalsPage() {
       confirmRejectionMessage: 'Are you sure you want to reject this request?',
       cancel: 'Cancel',
       confirm: 'Confirm',
-      ago: 'ago',
+      timeAgo: {
+        justNow: 'just now',
+        minute: '1 minute ago',
+        minutes: 'minutes ago',
+        hour: '1 hour ago',
+        hours: 'hours ago',
+        day: '1 day ago',
+        days: 'days ago',
+        week: '1 week ago',
+        weeks: 'weeks ago',
+        month: '1 month ago',
+        months: 'months ago',
+      },
       generateSummary: 'Generate AI Summary',
       generatingSummary: 'Generating...',
       aiSummary: 'AI Assistant',
@@ -352,7 +364,19 @@ export default function ApprovalsPage() {
       confirmRejectionMessage: '您确定要拒绝此请求吗？',
       cancel: '取消',
       confirm: '确认',
-      ago: '前',
+      timeAgo: {
+        justNow: '刚刚',
+        minute: '1分钟前',
+        minutes: '分钟前',
+        hour: '1小时前',
+        hours: '小时前',
+        day: '1天前',
+        days: '天前',
+        week: '1周前',
+        weeks: '周前',
+        month: '1个月前',
+        months: '个月前',
+      },
       generateSummary: '生成AI摘要',
       generatingSummary: '生成中...',
       aiSummary: 'AI助手',
@@ -444,7 +468,19 @@ export default function ApprovalsPage() {
       confirmRejectionMessage: '¿Está seguro de rechazar esta solicitud?',
       cancel: 'Cancelar',
       confirm: 'Confirmar',
-      ago: 'hace',
+      timeAgo: {
+        justNow: 'ahora mismo',
+        minute: 'hace 1 minuto',
+        minutes: 'minutos',
+        hour: 'hace 1 hora',
+        hours: 'horas',
+        day: 'hace 1 día',
+        days: 'días',
+        week: 'hace 1 semana',
+        weeks: 'semanas',
+        month: 'hace 1 mes',
+        months: 'meses',
+      },
       generateSummary: 'Generar Resumen IA',
       generatingSummary: 'Generando...',
       aiSummary: 'Asistente IA',
@@ -527,10 +563,48 @@ export default function ApprovalsPage() {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
 
-    if (diffMins < 60) return `${diffMins}m ${t.ago}`;
-    if (diffHours < 24) return `${diffHours}h ${t.ago}`;
-    return `${diffDays}d ${t.ago}`;
+    // Handle different languages differently for proper grammar
+    if (language === 'zh') {
+      if (diffMins < 1) return t.timeAgo.justNow;
+      if (diffMins === 1) return t.timeAgo.minute;
+      if (diffMins < 60) return `${diffMins}${t.timeAgo.minutes}`;
+      if (diffHours === 1) return t.timeAgo.hour;
+      if (diffHours < 24) return `${diffHours}${t.timeAgo.hours}`;
+      if (diffDays === 1) return t.timeAgo.day;
+      if (diffDays < 7) return `${diffDays}${t.timeAgo.days}`;
+      if (diffWeeks === 1) return t.timeAgo.week;
+      if (diffWeeks < 4) return `${diffWeeks}${t.timeAgo.weeks}`;
+      if (diffMonths === 1) return t.timeAgo.month;
+      return `${diffMonths}${t.timeAgo.months}`;
+    } else if (language === 'es') {
+      if (diffMins < 1) return t.timeAgo.justNow;
+      if (diffMins === 1) return t.timeAgo.minute;
+      if (diffMins < 60) return `hace ${diffMins} ${t.timeAgo.minutes}`;
+      if (diffHours === 1) return t.timeAgo.hour;
+      if (diffHours < 24) return `hace ${diffHours} ${t.timeAgo.hours}`;
+      if (diffDays === 1) return t.timeAgo.day;
+      if (diffDays < 7) return `hace ${diffDays} ${t.timeAgo.days}`;
+      if (diffWeeks === 1) return t.timeAgo.week;
+      if (diffWeeks < 4) return `hace ${diffWeeks} ${t.timeAgo.weeks}`;
+      if (diffMonths === 1) return t.timeAgo.month;
+      return `hace ${diffMonths} ${t.timeAgo.months}`;
+    } else {
+      // English
+      if (diffMins < 1) return t.timeAgo.justNow;
+      if (diffMins === 1) return t.timeAgo.minute;
+      if (diffMins < 60) return `${diffMins} ${t.timeAgo.minutes}`;
+      if (diffHours === 1) return t.timeAgo.hour;
+      if (diffHours < 24) return `${diffHours} ${t.timeAgo.hours}`;
+      if (diffDays === 1) return t.timeAgo.day;
+      if (diffDays < 7) return `${diffDays} ${t.timeAgo.days}`;
+      if (diffWeeks === 1) return t.timeAgo.week;
+      if (diffWeeks < 4) return `${diffWeeks} ${t.timeAgo.weeks}`;
+      if (diffMonths === 1) return t.timeAgo.month;
+      return `${diffMonths} ${t.timeAgo.months}`;
+    }
   };
 
   const handleApprove = async () => {
@@ -613,7 +687,7 @@ export default function ApprovalsPage() {
         stream: true,
       };
 
-      // Use streaming API
+      // Call backend directly for streaming (bypasses Next.js rewrites which may not handle SSE well)
       const response = await fetch('/api/ai/generate-summary', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -622,53 +696,80 @@ export default function ApprovalsPage() {
 
       if (!response.ok) throw new Error('Failed to generate summary');
 
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
+      // Check if response is SSE (streaming) or JSON (non-streaming fallback)
+      const contentType = response.headers.get('content-type') || '';
 
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+      if (contentType.includes('text/event-stream')) {
+        // Handle SSE streaming
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        let fullText = '';
 
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
+        if (reader) {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
-              if (data === '[DONE]') continue;
-              if (data === '[THINKING]') {
-                setIsThinking(true);
-                continue;
-              }
-              if (data === '[RESPONDING]') {
-                setIsThinking(false);
-                continue;
-              }
-              try {
-                const parsed = JSON.parse(data);
-                if (parsed.content) {
-                  fullText += parsed.content;
-                  setStreamingText(fullText);
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6);
+                if (data === '[DONE]') continue;
+                if (data === '[THINKING]') {
+                  setIsThinking(true);
+                  continue;
                 }
-              } catch {
-                // Not JSON, might be raw text
-                fullText += data;
-                setStreamingText(fullText);
+                if (data === '[RESPONDING]') {
+                  setIsThinking(false);
+                  continue;
+                }
+                try {
+                  const parsed = JSON.parse(data);
+                  if (parsed.content) {
+                    fullText += parsed.content;
+                    setStreamingText(fullText);
+                  }
+                } catch {
+                  // Not JSON, might be raw text
+                  if (data.trim()) {
+                    fullText += data;
+                    setStreamingText(fullText);
+                  }
+                }
               }
             }
           }
         }
-      }
 
-      // Finalize the response
-      setAiSummary(prev => {
-        if (question && prev) {
-          return `${prev}\n\n---\n\n**Q: ${question}**\n${fullText}`;
+        // Finalize the response
+        setAiSummary(prev => {
+          if (question && prev) {
+            return `${prev}\n\n---\n\n**Q: ${question}**\n${fullText}`;
+          }
+          return fullText;
+        });
+      } else {
+        // Non-streaming response (JSON)
+        const data = await response.json();
+        const summary = data.data?.summary || data.summary || '';
+
+        // Simulate typing effect for non-streaming response
+        let displayedText = '';
+        for (let i = 0; i < summary.length; i += 3) {
+          displayedText = summary.slice(0, i + 3);
+          setStreamingText(displayedText);
+          await new Promise(resolve => setTimeout(resolve, 10));
         }
-        return fullText;
-      });
+
+        setAiSummary(prev => {
+          if (question && prev) {
+            return `${prev}\n\n---\n\n**Q: ${question}**\n${summary}`;
+          }
+          return summary;
+        });
+      }
       setAiQuestion('');
     } catch (error) {
       console.error('Failed to generate summary:', error);

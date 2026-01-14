@@ -56,15 +56,25 @@ func (h *RequestHandler) getUserLanguage(c *gin.Context) string {
 	return "en"
 }
 
+// TranslatedTextInput represents translated text in all languages
+type TranslatedTextInput struct {
+	Original string `json:"original"`
+	En       string `json:"en"`
+	Zh       string `json:"zh"`
+	Es       string `json:"es"`
+}
+
 // CreateRequestItemInput represents a single product item in a multi-product request
 type CreateRequestItemInput struct {
-	URL                string   `json:"url"` // URL is optional for catalog products
-	Quantity           int      `json:"quantity" binding:"required,gte=1"`
-	ProductTitle       string   `json:"product_title"`
-	ProductImageURL    string   `json:"product_image_url"`
-	ProductDescription string   `json:"product_description"`
-	EstimatedPrice     *float64 `json:"estimated_price"`
-	Currency           string   `json:"currency"`
+	URL                          string               `json:"url"` // URL is optional for catalog products
+	Quantity                     int                  `json:"quantity" binding:"required,gte=1"`
+	ProductTitle                 string               `json:"product_title"`
+	ProductTitleTranslated       *TranslatedTextInput `json:"product_title_translated"`
+	ProductImageURL              string               `json:"product_image_url"`
+	ProductDescription           string               `json:"product_description"`
+	ProductDescriptionTranslated *TranslatedTextInput `json:"product_description_translated"`
+	EstimatedPrice               *float64             `json:"estimated_price"`
+	Currency                     string               `json:"currency"`
 }
 
 // CreateRequestInput represents the input for creating a new purchase request
@@ -469,6 +479,16 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 
 			var titleTranslatedJSON, descTranslatedJSON models.JSONB
 
+			// Use translations from input if provided
+			if itemInput.ProductTitleTranslated != nil {
+				jsonData, _ := json.Marshal(itemInput.ProductTitleTranslated)
+				titleTranslatedJSON = models.JSONB(jsonData)
+			}
+			if itemInput.ProductDescriptionTranslated != nil {
+				jsonData, _ := json.Marshal(itemInput.ProductDescriptionTranslated)
+				descTranslatedJSON = models.JSONB(jsonData)
+			}
+
 			if productTitle == "" || productImageURL == "" {
 				meta, err := h.metadataService.Extract(itemInput.URL)
 				if err == nil {
@@ -487,12 +507,12 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 					if currency == "" && meta.Currency != "" {
 						currency = meta.Currency
 					}
-					// Capture translations
-					if meta.TitleTranslated != nil {
+					// Capture translations from metadata if not already provided
+					if titleTranslatedJSON == nil && meta.TitleTranslated != nil {
 						jsonData, _ := json.Marshal(meta.TitleTranslated)
 						titleTranslatedJSON = models.JSONB(jsonData)
 					}
-					if meta.DescTranslated != nil {
+					if descTranslatedJSON == nil && meta.DescTranslated != nil {
 						jsonData, _ := json.Marshal(meta.DescTranslated)
 						descTranslatedJSON = models.JSONB(jsonData)
 					}

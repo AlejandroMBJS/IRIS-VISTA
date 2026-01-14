@@ -182,8 +182,8 @@ func (h *NotificationHandler) GetPendingCounts(c *gin.Context) {
 		counts["pending_approvals"] = pendingApprovals
 	}
 
-	// Pending orders count (for Admin and Purchase Admin)
-	if userRole == string(models.RoleAdmin) || userRole == string(models.RolePurchaseAdmin) {
+	// Pending orders count (for Admin, Purchase Admin, and Supply Chain Manager)
+	if userRole == string(models.RoleAdmin) || userRole == string(models.RolePurchaseAdmin) || userRole == string(models.RoleSupplyChainManager) {
 		var pendingOrders int64
 		h.db.Model(&models.PurchaseRequest{}).
 			Where("status = ?", models.StatusApproved).

@@ -324,8 +324,10 @@ export interface CreatePurchaseRequestItemInput {
   url: string;
   quantity: number;
   product_title?: string;
+  product_title_translated?: TranslatedText;
   product_image_url?: string;
   product_description?: string;
+  product_description_translated?: TranslatedText;
   estimated_price?: number;
   currency?: string;
 }

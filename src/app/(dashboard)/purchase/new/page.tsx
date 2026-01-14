@@ -706,8 +706,10 @@ export default function NewPurchaseRequestPage() {
             url: product.url,
             quantity: product.quantity,
             product_title: title,
+            product_title_translated: product.metadata?.title_translated,
             product_image_url: product.metadata?.image_url,
             product_description: description,
+            product_description_translated: product.metadata?.description_translated,
             estimated_price: product.metadata?.price || undefined,
             currency: product.metadata?.currency || 'MXN',
           };

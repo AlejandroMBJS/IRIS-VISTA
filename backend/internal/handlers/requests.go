@@ -17,14 +17,14 @@ import (
 
 type RequestHandler struct {
 	db                *gorm.DB
-	metadataExtractor *metadata.Extractor
+	metadataService   *metadata.Service
 	notificationSvc   *notifications.NotificationService
 }
 
 func NewRequestHandler(db *gorm.DB) *RequestHandler {
 	return &RequestHandler{
 		db:                db,
-		metadataExtractor: metadata.NewExtractor(),
+		metadataService:   metadata.NewService(),
 		notificationSvc:   notifications.NewNotificationService(db),
 	}
 }
@@ -324,7 +324,7 @@ func (h *RequestHandler) ExtractMetadata(c *gin.Context) {
 		return
 	}
 
-	meta, err := h.metadataExtractor.ExtractFromURL(input.URL)
+	meta, err := h.metadataService.Extract(input.URL)
 	if err != nil {
 		// Return partial response even on error
 		response.Success(c, gin.H{
@@ -343,16 +343,18 @@ func (h *RequestHandler) ExtractMetadata(c *gin.Context) {
 	}
 
 	response.Success(c, gin.H{
-		"url":          input.URL,
-		"title":        meta.Title,
-		"description":  meta.Description,
-		"image_url":    meta.ImageURL,
-		"price":        meta.Price,
-		"currency":     meta.Currency,
-		"site_name":    meta.SiteName,
-		"is_amazon":    amazon.IsAmazonURL(input.URL),
-		"amazon_asin":  amazon.ExtractASIN(input.URL),
-		"error":        nil,
+		"url":                    input.URL,
+		"title":                  meta.Title,
+		"description":            meta.Description,
+		"image_url":              meta.ImageURL,
+		"price":                  meta.Price,
+		"currency":               meta.Currency,
+		"site_name":              meta.SiteName,
+		"is_amazon":              amazon.IsAmazonURL(input.URL),
+		"amazon_asin":            amazon.ExtractASIN(input.URL),
+		"title_translated":       meta.TitleTranslated,
+		"description_translated": meta.DescTranslated,
+		"error":                  nil,
 	})
 }
 
@@ -394,7 +396,7 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 			currency := itemInput.Currency
 
 			if productTitle == "" || productImageURL == "" {
-				meta, err := h.metadataExtractor.ExtractFromURL(itemInput.URL)
+				meta, err := h.metadataService.Extract(itemInput.URL)
 				if err == nil {
 					if productTitle == "" {
 						productTitle = meta.Title
@@ -471,7 +473,7 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 		currency := input.Currency
 
 		if productTitle == "" || productImageURL == "" {
-			meta, err := h.metadataExtractor.ExtractFromURL(input.URL)
+			meta, err := h.metadataService.Extract(input.URL)
 			if err == nil {
 				if productTitle == "" {
 					productTitle = meta.Title

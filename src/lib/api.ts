@@ -574,7 +574,7 @@ export const adminApi = {
   getApprovedOrders: async (params?: {
     page?: number;
     per_page?: number;
-    filter?: 'all' | 'amazon_cart' | 'pending_manual' | 'purchased';
+    filter?: 'all' | 'amazon_cart' | 'pending_manual' | 'purchased' | 'delivered' | 'cancelled';
   }) => {
     const response = await api.get<ApiResponse<PurchaseRequest[]>>('/admin/approved-orders', { params });
     return response.data;

@@ -208,8 +208,10 @@ export default function RequestsPage() {
       id: 0,
       url: request.url || '',
       product_title: request.product_title || 'Product',
+      product_title_translated: request.product_title_translated,
       product_image_url: request.product_image_url || '',
       product_description: request.product_description,
+      product_description_translated: request.product_description_translated,
       estimated_price: request.estimated_price,
       currency: request.currency,
       quantity: request.quantity,
@@ -440,7 +442,7 @@ export default function RequestsPage() {
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-[#2D363F] truncate">
-                              {item.product_title}
+                              {getTranslatedText(item.product_title_translated, item.product_title, language)}
                             </p>
                             <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#4E616F]">
                               <span>{t.quantity}: {item.quantity}</span>
@@ -588,7 +590,7 @@ export default function RequestsPage() {
                       )}
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-[#2D363F] line-clamp-2">
-                          {item.product_title || 'Product'}
+                          {getTranslatedText(item.product_title_translated, item.product_title || 'Product', language)}
                         </h4>
                         <div className="flex items-center gap-4 mt-2">
                           <span className="text-sm text-[#4E616F]">{t.quantity}: {item.quantity}</span>

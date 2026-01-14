@@ -141,8 +141,10 @@ export interface PurchaseRequestItem {
   id: number;
   url: string;
   product_title: string;
+  product_title_translated?: TranslatedText;
   product_image_url: string;
   product_description?: string;
+  product_description_translated?: TranslatedText;
   estimated_price?: number;
   currency: string;
   quantity: number;
@@ -166,8 +168,10 @@ export interface PurchaseRequest {
   // Legacy single-product fields (for backward compatibility)
   url?: string;
   product_title?: string;
+  product_title_translated?: TranslatedText;
   product_image_url?: string;
   product_description?: string;
+  product_description_translated?: TranslatedText;
   estimated_price?: number;
   currency: string;
   quantity: number;

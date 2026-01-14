@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"strconv"
 	"strings"
@@ -93,20 +94,22 @@ type ExtractMetadataInput struct {
 
 // RequestItemResponse represents a single item in a purchase request
 type RequestItemResponse struct {
-	ID                 uint       `json:"id"`
-	URL                string     `json:"url"`
-	ProductTitle       string     `json:"product_title"`
-	ProductImageURL    string     `json:"product_image_url"`
-	ProductDescription string     `json:"product_description,omitempty"`
-	EstimatedPrice     *float64   `json:"estimated_price,omitempty"`
-	Currency           string     `json:"currency"`
-	Quantity           int        `json:"quantity"`
-	Subtotal           float64    `json:"subtotal"`
-	IsAmazonURL        bool       `json:"is_amazon_url"`
-	AmazonASIN         string     `json:"amazon_asin,omitempty"`
-	AddedToCart        bool       `json:"added_to_cart"`
-	AddedToCartAt      *time.Time `json:"added_to_cart_at,omitempty"`
-	CartError          string     `json:"cart_error,omitempty"`
+	ID                      uint         `json:"id"`
+	URL                     string       `json:"url"`
+	ProductTitle            string       `json:"product_title"`
+	ProductTitleTranslated  models.JSONB `json:"product_title_translated,omitempty"`
+	ProductImageURL         string       `json:"product_image_url"`
+	ProductDescription      string       `json:"product_description,omitempty"`
+	ProductDescTranslated   models.JSONB `json:"product_description_translated,omitempty"`
+	EstimatedPrice          *float64     `json:"estimated_price,omitempty"`
+	Currency                string       `json:"currency"`
+	Quantity                int          `json:"quantity"`
+	Subtotal                float64      `json:"subtotal"`
+	IsAmazonURL             bool         `json:"is_amazon_url"`
+	AmazonASIN              string       `json:"amazon_asin,omitempty"`
+	AddedToCart             bool         `json:"added_to_cart"`
+	AddedToCartAt           *time.Time   `json:"added_to_cart_at,omitempty"`
+	CartError               string       `json:"cart_error,omitempty"`
 }
 
 // RequestResponse represents the response for a purchase request
@@ -121,13 +124,15 @@ type RequestResponse struct {
 	TotalEstimated *float64              `json:"total_estimated,omitempty"`
 
 	// Legacy single-product fields (for backward compatibility)
-	URL                string        `json:"url,omitempty"`
-	ProductTitle       string        `json:"product_title,omitempty"`
-	ProductImageURL    string        `json:"product_image_url,omitempty"`
-	ProductDescription string        `json:"product_description,omitempty"`
-	EstimatedPrice     *float64      `json:"estimated_price,omitempty"`
-	Currency           string        `json:"currency"`
-	Quantity           int           `json:"quantity"`
+	URL                       string       `json:"url,omitempty"`
+	ProductTitle              string       `json:"product_title,omitempty"`
+	ProductTitleTranslated    models.JSONB `json:"product_title_translated,omitempty"`
+	ProductImageURL           string       `json:"product_image_url,omitempty"`
+	ProductDescription        string       `json:"product_description,omitempty"`
+	ProductDescTranslated     models.JSONB `json:"product_description_translated,omitempty"`
+	EstimatedPrice            *float64     `json:"estimated_price,omitempty"`
+	Currency                  string       `json:"currency"`
+	Quantity                  int          `json:"quantity"`
 
 	Justification      string        `json:"justification"`
 	Urgency            string        `json:"urgency"`
@@ -212,18 +217,20 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 	}
 
 	resp := RequestResponse{
-		ID:                 r.ID,
-		RequestNumber:      r.RequestNumber,
-		PONumber:           poNumber,
-		ProductCount:       r.ProductCount,
-		TotalEstimated:     r.TotalEstimated,
-		URL:                r.URL,
-		ProductTitle:       r.ProductTitle,
-		ProductImageURL:    r.ProductImageURL,
-		ProductDescription: r.ProductDescription,
-		EstimatedPrice:     r.EstimatedPrice,
-		Currency:           r.Currency,
-		Quantity:           r.Quantity,
+		ID:                     r.ID,
+		RequestNumber:          r.RequestNumber,
+		PONumber:               poNumber,
+		ProductCount:           r.ProductCount,
+		TotalEstimated:         r.TotalEstimated,
+		URL:                    r.URL,
+		ProductTitle:           r.ProductTitle,
+		ProductTitleTranslated: r.ProductTitleTranslated,
+		ProductImageURL:        r.ProductImageURL,
+		ProductDescription:     r.ProductDescription,
+		ProductDescTranslated:  r.ProductDescTranslated,
+		EstimatedPrice:         r.EstimatedPrice,
+		Currency:               r.Currency,
+		Quantity:               r.Quantity,
 		Justification:      r.Justification,
 		Urgency:            string(r.Urgency),
 		RequesterID:        r.RequesterID,
@@ -261,20 +268,22 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 	// Add items if multi-product request
 	for _, item := range r.Items {
 		resp.Items = append(resp.Items, RequestItemResponse{
-			ID:                 item.ID,
-			URL:                item.URL,
-			ProductTitle:       item.ProductTitle,
-			ProductImageURL:    item.ProductImageURL,
-			ProductDescription: item.ProductDescription,
-			EstimatedPrice:     item.EstimatedPrice,
-			Currency:           item.Currency,
-			Quantity:           item.Quantity,
-			Subtotal:           item.Subtotal(),
-			IsAmazonURL:        item.IsAmazonURL,
-			AmazonASIN:         item.AmazonASIN,
-			AddedToCart:        item.AddedToCart,
-			AddedToCartAt:      item.AddedToCartAt,
-			CartError:          item.CartError,
+			ID:                     item.ID,
+			URL:                    item.URL,
+			ProductTitle:           item.ProductTitle,
+			ProductTitleTranslated: item.ProductTitleTranslated,
+			ProductImageURL:        item.ProductImageURL,
+			ProductDescription:     item.ProductDescription,
+			ProductDescTranslated:  item.ProductDescTranslated,
+			EstimatedPrice:         item.EstimatedPrice,
+			Currency:               item.Currency,
+			Quantity:               item.Quantity,
+			Subtotal:               item.Subtotal(),
+			IsAmazonURL:            item.IsAmazonURL,
+			AmazonASIN:             item.AmazonASIN,
+			AddedToCart:            item.AddedToCart,
+			AddedToCartAt:          item.AddedToCartAt,
+			CartError:              item.CartError,
 		})
 	}
 
@@ -458,6 +467,8 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 			estimatedPrice := itemInput.EstimatedPrice
 			currency := itemInput.Currency
 
+			var titleTranslatedJSON, descTranslatedJSON models.JSONB
+
 			if productTitle == "" || productImageURL == "" {
 				meta, err := h.metadataService.Extract(itemInput.URL)
 				if err == nil {
@@ -476,6 +487,15 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 					if currency == "" && meta.Currency != "" {
 						currency = meta.Currency
 					}
+					// Capture translations
+					if meta.TitleTranslated != nil {
+						jsonData, _ := json.Marshal(meta.TitleTranslated)
+						titleTranslatedJSON = models.JSONB(jsonData)
+					}
+					if meta.DescTranslated != nil {
+						jsonData, _ := json.Marshal(meta.DescTranslated)
+						descTranslatedJSON = models.JSONB(jsonData)
+					}
 				}
 			}
 
@@ -491,15 +511,17 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 			}
 
 			item := models.PurchaseRequestItem{
-				URL:                itemInput.URL,
-				ProductTitle:       productTitle,
-				ProductImageURL:    productImageURL,
-				ProductDescription: productDescription,
-				EstimatedPrice:     estimatedPrice,
-				Currency:           currency,
-				Quantity:           itemInput.Quantity,
-				IsAmazonURL:        isAmazonURL,
-				AmazonASIN:         amazonASIN,
+				URL:                    itemInput.URL,
+				ProductTitle:           productTitle,
+				ProductTitleTranslated: titleTranslatedJSON,
+				ProductImageURL:        productImageURL,
+				ProductDescription:     productDescription,
+				ProductDescTranslated:  descTranslatedJSON,
+				EstimatedPrice:         estimatedPrice,
+				Currency:               currency,
+				Quantity:               itemInput.Quantity,
+				IsAmazonURL:            isAmazonURL,
+				AmazonASIN:             amazonASIN,
 			}
 
 			request.Items = append(request.Items, item)
@@ -519,8 +541,10 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 			first := request.Items[0]
 			request.URL = first.URL
 			request.ProductTitle = first.ProductTitle
+			request.ProductTitleTranslated = first.ProductTitleTranslated
 			request.ProductImageURL = first.ProductImageURL
 			request.ProductDescription = first.ProductDescription
+			request.ProductDescTranslated = first.ProductDescTranslated
 			request.EstimatedPrice = first.EstimatedPrice
 			request.Currency = first.Currency
 			request.Quantity = first.Quantity
@@ -534,6 +558,7 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 		productDescription := input.ProductDescription
 		estimatedPrice := input.EstimatedPrice
 		currency := input.Currency
+		var titleTranslatedJSON, descTranslatedJSON models.JSONB
 
 		if productTitle == "" || productImageURL == "" {
 			meta, err := h.metadataService.Extract(input.URL)
@@ -552,6 +577,15 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 				}
 				if currency == "" && meta.Currency != "" {
 					currency = meta.Currency
+				}
+				// Capture translations
+				if meta.TitleTranslated != nil {
+					jsonData, _ := json.Marshal(meta.TitleTranslated)
+					titleTranslatedJSON = models.JSONB(jsonData)
+				}
+				if meta.DescTranslated != nil {
+					jsonData, _ := json.Marshal(meta.DescTranslated)
+					descTranslatedJSON = models.JSONB(jsonData)
 				}
 			}
 		}
@@ -574,8 +608,10 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 
 		request.URL = input.URL
 		request.ProductTitle = productTitle
+		request.ProductTitleTranslated = titleTranslatedJSON
 		request.ProductImageURL = productImageURL
 		request.ProductDescription = productDescription
+		request.ProductDescTranslated = descTranslatedJSON
 		request.EstimatedPrice = estimatedPrice
 		request.Currency = currency
 		request.Quantity = quantity

@@ -10,12 +10,14 @@ type PurchaseRequestItem struct {
 	RequestID uint   `gorm:"not null;index" json:"request_id"`
 
 	// Product information (extracted from URL or catalog)
-	URL                string   `gorm:"size:2000" json:"url"` // Optional for catalog products
-	ProductTitle       string   `gorm:"size:500" json:"product_title"`
-	ProductImageURL    string   `gorm:"size:2000" json:"product_image_url"`
-	ProductDescription string   `gorm:"type:text" json:"product_description"`
-	EstimatedPrice     *float64 `json:"estimated_price,omitempty"`
-	Currency           string   `gorm:"default:'MXN';size:10" json:"currency"`
+	URL                    string   `gorm:"size:2000" json:"url"` // Optional for catalog products
+	ProductTitle           string   `gorm:"size:500" json:"product_title"`
+	ProductTitleTranslated JSONB    `gorm:"type:jsonb" json:"product_title_translated,omitempty"`
+	ProductImageURL        string   `gorm:"size:2000" json:"product_image_url"`
+	ProductDescription     string   `gorm:"type:text" json:"product_description"`
+	ProductDescTranslated  JSONB    `gorm:"type:jsonb" json:"product_description_translated,omitempty"`
+	EstimatedPrice         *float64 `json:"estimated_price,omitempty"`
+	Currency               string   `gorm:"default:'MXN';size:10" json:"currency"`
 
 	// Quantity for this specific product
 	Quantity int `gorm:"not null;default:1" json:"quantity"`

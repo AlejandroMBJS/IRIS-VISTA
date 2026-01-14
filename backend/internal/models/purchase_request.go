@@ -35,13 +35,15 @@ type PurchaseRequest struct {
 
 	// Legacy single-product fields (kept for backward compatibility)
 	// New multi-product requests should use Items instead
-	URL                string   `gorm:"size:2000" json:"url,omitempty"`
-	ProductTitle       string   `gorm:"size:500" json:"product_title,omitempty"`
-	ProductImageURL    string   `gorm:"size:2000" json:"product_image_url,omitempty"`
-	ProductDescription string   `gorm:"type:text" json:"product_description,omitempty"`
-	EstimatedPrice     *float64 `json:"estimated_price,omitempty"`
-	Currency           string   `gorm:"default:'MXN';size:10" json:"currency"`
-	Quantity           int      `gorm:"not null;default:1" json:"quantity"`
+	URL                       string   `gorm:"size:2000" json:"url,omitempty"`
+	ProductTitle              string   `gorm:"size:500" json:"product_title,omitempty"`
+	ProductTitleTranslated    JSONB    `gorm:"type:jsonb" json:"product_title_translated,omitempty"`
+	ProductImageURL           string   `gorm:"size:2000" json:"product_image_url,omitempty"`
+	ProductDescription        string   `gorm:"type:text" json:"product_description,omitempty"`
+	ProductDescTranslated     JSONB    `gorm:"type:jsonb" json:"product_description_translated,omitempty"`
+	EstimatedPrice            *float64 `json:"estimated_price,omitempty"`
+	Currency                  string   `gorm:"default:'MXN';size:10" json:"currency"`
+	Quantity                  int      `gorm:"not null;default:1" json:"quantity"`
 
 	// Multi-product support
 	Items        []PurchaseRequestItem `gorm:"foreignKey:RequestID" json:"items,omitempty"`

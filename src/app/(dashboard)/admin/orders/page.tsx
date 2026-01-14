@@ -394,8 +394,10 @@ export default function ApprovedOrdersPage() {
       id: 0,
       url: request.url || '',
       product_title: request.product_title || 'Product',
+      product_title_translated: request.product_title_translated,
       product_image_url: request.product_image_url || '',
       product_description: request.product_description,
+      product_description_translated: request.product_description_translated,
       estimated_price: request.estimated_price,
       currency: request.currency,
       quantity: request.quantity,
@@ -676,7 +678,7 @@ export default function ApprovedOrdersPage() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start gap-2">
                               <p className="font-medium text-[#2D363F] truncate">
-                                {item.product_title}
+                                {getTranslatedText(item.product_title_translated, item.product_title, language)}
                               </p>
                               {getItemStatusBadge(item)}
                             </div>
@@ -967,7 +969,7 @@ export default function ApprovedOrdersPage() {
                 <div className="mt-2 space-y-1">
                   {getProductItems(selectedOrder).map((item, idx) => (
                     <div key={idx} className="flex justify-between text-sm">
-                      <span className="truncate">{item.product_title} (x{item.quantity})</span>
+                      <span className="truncate">{getTranslatedText(item.product_title_translated, item.product_title, language)} (x{item.quantity})</span>
                       <span className="font-medium">
                         {item.currency}${((item.estimated_price || 0) * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </span>

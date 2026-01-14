@@ -628,16 +628,41 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 		return
 	}
 
+	// Check if the requester is a General Manager - auto-approve their requests
+	userRole := middleware.GetUserRole(c)
+	isGMRequest := userRole == string(models.RoleGeneralManager)
+
+	if isGMRequest {
+		// Auto-approve GM requests
+		now := time.Now()
+		request.Status = models.StatusApproved
+		request.ApprovedByID = &userID
+		request.ApprovedAt = &now
+		request.PONumber = models.GeneratePONumber(request.RequestNumber)
+	}
+
 	err := h.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&request).Error; err != nil {
 			return err
 		}
 
-		comment := "Purchase request created"
-		if len(request.Items) > 1 {
-			comment = "Purchase request created with " + strconv.Itoa(len(request.Items)) + " products"
+		// Create history entry
+		var history *models.RequestHistory
+		if isGMRequest {
+			// Auto-approved: create both creation and approval history
+			comment := "Purchase request created and auto-approved (GM request)"
+			if len(request.Items) > 1 {
+				comment = "Purchase request created with " + strconv.Itoa(len(request.Items)) + " products and auto-approved (GM request)"
+			}
+			history = models.NewHistory(request.ID, userID, models.ActionApproved, "", models.StatusApproved, comment)
+		} else {
+			// Normal flow: pending approval
+			comment := "Purchase request created"
+			if len(request.Items) > 1 {
+				comment = "Purchase request created with " + strconv.Itoa(len(request.Items)) + " products"
+			}
+			history = models.NewHistory(request.ID, userID, models.ActionCreated, "", models.StatusPending, comment)
 		}
-		history := models.NewHistory(request.ID, userID, models.ActionCreated, "", models.StatusPending, comment)
 		return tx.Create(history).Error
 	})
 
@@ -655,10 +680,18 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 		Preload("History.User").
 		First(&request, request.ID)
 
-	// Send notification to approvers (async)
+	// Send notification (async)
 	go func() {
-		if err := h.notificationSvc.NotifyRequestCreated(&request); err != nil {
-			log.Printf("Failed to send request created notification: %v", err)
+		if isGMRequest {
+			// GM request auto-approved: notify purchase admins about new approved order
+			if err := h.notificationSvc.NotifyNewApprovedOrder(&request); err != nil {
+				log.Printf("Failed to send new approved order notification: %v", err)
+			}
+		} else {
+			// Normal request: notify approvers
+			if err := h.notificationSvc.NotifyRequestCreated(&request); err != nil {
+				log.Printf("Failed to send request created notification: %v", err)
+			}
 		}
 	}()
 

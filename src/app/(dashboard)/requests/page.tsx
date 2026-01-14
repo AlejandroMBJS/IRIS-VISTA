@@ -383,7 +383,7 @@ export default function RequestsPage() {
               dateRange={dateRange}
               onDateRangeChange={setDateRange}
               language={language}
-              className="md:ml-auto min-w-[200px]"
+              className="w-full sm:w-auto md:ml-auto"
             />
           </div>
 

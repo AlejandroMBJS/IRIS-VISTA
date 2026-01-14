@@ -188,30 +188,34 @@ export function NotificationsSection({ config, onChange, language }: Props) {
         <div className="border-t border-[#ABC0B9] pt-6">
           <h3 className="mb-4 text-sm font-semibold text-[#2D363F]">{t.remindersSection}</h3>
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-[#2D363F] min-w-[280px]">{t.reminderPending}</span>
-              <input
-                type="number"
-                min={1}
-                max={168}
-                value={config.reminder_pending_hours}
-                onChange={(e) => onChange({ reminder_pending_hours: parseInt(e.target.value) || 24 })}
-                className="w-20 rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
-              />
-              <span className="text-sm text-[#4E616F]">{t.hours}</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <span className="text-sm text-[#2D363F] sm:min-w-[280px]">{t.reminderPending}</span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  max={168}
+                  value={config.reminder_pending_hours}
+                  onChange={(e) => onChange({ reminder_pending_hours: parseInt(e.target.value) || 24 })}
+                  className="w-20 rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                />
+                <span className="text-sm text-[#4E616F]">{t.hours}</span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-[#2D363F] min-w-[280px]">{t.reminderUnpurchased}</span>
-              <input
-                type="number"
-                min={1}
-                max={168}
-                value={config.reminder_unpurchased_hours}
-                onChange={(e) => onChange({ reminder_unpurchased_hours: parseInt(e.target.value) || 48 })}
-                className="w-20 rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
-              />
-              <span className="text-sm text-[#4E616F]">{t.hours}</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <span className="text-sm text-[#2D363F] sm:min-w-[280px]">{t.reminderUnpurchased}</span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  max={168}
+                  value={config.reminder_unpurchased_hours}
+                  onChange={(e) => onChange({ reminder_unpurchased_hours: parseInt(e.target.value) || 48 })}
+                  className="w-20 rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                />
+                <span className="text-sm text-[#4E616F]">{t.hours}</span>
+              </div>
             </div>
           </div>
         </div>

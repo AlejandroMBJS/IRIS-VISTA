@@ -558,13 +558,13 @@ export default function ApprovalsPage() {
             </div>
 
             {/* Date Filter + My Approvals Toggle + Search */}
-            <div className="flex flex-1 gap-3 items-center md:ml-auto flex-wrap md:flex-nowrap">
+            <div className="flex flex-1 gap-3 items-center md:ml-auto flex-wrap">
               {/* Date Range Filter */}
               <DateRangePicker
                 dateRange={dateRange}
                 onDateRangeChange={setDateRange}
                 language={language}
-                className="min-w-[200px]"
+                className="w-full sm:w-auto"
               />
 
               {/* My Approvals Toggle */}
@@ -584,7 +584,7 @@ export default function ApprovalsPage() {
               )}
 
               {/* Search */}
-              <div className="flex-1 min-w-[150px]">
+              <div className="w-full sm:flex-1 sm:min-w-[150px]">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#80959A]" />
                   <Input

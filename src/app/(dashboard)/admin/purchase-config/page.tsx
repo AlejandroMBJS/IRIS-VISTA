@@ -201,21 +201,21 @@ export default function PurchaseConfigPage() {
     <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
       <div className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E95F20] to-[#E95F20]">
-              <ShoppingCart className="h-6 w-6 text-white" />
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E95F20] to-[#E95F20] flex-shrink-0">
+              <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[#2D363F]">{t.title}</h1>
-              <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-[#2D363F]">{t.title}</h1>
+              <p className="text-xs sm:text-sm text-[#4E616F]">{t.subtitle}</p>
             </div>
           </div>
 
           {/* Save button */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             {hasChanges && (
-              <div className="flex items-center gap-2 text-[#E95F20]">
+              <div className="hidden sm:flex items-center gap-2 text-[#E95F20]">
                 <AlertCircle className="h-4 w-4" />
                 <span className="text-sm">{t.unsavedChanges}</span>
               </div>
@@ -223,7 +223,7 @@ export default function PurchaseConfigPage() {
             <button
               onClick={handleSave}
               disabled={isSaving || !hasChanges}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

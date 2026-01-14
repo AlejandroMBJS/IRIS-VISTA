@@ -179,7 +179,7 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
           <label className="mb-3 block text-sm font-medium text-[#2D363F]">
             {t.visibleColumns}
           </label>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {COLUMNS.map((column) => {
               const isChecked = (config.admin_visible_columns || []).includes(column.id);
               return (

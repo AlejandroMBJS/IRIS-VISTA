@@ -645,14 +645,14 @@ export default function ApprovedOrdersPage() {
                 ))}
               </div>
 
-              <div className="flex flex-1 gap-3 items-center md:ml-auto">
+              <div className="flex flex-col sm:flex-row flex-1 gap-3 items-stretch sm:items-center md:ml-auto">
                 <DateRangePicker
                   dateRange={dateRange}
                   onDateRangeChange={setDateRange}
                   language={language}
-                  className="min-w-[200px]"
+                  className="w-full sm:w-auto"
                 />
-                <div className="flex-1 min-w-[150px] max-w-xs">
+                <div className="w-full sm:flex-1 sm:min-w-[150px] sm:max-w-xs">
                   <Input
                     placeholder={t.search || 'Search...'}
                     value={searchQuery}

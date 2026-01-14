@@ -7,6 +7,7 @@ import {
   Package,
   CheckCircle,
   AlertCircle,
+  AlertTriangle,
   ExternalLink,
   Loader2,
   RefreshCw,
@@ -24,6 +25,8 @@ import {
   Edit3,
   Truck,
   XCircle,
+  ArrowRight,
+  CircleDot,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -63,6 +66,10 @@ export default function ApprovedOrdersPage() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [statusChangeNotes, setStatusChangeNotes] = useState('');
   const [cancelNotesError, setCancelNotesError] = useState('');
+
+  // Details modal
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [detailsOrder, setDetailsOrder] = useState<PurchaseRequest | null>(null);
 
   // Admin notes state
   const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
@@ -134,6 +141,23 @@ export default function ApprovedOrdersPage() {
       orderInfo: 'Order Info',
       openUrl: 'Open URL',
       amazonDisabled: 'Amazon integration disabled - open URLs manually',
+      // Action indicators
+      actionRequired: 'Action Required',
+      readyToPurchase: 'Ready to Purchase',
+      awaitingDelivery: 'Awaiting Delivery',
+      orderComplete: 'Complete',
+      orderCancelled: 'Cancelled',
+      nextStep: 'Next Step',
+      purchaseItems: 'Purchase these items and mark as purchased',
+      confirmDeliveryAction: 'Confirm delivery when items arrive',
+      noActionNeeded: 'No action needed',
+      approvedOn: 'Approved',
+      purchasedOn: 'Purchased',
+      deliveredOn: 'Delivered',
+      cancelledOn: 'Cancelled',
+      close: 'Close',
+      justification: 'Justification',
+      history: 'History',
     },
     zh: {
       title: '订单',
@@ -191,6 +215,23 @@ export default function ApprovedOrdersPage() {
       orderInfo: '订单信息',
       openUrl: '打开链接',
       amazonDisabled: 'Amazon集成已禁用 - 请手动打开链接',
+      // Action indicators
+      actionRequired: '需要操作',
+      readyToPurchase: '待购买',
+      awaitingDelivery: '待交付',
+      orderComplete: '已完成',
+      orderCancelled: '已取消',
+      nextStep: '下一步',
+      purchaseItems: '购买这些商品并标记为已购买',
+      confirmDeliveryAction: '商品到达后确认交付',
+      noActionNeeded: '无需操作',
+      approvedOn: '批准于',
+      purchasedOn: '购买于',
+      deliveredOn: '交付于',
+      cancelledOn: '取消于',
+      close: '关闭',
+      justification: '理由',
+      history: '历史',
     },
     es: {
       title: 'Órdenes',
@@ -248,6 +289,23 @@ export default function ApprovedOrdersPage() {
       orderInfo: 'Info del Pedido',
       openUrl: 'Abrir URL',
       amazonDisabled: 'Integracion Amazon deshabilitada - abrir URLs manualmente',
+      // Action indicators
+      actionRequired: 'Acción Requerida',
+      readyToPurchase: 'Listo para Comprar',
+      awaitingDelivery: 'Esperando Entrega',
+      orderComplete: 'Completado',
+      orderCancelled: 'Cancelado',
+      nextStep: 'Siguiente Paso',
+      purchaseItems: 'Comprar estos artículos y marcar como comprado',
+      confirmDeliveryAction: 'Confirmar entrega cuando lleguen los artículos',
+      noActionNeeded: 'Sin acción necesaria',
+      approvedOn: 'Aprobado',
+      purchasedOn: 'Comprado',
+      deliveredOn: 'Entregado',
+      cancelledOn: 'Cancelado',
+      close: 'Cerrar',
+      justification: 'Justificación',
+      history: 'Historial',
     },
   };
 
@@ -505,6 +563,63 @@ export default function ApprovedOrdersPage() {
     );
   };
 
+  // Get action info for order - shows what action is needed
+  const getActionInfo = (order: PurchaseRequest): {
+    actionNeeded: boolean;
+    actionLabel: string;
+    actionDescription: string;
+    actionColor: string;
+    icon: React.ElementType;
+  } => {
+    if (order.status === 'delivered') {
+      return {
+        actionNeeded: false,
+        actionLabel: t.orderComplete,
+        actionDescription: t.noActionNeeded,
+        actionColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        icon: CheckCircle,
+      };
+    }
+    if (order.status === 'cancelled') {
+      return {
+        actionNeeded: false,
+        actionLabel: t.orderCancelled,
+        actionDescription: t.noActionNeeded,
+        actionColor: 'bg-gray-100 text-gray-600 border-gray-200',
+        icon: XCircle,
+      };
+    }
+    if (order.status === 'purchased') {
+      return {
+        actionNeeded: true,
+        actionLabel: t.awaitingDelivery,
+        actionDescription: t.confirmDeliveryAction,
+        actionColor: 'bg-blue-100 text-blue-800 border-blue-200',
+        icon: Truck,
+      };
+    }
+    // Status is approved - needs to be purchased
+    return {
+      actionNeeded: true,
+      actionLabel: t.readyToPurchase,
+      actionDescription: t.purchaseItems,
+      actionColor: 'bg-amber-100 text-amber-800 border-amber-200',
+      icon: ShoppingCart,
+    };
+  };
+
+  // Format date for display
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString(language === 'zh' ? 'zh-CN' : language === 'es' ? 'es-ES' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   const filters: { key: FilterType; label: string; count?: number }[] = [
     { key: 'pending_manual', label: t.pendingPurchase },
     { key: 'amazon_cart', label: t.inCart },
@@ -681,9 +796,41 @@ export default function ApprovedOrdersPage() {
                 const items = getProductItems(order);
                 const progress = getCartProgress(items);
                 const total = calculateTotal(order);
+                const actionInfo = getActionInfo(order);
+                const ActionIcon = actionInfo.icon;
+
+                // Handle card click to show details
+                const handleCardClick = () => {
+                  setDetailsOrder(order);
+                  setShowDetailsModal(true);
+                };
 
                 return (
-                  <Card key={order.id} className="overflow-hidden">
+                  <Card
+                    key={order.id}
+                    className={`overflow-hidden cursor-pointer hover:shadow-lg transition-shadow ${actionInfo.actionNeeded ? (order.status === 'purchased' ? 'ring-2 ring-blue-200' : 'ring-2 ring-amber-200') : ''}`}
+                    onClick={handleCardClick}
+                  >
+                    {/* Action Required Banner */}
+                    {actionInfo.actionNeeded && (
+                      <div className={`px-4 py-2 ${order.status === 'purchased' ? 'bg-blue-50' : 'bg-amber-50'} border-b ${order.status === 'purchased' ? 'border-blue-100' : 'border-amber-100'}`}>
+                        <div className="flex items-center gap-2">
+                          <div className={`p-1 rounded-full ${order.status === 'purchased' ? 'bg-blue-100' : 'bg-amber-100'}`}>
+                            <ActionIcon className={`h-4 w-4 ${order.status === 'purchased' ? 'text-blue-600' : 'text-amber-600'}`} />
+                          </div>
+                          <div className="flex-1">
+                            <span className={`text-sm font-semibold ${order.status === 'purchased' ? 'text-blue-800' : 'text-amber-800'}`}>
+                              {actionInfo.actionLabel}
+                            </span>
+                            <span className={`hidden sm:inline text-sm ${order.status === 'purchased' ? 'text-blue-600' : 'text-amber-600'} ml-2`}>
+                              — {actionInfo.actionDescription}
+                            </span>
+                          </div>
+                          <ArrowRight className={`h-4 w-4 ${order.status === 'purchased' ? 'text-blue-400' : 'text-amber-400'}`} />
+                        </div>
+                      </div>
+                    )}
+
                     {/* Order Header */}
                     <div className="p-4 md:p-6 border-b border-[#ABC0B9] bg-white">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -692,15 +839,26 @@ export default function ApprovedOrdersPage() {
                             {getDisplayNumber(order)}
                           </span>
                           {getOrderStatusBadge(order)}
+                          {!actionInfo.actionNeeded && (
+                            <Badge className={`${actionInfo.actionColor} border`}>
+                              <ActionIcon className="h-3 w-3 mr-1" />
+                              {actionInfo.actionLabel}
+                            </Badge>
+                          )}
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-[#4E616F]">
+                        <div className="flex flex-wrap items-center gap-3 text-sm text-[#4E616F]">
                           <span className="flex items-center gap-1">
                             <User className="h-4 w-4" />
                             {order.requester?.name}
                           </span>
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center gap-1" title={t.approvedOn}>
                             <Check className="h-4 w-4 text-[#5C2F0E]" />
                             {order.approved_by?.name}
+                            {order.approved_at && (
+                              <span className="text-xs text-[#80959A] ml-1">
+                                {formatDate(order.approved_at)}
+                              </span>
+                            )}
                           </span>
                         </div>
                       </div>
@@ -762,12 +920,15 @@ export default function ApprovedOrdersPage() {
                           </div>
 
                           {/* Item Actions */}
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                          <div className="flex items-center gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                             {item.url && (
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => window.open(item.url, '_blank')}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.open(item.url, '_blank');
+                                }}
                                 title={t.openUrl}
                               >
                                 <ExternalLink className="h-3 w-3" />
@@ -808,7 +969,7 @@ export default function ApprovedOrdersPage() {
                       ))}
 
                       {/* Admin Notes Section */}
-                      <div className="mt-4 p-3 bg-white rounded-lg border border-[#ABC0B9]">
+                      <div className="mt-4 p-3 bg-white rounded-lg border border-[#ABC0B9]" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2 text-sm font-medium text-[#2D363F]">
                             <MessageSquare className="h-4 w-4 text-[#5C2F0E]" />
@@ -818,7 +979,10 @@ export default function ApprovedOrdersPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => startEditingNotes(order)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                startEditingNotes(order);
+                              }}
                               className="h-7 px-2"
                             >
                               <Edit3 className="h-3 w-3 mr-1" />
@@ -869,21 +1033,102 @@ export default function ApprovedOrdersPage() {
                         )}
                       </div>
 
-                      {/* Purchase Info (visible when purchased) */}
-                      {order.status === 'purchased' && (order.purchase_notes || order.order_number) && (
-                        <div className="mt-3 p-3 bg-[#ABC0B9]/20 rounded-lg border border-[#ABC0B9]-200">
-                          <div className="flex items-center gap-2 text-sm font-medium text-[#2D363F] mb-2">
-                            <FileText className="h-4 w-4" />
+                      {/* Order Timeline - shows progress through stages */}
+                      {(order.status === 'purchased' || order.status === 'delivered' || order.status === 'cancelled') && (
+                        <div className="mt-4 p-4 bg-gradient-to-r from-slate-50 to-white rounded-lg border border-slate-200">
+                          <div className="flex items-center gap-2 text-sm font-medium text-[#2D363F] mb-3">
+                            <Clock className="h-4 w-4" />
                             {t.orderInfo}
                           </div>
-                          {order.order_number && (
-                            <p className="text-sm text-[#5C2F0E]">
-                              <span className="font-medium">Order #:</span> {order.order_number}
-                            </p>
-                          )}
-                          {order.purchase_notes && (
-                            <p className="text-sm text-[#5C2F0E] mt-1">{getTranslatedText(order.purchase_notes_translated, order.purchase_notes, language)}</p>
-                          )}
+
+                          {/* Timeline */}
+                          <div className="space-y-3">
+                            {/* Approved */}
+                            <div className="flex items-start gap-3">
+                              <div className="flex flex-col items-center">
+                                <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+                                  <Check className="h-3 w-3 text-emerald-600" />
+                                </div>
+                                {(order.status !== 'cancelled' || order.purchased_at) && (
+                                  <div className="w-0.5 h-6 bg-emerald-200" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0 pb-1">
+                                <p className="text-sm font-medium text-emerald-800">{t.approvedOn}</p>
+                                <p className="text-xs text-slate-500">{formatDate(order.approved_at)}</p>
+                                <p className="text-xs text-slate-400">{order.approved_by?.name}</p>
+                              </div>
+                            </div>
+
+                            {/* Purchased */}
+                            {order.purchased_at && (
+                              <div className="flex items-start gap-3">
+                                <div className="flex flex-col items-center">
+                                  <div className={`w-6 h-6 rounded-full ${order.status === 'cancelled' ? 'bg-gray-100' : 'bg-blue-100'} flex items-center justify-center`}>
+                                    <ShoppingCart className={`h-3 w-3 ${order.status === 'cancelled' ? 'text-gray-500' : 'text-blue-600'}`} />
+                                  </div>
+                                  {order.status !== 'purchased' && (
+                                    <div className={`w-0.5 h-6 ${order.status === 'cancelled' ? 'bg-gray-200' : 'bg-blue-200'}`} />
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0 pb-1">
+                                  <p className={`text-sm font-medium ${order.status === 'cancelled' ? 'text-gray-600' : 'text-blue-800'}`}>{t.purchasedOn}</p>
+                                  <p className="text-xs text-slate-500">{formatDate(order.purchased_at)}</p>
+                                  {order.purchased_by && (
+                                    <p className="text-xs text-slate-400">{order.purchased_by.name}</p>
+                                  )}
+                                  {order.order_number && (
+                                    <p className="text-xs font-medium text-slate-600 mt-0.5">Order #: {order.order_number}</p>
+                                  )}
+                                  {order.purchase_notes && (
+                                    <p className="text-xs text-slate-400 mt-0.5">{getTranslatedText(order.purchase_notes_translated, order.purchase_notes, language)}</p>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Delivered */}
+                            {order.status === 'delivered' && order.delivered_at && (
+                              <div className="flex items-start gap-3">
+                                <div className="flex flex-col items-center">
+                                  <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+                                    <Truck className="h-3 w-3 text-emerald-600" />
+                                  </div>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-emerald-800">{t.deliveredOn}</p>
+                                  <p className="text-xs text-slate-500">{formatDate(order.delivered_at)}</p>
+                                  {order.delivered_by && (
+                                    <p className="text-xs text-slate-400">{order.delivered_by.name}</p>
+                                  )}
+                                  {order.delivery_notes && (
+                                    <p className="text-xs text-emerald-600 mt-0.5">{getTranslatedText(order.delivery_notes_translated, order.delivery_notes, language)}</p>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Cancelled */}
+                            {order.status === 'cancelled' && order.cancelled_at && (
+                              <div className="flex items-start gap-3">
+                                <div className="flex flex-col items-center">
+                                  <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center">
+                                    <XCircle className="h-3 w-3 text-red-600" />
+                                  </div>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-red-800">{t.cancelledOn}</p>
+                                  <p className="text-xs text-slate-500">{formatDate(order.cancelled_at)}</p>
+                                  {order.cancelled_by && (
+                                    <p className="text-xs text-slate-400">{order.cancelled_by.name}</p>
+                                  )}
+                                  {order.cancellation_notes && (
+                                    <p className="text-xs text-red-600 mt-0.5">{getTranslatedText(order.cancellation_notes_translated, order.cancellation_notes, language)}</p>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
@@ -918,7 +1163,7 @@ export default function ApprovedOrdersPage() {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
                           {order.status !== 'purchased' && order.status !== 'delivered' && order.status !== 'cancelled' && (
                             <>
                               {/* Only show Add All to Cart when Amazon is enabled */}
@@ -926,7 +1171,10 @@ export default function ApprovedOrdersPage() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => handleAddToCart(order.id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddToCart(order.id);
+                                  }}
                                   disabled={processingId === order.id}
                                 >
                                   <ShoppingCart className="h-4 w-4 mr-2" />
@@ -937,7 +1185,10 @@ export default function ApprovedOrdersPage() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => window.open('https://www.amazon.com.mx/gp/cart/view.html', '_blank')}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open('https://www.amazon.com.mx/gp/cart/view.html', '_blank');
+                                  }}
                                 >
                                   <Link2 className="h-4 w-4 mr-2" />
                                   {t.goToCart}
@@ -946,7 +1197,8 @@ export default function ApprovedOrdersPage() {
                               <Button
                                 className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
                                 size="sm"
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setSelectedOrder(order);
                                   setShowPurchaseModal(true);
                                 }}
@@ -962,7 +1214,8 @@ export default function ApprovedOrdersPage() {
                               <Button
                                 className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
                                 size="sm"
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setSelectedOrder(order);
                                   setStatusChangeNotes('');
                                   setShowDeliveredModal(true);
@@ -975,7 +1228,8 @@ export default function ApprovedOrdersPage() {
                                 variant="outline"
                                 size="sm"
                                 className="border-[#AA2F0D]-300 text-[#AA2F0D] hover:bg-[#AA2F0D]/10"
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setSelectedOrder(order);
                                   setStatusChangeNotes('');
                                   setCancelNotesError('');
@@ -1271,6 +1525,231 @@ export default function ApprovedOrdersPage() {
                   <XCircle className="h-4 w-4 mr-2" />
                 )}
                 {t.cancelOrder}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Order Details Modal */}
+      {showDetailsModal && detailsOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-3xl rounded-xl bg-white shadow-2xl max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-6 rounded-t-xl flex items-center justify-between flex-shrink-0">
+              <div>
+                <h2 className="text-2xl text-white font-semibold mb-1">
+                  {getDisplayNumber(detailsOrder)}
+                </h2>
+                <div className="flex items-center gap-2">
+                  {getOrderStatusBadge(detailsOrder)}
+                  <span className="text-white/80 text-sm">
+                    {formatDate(detailsOrder.approved_at || detailsOrder.created_at)}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowDetailsModal(false);
+                  setDetailsOrder(null);
+                }}
+                className="text-white hover:text-white/80"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-4 overflow-y-auto flex-1">
+              {/* Requester and Approver */}
+              <div className="flex flex-wrap items-center gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-[#4E616F]" />
+                  <span className="text-[#4E616F]">{t.requester}:</span>
+                  <span className="font-medium text-[#2D363F]">{detailsOrder.requester?.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#5C2F0E]" />
+                  <span className="text-[#4E616F]">{t.approvedBy}:</span>
+                  <span className="font-medium text-[#2D363F]">{detailsOrder.approved_by?.name}</span>
+                </div>
+              </div>
+
+              {/* Items List */}
+              <div>
+                <p className="text-sm font-semibold text-[#2D363F] mb-3">
+                  {t.products} ({getProductItems(detailsOrder).length})
+                </p>
+                <div className="space-y-3">
+                  {getProductItems(detailsOrder).map((item, idx) => (
+                    <div key={idx} className="flex gap-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]">
+                      {item.product_image_url ? (
+                        <div className="w-20 h-20 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          <Image
+                            src={item.product_image_url}
+                            alt={getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product'}
+                            width={80}
+                            height={80}
+                            className="object-contain"
+                            unoptimized
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-20 h-20 rounded-lg bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                          <Package className="h-8 w-8 text-[#4E616F]" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-[#2D363F] line-clamp-2">
+                          {getTranslatedText(item.product_title_translated, item.product_title || 'Product', language)}
+                        </h4>
+                        <div className="flex items-center gap-4 mt-2">
+                          <span className="text-sm text-[#4E616F]">{t.quantity}: {item.quantity}</span>
+                          {item.estimated_price && (
+                            <span className="text-sm font-semibold text-[#5C2F0E]">
+                              {item.currency || 'MXN'} ${(item.estimated_price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            </span>
+                          )}
+                          {item.is_amazon_url && (
+                            <Badge variant="outline" className="bg-orange-50 border-orange-200 text-orange-700 text-xs">
+                              Amazon
+                            </Badge>
+                          )}
+                          {getItemStatusBadge(item)}
+                        </div>
+                        {item.url && (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-[#5C2F0E] hover:underline mt-2 inline-flex items-center gap-1"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            {t.openUrl}
+                          </a>
+                        )}
+                      </div>
+                      <div className="flex-shrink-0 text-right">
+                        {item.estimated_price && (
+                          <p className="font-bold text-[#2D363F]">
+                            ${(item.estimated_price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Total */}
+              <div className="pt-4 border-t border-[#ABC0B9] flex justify-between items-center">
+                <span className="text-lg font-semibold text-[#2D363F]">{t.total}:</span>
+                <span className="text-2xl font-bold text-[#5C2F0E]">
+                  {detailsOrder.currency} ${calculateTotal(detailsOrder).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+
+              {/* Admin Notes */}
+              {detailsOrder.admin_notes && (
+                <div className="p-3 bg-[#5C2F0E]/5 border border-[#5C2F0E]/20 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <MessageSquare className="h-4 w-4 text-[#5C2F0E]" />
+                    <p className="text-sm font-medium text-[#5C2F0E]">{t.adminNotes}:</p>
+                  </div>
+                  <p className="text-sm text-[#4E616F]">{getTranslatedText(detailsOrder.admin_notes_translated, detailsOrder.admin_notes, language)}</p>
+                </div>
+              )}
+
+              {/* Order Timeline */}
+              {(detailsOrder.status === 'purchased' || detailsOrder.status === 'delivered' || detailsOrder.status === 'cancelled') && (
+                <div className="p-4 bg-gradient-to-r from-slate-50 to-white rounded-lg border border-slate-200">
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#2D363F] mb-3">
+                    <Clock className="h-4 w-4" />
+                    {t.history}
+                  </div>
+                  <div className="space-y-3">
+                    {/* Approved */}
+                    <div className="flex items-start gap-3">
+                      <div className="flex flex-col items-center">
+                        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+                          <Check className="h-3 w-3 text-emerald-600" />
+                        </div>
+                        <div className="w-0.5 h-6 bg-emerald-200" />
+                      </div>
+                      <div className="flex-1 min-w-0 pb-1">
+                        <p className="text-sm font-medium text-emerald-800">{t.approvedOn}</p>
+                        <p className="text-xs text-slate-500">{formatDate(detailsOrder.approved_at)}</p>
+                        <p className="text-xs text-slate-400">{detailsOrder.approved_by?.name}</p>
+                      </div>
+                    </div>
+
+                    {/* Purchased */}
+                    {detailsOrder.purchased_at && (
+                      <div className="flex items-start gap-3">
+                        <div className="flex flex-col items-center">
+                          <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
+                            <ShoppingCart className="h-3 w-3 text-blue-600" />
+                          </div>
+                          {detailsOrder.status !== 'purchased' && (
+                            <div className="w-0.5 h-6 bg-blue-200" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0 pb-1">
+                          <p className="text-sm font-medium text-blue-800">{t.purchasedOn}</p>
+                          <p className="text-xs text-slate-500">{formatDate(detailsOrder.purchased_at)}</p>
+                          {detailsOrder.purchased_by && (
+                            <p className="text-xs text-slate-400">{detailsOrder.purchased_by.name}</p>
+                          )}
+                          {detailsOrder.order_number && (
+                            <p className="text-xs font-medium text-slate-600 mt-0.5">Order #: {detailsOrder.order_number}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Delivered */}
+                    {detailsOrder.status === 'delivered' && detailsOrder.delivered_at && (
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+                          <Truck className="h-3 w-3 text-emerald-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-emerald-800">{t.deliveredOn}</p>
+                          <p className="text-xs text-slate-500">{formatDate(detailsOrder.delivered_at)}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Cancelled */}
+                    {detailsOrder.status === 'cancelled' && detailsOrder.cancelled_at && (
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center">
+                          <XCircle className="h-3 w-3 text-red-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-red-800">{t.cancelledOn}</p>
+                          <p className="text-xs text-slate-500">{formatDate(detailsOrder.cancelled_at)}</p>
+                          {detailsOrder.cancellation_notes && (
+                            <p className="text-xs text-red-600 mt-0.5">{getTranslatedText(detailsOrder.cancellation_notes_translated, detailsOrder.cancellation_notes, language)}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-[#ABC0B9] flex justify-end flex-shrink-0">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowDetailsModal(false);
+                  setDetailsOrder(null);
+                }}
+              >
+                {t.close}
               </Button>
             </div>
           </div>

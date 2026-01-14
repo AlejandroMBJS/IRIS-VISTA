@@ -1029,7 +1029,8 @@ export default function ApprovalsPage() {
                 return (
                   <div
                     key={approval.id}
-                    className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] overflow-hidden hover:shadow-md transition-shadow"
+                    className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => setSelectedApproval(approval)}
                   >
                     {/* Card Header */}
                     <div className="p-4 md:p-6 border-b border-[#ABC0B9]">
@@ -1132,14 +1133,17 @@ export default function ApprovalsPage() {
                     </div>
 
                     {/* Card Footer */}
-                    <div className="px-4 md:px-6 py-4 bg-[#FAFBFA] border-t border-[#ABC0B9] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div className="px-4 md:px-6 py-4 bg-[#FAFBFA] border-t border-[#ABC0B9] flex flex-col md:flex-row md:items-center md:justify-between gap-3" onClick={(e) => e.stopPropagation()}>
                       <div className="text-lg font-semibold text-[#5C2F0E]">
                         {t.total}: {approval.currency}${totals.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </div>
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
-                          onClick={() => setSelectedApproval(approval)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedApproval(approval);
+                          }}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           {t.viewDetails}
@@ -1149,7 +1153,8 @@ export default function ApprovalsPage() {
                             <Button
                               variant="outline"
                               className="text-[#AA2F0D] border-[#AA2F0D]-200 hover:bg-[#AA2F0D]/10"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setSelectedApproval(approval);
                                 setComment('');
                               }}
@@ -1158,7 +1163,8 @@ export default function ApprovalsPage() {
                             </Button>
                             <Button
                               className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setSelectedApproval(approval);
                                 setComment('');
                               }}

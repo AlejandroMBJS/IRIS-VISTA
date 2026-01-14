@@ -424,11 +424,59 @@ export default function UsersPage() {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const content = event.target?.result as string;
+      let content = event.target?.result as string;
+      // Remove BOM if present
+      if (content.charCodeAt(0) === 0xFEFF) {
+        content = content.slice(1);
+      }
       setCsvText(content);
     };
-    reader.readAsText(file);
+    reader.onerror = () => {
+      alert('Failed to read file');
+    };
+    // Read as UTF-8 by default
+    reader.readAsText(file, 'UTF-8');
     e.target.value = ''; // Reset input
+  };
+
+  // Parse CSV line properly handling quoted fields
+  const parseCSVLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const nextChar = line[i + 1];
+
+      if (inQuotes) {
+        if (char === '"' && nextChar === '"') {
+          // Escaped quote
+          current += '"';
+          i++;
+        } else if (char === '"') {
+          // End of quoted field
+          inQuotes = false;
+        } else {
+          current += char;
+        }
+      } else {
+        if (char === '"') {
+          // Start of quoted field
+          inQuotes = true;
+        } else if (char === ',') {
+          // Field separator
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+    }
+
+    // Push last field
+    result.push(current.trim());
+    return result;
   };
 
   // Parse CSV and import users
@@ -439,11 +487,35 @@ export default function UsersPage() {
     setImportResults(null);
 
     try {
-      const lines = csvText.trim().split('\n');
-      const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
+      // Remove BOM if present and normalize line endings
+      let cleanText = csvText.trim();
+      if (cleanText.charCodeAt(0) === 0xFEFF) {
+        cleanText = cleanText.slice(1);
+      }
+      // Normalize line endings (handle Windows \r\n)
+      cleanText = cleanText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
-      const users = lines.slice(1).filter(line => line.trim()).map(line => {
-        const values = line.split(',').map(v => v.trim());
+      const lines = cleanText.split('\n').filter(line => line.trim());
+
+      if (lines.length < 2) {
+        alert('CSV must have at least a header row and one data row');
+        setIsImporting(false);
+        return;
+      }
+
+      const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+
+      // Validate required headers
+      const requiredHeaders = ['employee_number', 'email', 'password', 'name'];
+      const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+      if (missingHeaders.length > 0) {
+        alert(`Missing required headers: ${missingHeaders.join(', ')}`);
+        setIsImporting(false);
+        return;
+      }
+
+      const users = lines.slice(1).map(line => {
+        const values = parseCSVLine(line);
         const user: Record<string, string> = {};
         headers.forEach((header, index) => {
           user[header] = values[index] || '';
@@ -458,14 +530,20 @@ export default function UsersPage() {
           cost_center: user.cost_center || '',
           department: user.department || '',
         };
-      });
+      }).filter(u => u.employee_number && u.email); // Filter out empty rows
+
+      if (users.length === 0) {
+        alert('No valid users found in CSV');
+        setIsImporting(false);
+        return;
+      }
 
       const results = await usersApi.bulkImport(users);
       setImportResults(results);
       fetchUsers();
     } catch (error) {
       console.error('Failed to import users:', error);
-      alert('Failed to import users');
+      alert('Failed to import users: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setIsImporting(false);
     }

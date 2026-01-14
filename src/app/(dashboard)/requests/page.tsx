@@ -366,7 +366,7 @@ export default function RequestsPage() {
           {/* Filters */}
           <div className="flex flex-col md:flex-row gap-4 md:items-center mb-6">
             <div className="flex gap-2 flex-wrap items-center">
-              <Filter className="h-5 w-5 text-white0" />
+              <Filter className="h-5 w-5 text-[#4E616F]" />
               {filters.map((f) => (
                 <Button
                   key={f.key}
@@ -394,7 +394,7 @@ export default function RequestsPage() {
             </div>
           ) : filteredRequests.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-white0">
+              <CardContent className="py-12 text-center text-[#4E616F]">
                 <ClipboardList className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="mb-2">{t.noRequests}</p>
                 {requests.length === 0 && (

@@ -349,7 +349,7 @@ export default function ActivityLogsPage() {
   if (user?.role !== 'admin') {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-white0">{t.accessDenied}</p>
+        <p className="text-[#4E616F]">{t.accessDenied}</p>
       </div>
     );
   }
@@ -425,7 +425,7 @@ export default function ActivityLogsPage() {
           className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'all'
               ? 'border-[#5C2F0E] text-[#5C2F0E]'
-              : 'border-transparent text-white0 hover:text-[#2D363F]'
+              : 'border-transparent text-[#4E616F] hover:text-[#2D363F]'
           }`}
         >
           {t.tabs.all}
@@ -435,7 +435,7 @@ export default function ActivityLogsPage() {
           className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'sessions'
               ? 'border-[#5C2F0E] text-[#5C2F0E]'
-              : 'border-transparent text-white0 hover:text-[#2D363F]'
+              : 'border-transparent text-[#4E616F] hover:text-[#2D363F]'
           }`}
         >
           {t.tabs.sessions} ({activeSessions.length})
@@ -522,7 +522,7 @@ export default function ActivityLogsPage() {
               {/* Clear Filters */}
               <button
                 onClick={clearFilters}
-                className="px-3 py-2 text-sm text-white0 hover:text-[#2D363F] flex items-center gap-1"
+                className="px-3 py-2 text-sm text-[#4E616F] hover:text-[#2D363F] flex items-center gap-1"
               >
                 <X className="h-4 w-4" />
                 {t.filters.clear}
@@ -538,7 +538,7 @@ export default function ActivityLogsPage() {
               </div>
             ) : logs.length === 0 ? (
               <div className="flex items-center justify-center py-12">
-                <p className="text-white0">{t.table.noLogs}</p>
+                <p className="text-[#4E616F]">{t.table.noLogs}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -561,7 +561,7 @@ export default function ActivityLogsPage() {
                               {log.user_name || log.identifier}
                             </p>
                             {log.user_email && (
-                              <p className="text-xs text-white0">{log.user_email}</p>
+                              <p className="text-xs text-[#4E616F]">{log.user_email}</p>
                             )}
                           </div>
                         </td>
@@ -580,12 +580,12 @@ export default function ActivityLogsPage() {
                           <span className="text-sm text-[#4E616F] font-mono">{log.ip_address}</span>
                         </td>
                         <td className="px-4 py-3">
-                          <span className="text-sm text-white0 truncate max-w-[200px] block" title={log.details}>
+                          <span className="text-sm text-[#4E616F] truncate max-w-[200px] block" title={log.details}>
                             {log.details || '-'}
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex items-center gap-1.5 text-sm text-white0">
+                          <div className="flex items-center gap-1.5 text-sm text-[#4E616F]">
                             <Clock className="h-3.5 w-3.5" />
                             {formatDate(log.created_at)}
                           </div>
@@ -600,7 +600,7 @@ export default function ActivityLogsPage() {
             {/* Pagination */}
             {pages > 1 && (
               <div className="flex items-center justify-between px-4 py-3 border-t border-[#ABC0B9]">
-                <p className="text-sm text-white0">
+                <p className="text-sm text-[#4E616F]">
                   {t.pagination.showing} {((page - 1) * (filters.per_page || 25)) + 1}-
                   {Math.min(page * (filters.per_page || 25), total)} {t.pagination.of} {total} {t.pagination.results}
                 </p>
@@ -634,7 +634,7 @@ export default function ActivityLogsPage() {
         <div className="bg-white rounded-xl border border-[#ABC0B9] overflow-hidden">
           {activeSessions.length === 0 ? (
             <div className="flex items-center justify-center py-12">
-              <p className="text-white0">{t.table.noSessions}</p>
+              <p className="text-[#4E616F]">{t.table.noSessions}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -657,7 +657,7 @@ export default function ActivityLogsPage() {
                             {session.user_name || session.identifier}
                           </p>
                           {session.user_email && (
-                            <p className="text-xs text-white0">{session.user_email}</p>
+                            <p className="text-xs text-[#4E616F]">{session.user_email}</p>
                           )}
                         </div>
                       </td>
@@ -665,7 +665,7 @@ export default function ActivityLogsPage() {
                         <span className="text-sm text-[#4E616F] font-mono">{session.ip_address}</span>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1.5 text-sm text-white0">
+                        <div className="flex items-center gap-1.5 text-sm text-[#4E616F]">
                           <Clock className="h-3.5 w-3.5" />
                           {formatDate(session.created_at)}
                         </div>

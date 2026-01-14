@@ -21,6 +21,8 @@ export function Header() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const langMenuRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Mobile search state
   const [showMobileSearch, setShowMobileSearch] = useState(false);
@@ -60,11 +62,19 @@ export function Header() {
     }
   }, [user, fetchNotifications]);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+
+      if (notificationRef.current && !notificationRef.current.contains(target)) {
         setShowNotifications(false);
+      }
+      if (langMenuRef.current && !langMenuRef.current.contains(target)) {
+        setShowLangMenu(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(target)) {
+        setShowUserMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -387,7 +397,7 @@ export function Header() {
           </div>
 
           {/* Language Switch - Hidden on small screens */}
-          <div className="relative hidden sm:block">
+          <div className="relative hidden sm:block" ref={langMenuRef}>
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
               className="flex items-center gap-2 rounded-xl border border-[#ABC0B9]/50 bg-white px-3.5 py-2 text-sm text-[#4E616F] transition-all duration-200 hover:border-[#5C2F0E]/30 hover:bg-[#FAFBFA] hover:text-[#5C2F0E] active:scale-[0.98] shadow-sm"
@@ -421,7 +431,7 @@ export function Header() {
           </div>
 
           {/* User Avatar */}
-          <div className="relative">
+          <div className="relative" ref={userMenuRef}>
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] text-sm text-white shadow-soft-md transition-all duration-200 hover:shadow-soft-lg hover:scale-[1.02] active:scale-[0.98] ring-2 ring-white/50"
@@ -485,8 +495,14 @@ export function Header() {
 
       {/* Password Change Modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]"
+          onClick={() => setShowPasswordModal(false)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#ABC0B9]">
               <h2 className="text-lg font-semibold text-[#2D363F] flex items-center gap-2">

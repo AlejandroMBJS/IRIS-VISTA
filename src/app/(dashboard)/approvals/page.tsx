@@ -1136,6 +1136,9 @@ export default function ApprovalsPage() {
                     setAiSummary('');
                     setAiQuestion('');
                     setShowModalLangMenu(false);
+                    setIsStreaming(false);
+                    setStreamingText('');
+                    setIsThinking(false);
                   }}
                   className="text-white hover:text-white/80 p-2 rounded-lg hover:bg-white/10 transition-all"
                 >

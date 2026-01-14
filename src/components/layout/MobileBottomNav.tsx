@@ -93,7 +93,7 @@ export function MobileBottomNav() {
   return (
     <>
       {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ABC0B9] bg-white md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ABC0B9] bg-white lg:hidden">
         <div className="flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
           {primaryItems.map((item) => {
             const Icon = item.icon;
@@ -133,10 +133,10 @@ export function MobileBottomNav() {
       {showMore && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/30 md:hidden"
+            className="fixed inset-0 z-40 bg-black/30 lg:hidden"
             onClick={() => setShowMore(false)}
           />
-          <div className="fixed bottom-[60px] left-4 right-4 z-50 rounded-xl bg-white p-4 shadow-xl md:hidden">
+          <div className="fixed bottom-[60px] left-4 right-4 z-50 rounded-xl bg-white p-4 shadow-xl lg:hidden">
             <div className="grid grid-cols-4 gap-4">
               {filteredMoreItems.map((item) => {
                 const Icon = item.icon;

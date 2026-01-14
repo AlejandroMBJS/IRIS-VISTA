@@ -233,7 +233,7 @@ export default function CartPage() {
   // Empty cart
   if (!isLoading && items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#FAFBFA]">
+      <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
         {/* Header */}
         <section className="border-b border-[#ABC0B9] bg-white px-4 sm:px-8 py-6 sm:py-8">
           <div className="mx-auto max-w-4xl">
@@ -271,7 +271,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFA]">
+    <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
       {/* Header */}
       <section className="border-b border-[#ABC0B9] bg-white px-4 sm:px-8 py-6 sm:py-8">
         <div className="mx-auto max-w-6xl">

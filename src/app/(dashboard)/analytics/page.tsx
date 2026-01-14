@@ -277,7 +277,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFA]">
+    <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
       {/* Header */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
         {/* Decorative elements */}

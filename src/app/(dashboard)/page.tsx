@@ -314,7 +314,7 @@ export default function HomePage() {
   // ============ ADMIN DASHBOARD ============
   if (user?.role === 'admin') {
     return (
-      <div className="min-h-screen bg-[#FAFBFA]">
+      <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
         {/* Hero Header */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
           {/* Decorative elements */}
@@ -496,7 +496,7 @@ export default function HomePage() {
   // ============ PURCHASE ADMIN / SUPPLY CHAIN DASHBOARD ============
   if (user?.role === 'purchase_admin' || user?.role === 'supply_chain_manager') {
     return (
-      <div className="min-h-screen bg-[#FAFBFA]">
+      <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
         {/* Hero Header */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
           {/* Decorative elements */}
@@ -689,7 +689,7 @@ export default function HomePage() {
   // ============ GENERAL MANAGER DASHBOARD ============
   if (user?.role === 'general_manager') {
     return (
-      <div className="min-h-screen bg-[#FAFBFA]">
+      <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
         {/* Hero Header */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#80959A] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
           {/* Decorative elements */}
@@ -882,7 +882,7 @@ export default function HomePage() {
 
   // ============ EMPLOYEE DASHBOARD (default) ============
   return (
-    <div className="min-h-screen bg-[#FAFBFA]">
+    <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
       {/* Hero Header */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
         {/* Decorative elements */}

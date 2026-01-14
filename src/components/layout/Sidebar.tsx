@@ -162,7 +162,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-16 sm:top-[73px] bottom-0 border-r border-[#ABC0B9] bg-white overflow-y-auto hidden md:block w-56 lg:w-64 transition-all duration-200">
+    <aside className="fixed left-0 top-16 sm:top-[73px] bottom-0 border-r border-[#ABC0B9] bg-white overflow-y-auto hidden lg:block w-56 xl:w-64 transition-all duration-200">
       <nav className="flex flex-col gap-1 p-3 lg:p-4">
         {filteredMenuItems.map((item) => {
           const Icon = item.icon;

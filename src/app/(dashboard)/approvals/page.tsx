@@ -499,7 +499,7 @@ export default function ApprovalsPage() {
   const urgentCount = approvals.filter(a => a.urgency === 'urgent' && a.status === 'pending').length;
 
   return (
-    <div className="min-h-screen bg-[#FAFBFA]">
+    <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
       {/* Header */}
       <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">

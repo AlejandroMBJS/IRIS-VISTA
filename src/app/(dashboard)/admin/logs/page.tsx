@@ -363,7 +363,7 @@ export default function ActivityLogsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold text-[#2D363F]">{t.title}</h1>

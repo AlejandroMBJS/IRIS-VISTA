@@ -198,7 +198,7 @@ export default function PurchaseConfigPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFA]">
+    <div className="min-h-screen bg-[#FAFBFA] overflow-x-hidden">
       {/* Header */}
       <div className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

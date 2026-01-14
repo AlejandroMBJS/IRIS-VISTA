@@ -42,7 +42,7 @@ export default function DashboardLayout({
       <Header />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 pt-16 sm:pt-[73px] pb-16 sm:pb-20 md:pb-6 md:ml-56 lg:ml-64 transition-all duration-200">
+        <main className="flex-1 pt-16 sm:pt-[73px] pb-16 sm:pb-20 lg:pb-6 lg:ml-56 xl:ml-64 transition-all duration-200 min-w-0">
           {children}
         </main>
       </div>

@@ -9,7 +9,6 @@ import {
   ClipboardList,
   CheckSquare,
   Settings,
-  DollarSign,
   MoreHorizontal,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -34,7 +33,6 @@ const primaryItems: NavItem[] = [
 // Items shown in "More" menu
 const moreItems: NavItem[] = [
   { icon: CheckSquare, labelKey: 'approvals', href: '/approvals', roles: ['general_manager', 'admin', 'purchase_admin'] },
-  { icon: DollarSign, labelKey: 'orders', href: '/admin/orders', roles: ['admin', 'purchase_admin'] },
   { icon: Settings, labelKey: 'admin', href: '/admin', roles: ['admin'] },
 ];
 

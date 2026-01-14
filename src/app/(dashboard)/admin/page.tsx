@@ -146,7 +146,7 @@ export default function AdminPage() {
       {/* Header */}
       <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
-          <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
+          <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
             {t.title}
           </h1>
           <p className="text-base text-[#4E616F]">{t.subtitle}</p>
@@ -156,7 +156,7 @@ export default function AdminPage() {
       {/* Stats Grid */}
       <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
             {statCards.map((stat, idx) => {
               const Icon = stat.icon;
               return (
@@ -177,8 +177,8 @@ export default function AdminPage() {
           </div>
 
           {/* Management Links */}
-          <h2 className="text-xl font-semibold text-[#2D363F] mb-4">{t.management}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-[#2D363F] mb-4">{t.management}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {managementLinks.map((link, idx) => {
               const Icon = link.icon;
               return (

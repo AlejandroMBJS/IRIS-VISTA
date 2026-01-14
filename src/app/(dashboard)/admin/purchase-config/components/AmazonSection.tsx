@@ -397,7 +397,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
               </div>
 
               {config?.has_password && (
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#ABC0B9]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#ABC0B9]">
                   <div>
                     <p className="text-xs text-[#4E616F]">{t.email}</p>
                     <p className="text-sm font-medium text-[#2D363F]">{config.email}</p>

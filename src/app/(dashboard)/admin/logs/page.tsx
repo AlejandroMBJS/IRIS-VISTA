@@ -366,13 +366,13 @@ export default function ActivityLogsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#2D363F]">{t.title}</h1>
-        <p className="text-white0 mt-1">{t.subtitle}</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-[#2D363F]">{t.title}</h1>
+        <p className="text-[#80959A] mt-1 text-sm sm:text-base">{t.subtitle}</p>
       </div>
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
             <div className="flex items-center gap-2 text-[#5C2F0E] mb-2">
               <CheckCircle className="h-5 w-5" />

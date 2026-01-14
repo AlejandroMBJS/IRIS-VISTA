@@ -738,7 +738,7 @@ export default function InventoryPage() {
       <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:justify-between md:items-start gap-4">
           <div>
-            <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
+            <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
               {t.title}
             </h1>
             <p className="text-base text-[#4E616F]">{t.subtitle}</p>
@@ -918,7 +918,7 @@ export default function InventoryPage() {
               {/* Basic Information */}
               <div>
                 <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.basicInfo}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.sku} *</label>
                     <input
@@ -997,7 +997,7 @@ export default function InventoryPage() {
               {/* Localization */}
               <div>
                 <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.localization}</h3>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.nameEn} *</label>
                     <input
@@ -1067,7 +1067,7 @@ export default function InventoryPage() {
               {/* Pricing & Stock */}
               <div>
                 <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.pricing}</h3>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.price} *</label>
                     <input
@@ -1138,7 +1138,7 @@ export default function InventoryPage() {
               {/* Media & Images */}
               <div>
                 <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.media}</h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.imageEmoji}</label>
                     <input
@@ -1230,8 +1230,8 @@ export default function InventoryPage() {
               <div>
                 <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.ecommerce}</h3>
                 <p className="text-sm text-[#4E616F] mb-4">{t.ecommerceHint}</p>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2">
                     <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.productUrl}</label>
                     <div className="flex gap-2">
                       <input

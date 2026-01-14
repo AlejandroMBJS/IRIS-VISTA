@@ -585,7 +585,7 @@ export default function UsersPage() {
       <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
+            <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
               {t.title}
             </h1>
             <p className="text-base text-[#4E616F]">{t.subtitle}</p>
@@ -904,7 +904,7 @@ export default function UsersPage() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.department}
@@ -1002,7 +1002,7 @@ export default function UsersPage() {
                   </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                       {t.department}

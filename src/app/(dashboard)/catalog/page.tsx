@@ -345,7 +345,7 @@ export default function CatalogPage() {
       {/* Header */}
       <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
-          <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
+          <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
             {t.title}
           </h1>
           <p className="text-base text-[#4E616F]">{t.subtitle}</p>

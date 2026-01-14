@@ -403,7 +403,7 @@ export default function HomePage() {
               {/* Quick Actions - Takes 2 columns */}
               <div className="lg:col-span-2">
                 <h2 className="text-lg font-semibold text-[#2D363F] mb-4">{t.quickActions}</h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Link
                     href="/admin/users"
                     className="bg-white rounded-2xl p-6 border border-[#ABC0B9] shadow-sm hover:shadow-lg hover:border-[#5C2F0E] transition-all group"

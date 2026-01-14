@@ -239,53 +239,50 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#ABC0B9] shadow-sm">
-      <div className="flex items-center justify-between px-3 sm:px-6 py-3">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#ABC0B9]/40 shadow-soft">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3.5">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 sm:gap-3 transition-transform duration-200 hover:scale-105 active:scale-100"
+          className="flex items-center gap-2.5 sm:gap-3.5 group"
         >
-          <div className="relative flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] shadow-md transition-shadow duration-300 hover:shadow-lg">
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
-            <span className="relative text-lg sm:text-xl text-white" style={{ fontWeight: 700 }}>
+          <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] shadow-soft-md transition-all duration-300 group-hover:shadow-soft-lg group-hover:scale-[1.02] group-active:scale-[0.98]">
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative text-base sm:text-lg text-white font-bold tracking-tight">
               IRIS
             </span>
           </div>
           <div className="text-left hidden sm:block">
-            <div
-              className="text-xl text-[#2D363F]"
-              style={{ fontWeight: 600, letterSpacing: '-0.02em' }}
-            >
+            <div className="text-lg text-[#2D363F] font-semibold tracking-tight">
               VISTA
             </div>
-            <div className="text-xs text-[#5C2F0E]" style={{ fontWeight: 400 }}>
-              Supply Chain & Procurement
+            <div className="text-[11px] text-[#4E616F] font-medium tracking-wide uppercase">
+              Supply Chain
             </div>
           </div>
         </Link>
 
         {/* Global Search - Hidden on mobile */}
-        <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-          <div className="relative w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4E616F]" />
+        <div className="hidden md:flex flex-1 max-w-xl mx-6 lg:mx-10">
+          <div className="relative w-full group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-[#4E616F]/60 transition-colors duration-200 group-focus-within:text-[#5C2F0E]" />
             <input
               type="text"
               placeholder={t.search}
-              className="w-full rounded-xl border border-[#ABC0B9] bg-[#FAFBFA] py-2.5 pl-12 pr-4 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+              className="w-full rounded-2xl border border-[#ABC0B9]/50 bg-[#FAFBFA]/80 py-2.5 pl-11 pr-4 text-sm text-[#2D363F] tracking-tight transition-all duration-200 placeholder:text-[#4E616F]/50 focus:border-[#5C2F0E]/40 focus:bg-white focus:outline-none focus:shadow-input-focus hover:border-[#ABC0B9] hover:bg-white"
             />
           </div>
         </div>
 
         {/* Right Side */}
-        <div className="flex items-center gap-1 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Mobile Search Button */}
           <button
             onClick={() => {
               setShowMobileSearch(true);
               setTimeout(() => mobileSearchRef.current?.focus(), 100);
             }}
-            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl text-[#5C2F0E] transition-all duration-200 hover:bg-[#FAFBFA] active:scale-95"
+            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl text-[#4E616F] transition-all duration-200 hover:bg-[#ABC0B9]/15 hover:text-[#5C2F0E] active:scale-95"
           >
             <Search className="h-5 w-5" />
           </button>
@@ -293,11 +290,11 @@ export function Header() {
           {/* Cart */}
           <Link
             href="/cart"
-            className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#5C2F0E] transition-all duration-200 hover:bg-[#FAFBFA] active:scale-95"
+            className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#4E616F] transition-all duration-200 hover:bg-[#ABC0B9]/15 hover:text-[#5C2F0E] active:scale-95"
           >
             <ShoppingCart className="h-5 w-5" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#5C2F0E] text-xs text-white shadow-md">
+              <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] text-[10px] font-semibold text-white shadow-soft-md">
                 {itemCount > 9 ? '9+' : itemCount}
               </span>
             )}
@@ -307,20 +304,20 @@ export function Header() {
           <div className="relative" ref={notificationRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#5C2F0E] transition-all duration-200 hover:bg-[#FAFBFA] active:scale-95"
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#4E616F] transition-all duration-200 hover:bg-[#ABC0B9]/15 hover:text-[#5C2F0E] active:scale-95"
             >
               <Bell className="h-5 w-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#AA2F0D] text-xs text-white shadow-md">
+                <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#AA2F0D] to-[#8a260b] text-[10px] font-semibold text-white shadow-soft-md animate-pulse-subtle">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 top-12 w-80 max-w-[calc(100vw-2rem)] rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-[#ABC0B9] bg-[#FAFBFA]">
-                  <span className="text-sm font-semibold text-[#2D363F]">{t.notifications}</span>
+              <div className="absolute right-0 top-14 w-80 max-w-[calc(100vw-2rem)] rounded-2xl bg-white shadow-dropdown border border-[#ABC0B9]/40 overflow-hidden z-50 animate-scale-in">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-[#ABC0B9]/30 bg-gradient-to-r from-[#FAFBFA] to-white">
+                  <span className="text-sm font-semibold text-[#2D363F] tracking-tight">{t.notifications}</span>
                   {unreadCount > 0 && (
                     <button
                       onClick={handleMarkAllAsRead}
@@ -393,15 +390,15 @@ export function Header() {
           <div className="relative hidden sm:block">
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 rounded-xl border border-[#ABC0B9] px-3 py-2 text-sm text-[#5C2F0E] transition-all duration-200 hover:border-[#5C2F0E] hover:bg-[#FAFBFA] active:scale-95"
+              className="flex items-center gap-2 rounded-xl border border-[#ABC0B9]/50 bg-white px-3.5 py-2 text-sm text-[#4E616F] transition-all duration-200 hover:border-[#5C2F0E]/30 hover:bg-[#FAFBFA] hover:text-[#5C2F0E] active:scale-[0.98] shadow-sm"
             >
               <Globe className="h-4 w-4" />
-              <span style={{ fontWeight: 500 }}>{languageLabels[language]}</span>
-              <ChevronDown className="h-3 w-3" />
+              <span className="font-medium tracking-tight">{languageLabels[language]}</span>
+              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${showLangMenu ? 'rotate-180' : ''}`} />
             </button>
 
             {showLangMenu && (
-              <div className="absolute right-0 top-12 w-48 rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
+              <div className="absolute right-0 top-14 w-44 rounded-2xl bg-white shadow-dropdown border border-[#ABC0B9]/40 overflow-hidden z-50 animate-scale-in">
                 {Object.entries(t.languages).map(([key, label]) => (
                   <button
                     key={key}
@@ -427,19 +424,19 @@ export function Header() {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] text-sm text-white shadow-md transition-all duration-200 hover:shadow-lg active:scale-95"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] text-sm text-white shadow-soft-md transition-all duration-200 hover:shadow-soft-lg hover:scale-[1.02] active:scale-[0.98] ring-2 ring-white/50"
             >
-              <span style={{ fontWeight: 600 }}>{getUserInitials()}</span>
+              <span className="font-semibold text-[13px] tracking-tight">{getUserInitials()}</span>
             </button>
 
             {showUserMenu && (
-              <div className="absolute right-0 top-12 w-56 rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-[#ABC0B9]">
-                  <p className="text-sm font-semibold text-[#2D363F]">{user?.name}</p>
-                  <p className="text-xs text-[#4E616F]">{user?.email}</p>
-                  <p className="text-xs text-[#5C2F0E] capitalize mt-1">
+              <div className="absolute right-0 top-14 w-60 rounded-2xl bg-white shadow-dropdown border border-[#ABC0B9]/40 overflow-hidden z-50 animate-scale-in">
+                <div className="px-5 py-4 border-b border-[#ABC0B9]/30 bg-gradient-to-r from-[#FAFBFA] to-white">
+                  <p className="text-sm font-semibold text-[#2D363F] tracking-tight">{user?.name}</p>
+                  <p className="text-xs text-[#4E616F] mt-0.5">{user?.email}</p>
+                  <span className="inline-flex items-center mt-2 px-2.5 py-1 rounded-lg bg-[#5C2F0E]/10 text-[10px] font-semibold text-[#5C2F0E] uppercase tracking-wide">
                     {user?.role.replace('_', ' ')}
-                  </p>
+                  </span>
                 </div>
                 {/* Language selector for mobile */}
                 <div className="sm:hidden border-b border-[#ABC0B9]">

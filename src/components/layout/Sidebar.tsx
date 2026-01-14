@@ -162,8 +162,8 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-16 sm:top-[73px] bottom-0 border-r border-[#ABC0B9] bg-white overflow-y-auto hidden lg:block w-56 xl:w-64 transition-all duration-200">
-      <nav className="flex flex-col gap-1 p-3 lg:p-4">
+    <aside className="fixed left-0 top-16 sm:top-[73px] bottom-0 border-r border-[#ABC0B9]/40 bg-white/95 backdrop-blur-sm overflow-y-auto hidden lg:block w-56 xl:w-64 transition-all duration-300">
+      <nav className="flex flex-col gap-1.5 p-4 lg:p-5">
         {filteredMenuItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
@@ -174,22 +174,21 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 lg:px-4 lg:py-3 text-sm transition-all duration-200 ${
+              className={`relative flex items-center gap-3 rounded-xl px-3.5 py-2.5 lg:px-4 lg:py-3 text-sm font-medium tracking-tight transition-all duration-200 ${
                 active
-                  ? 'bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white shadow-md'
-                  : 'text-[#5C2F0E] hover:bg-[#ABC0B9]/10 active:scale-95'
+                  ? 'bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white shadow-soft-md'
+                  : 'text-[#4E616F] hover:bg-[#ABC0B9]/15 hover:text-[#2D363F] active:scale-[0.98]'
               }`}
-              style={{ fontWeight: 500 }}
               title={label}
             >
-              <Icon className="h-5 w-5 flex-shrink-0" />
+              <Icon className={`h-[18px] w-[18px] flex-shrink-0 transition-colors duration-200 ${active ? '' : 'opacity-70'}`} />
               <span className="flex-1 truncate">{label}</span>
               {badgeCount > 0 && (
                 <span
-                  className={`flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold ${
+                  className={`flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full text-[10px] font-bold shadow-sm transition-all duration-200 ${
                     active
-                      ? 'bg-white/20 text-white'
-                      : 'bg-[#AA2F0D] text-white'
+                      ? 'bg-white/25 text-white'
+                      : 'bg-gradient-to-br from-[#AA2F0D] to-[#8a260b] text-white'
                   }`}
                 >
                   {badgeCount > 99 ? '99+' : badgeCount}

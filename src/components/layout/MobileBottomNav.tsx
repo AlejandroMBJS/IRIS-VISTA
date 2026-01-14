@@ -93,8 +93,8 @@ export function MobileBottomNav() {
   return (
     <>
       {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ABC0B9] bg-white lg:hidden">
-        <div className="flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ABC0B9]/40 bg-white/95 backdrop-blur-md lg:hidden shadow-soft">
+        <div className="flex items-center justify-around px-2 py-1 pb-[env(safe-area-inset-bottom)]">
           {primaryItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -104,12 +104,14 @@ export function MobileBottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center gap-1 px-3 py-2 text-xs ${
-                  active ? 'text-[#5C2F0E]' : 'text-[#4E616F]'
+                className={`flex flex-col items-center gap-0.5 px-4 py-2 text-[10px] tracking-tight transition-all duration-200 active:scale-95 ${
+                  active ? 'text-[#5C2F0E]' : 'text-[#4E616F]/70'
                 }`}
               >
-                <Icon className={`h-5 w-5 ${active ? 'stroke-2' : ''}`} />
-                <span className={active ? 'font-medium' : ''}>{label}</span>
+                <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-[#5C2F0E]/10' : ''}`}>
+                  <Icon className={`h-5 w-5 transition-all duration-200 ${active ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+                </div>
+                <span className={`transition-all duration-200 ${active ? 'font-semibold' : 'font-medium'}`}>{label}</span>
               </Link>
             );
           })}
@@ -118,12 +120,14 @@ export function MobileBottomNav() {
           {filteredMoreItems.length > 0 && (
             <button
               onClick={() => setShowMore(!showMore)}
-              className={`flex flex-col items-center gap-1 px-3 py-2 text-xs ${
-                isMoreActive || showMore ? 'text-[#5C2F0E]' : 'text-[#4E616F]'
+              className={`flex flex-col items-center gap-0.5 px-4 py-2 text-[10px] tracking-tight transition-all duration-200 active:scale-95 ${
+                isMoreActive || showMore ? 'text-[#5C2F0E]' : 'text-[#4E616F]/70'
               }`}
             >
-              <MoreHorizontal className={`h-5 w-5 ${isMoreActive ? 'stroke-2' : ''}`} />
-              <span className={isMoreActive ? 'font-medium' : ''}>{t.more}</span>
+              <div className={`p-1.5 rounded-xl transition-all duration-200 ${isMoreActive ? 'bg-[#5C2F0E]/10' : ''}`}>
+                <MoreHorizontal className={`h-5 w-5 transition-all duration-200 ${isMoreActive ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+              </div>
+              <span className={`transition-all duration-200 ${isMoreActive ? 'font-semibold' : 'font-medium'}`}>{t.more}</span>
             </button>
           )}
         </div>
@@ -133,11 +137,11 @@ export function MobileBottomNav() {
       {showMore && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/30 lg:hidden"
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden animate-fade-in"
             onClick={() => setShowMore(false)}
           />
-          <div className="fixed bottom-[60px] left-4 right-4 z-50 rounded-xl bg-white p-4 shadow-xl lg:hidden">
-            <div className="grid grid-cols-4 gap-4">
+          <div className="fixed bottom-[72px] left-4 right-4 z-50 rounded-2xl bg-white p-5 shadow-modal lg:hidden animate-slide-up">
+            <div className="grid grid-cols-4 gap-3">
               {filteredMoreItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
@@ -148,14 +152,14 @@ export function MobileBottomNav() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setShowMore(false)}
-                    className={`flex flex-col items-center gap-2 rounded-lg p-3 ${
+                    className={`flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-200 active:scale-95 ${
                       active
-                        ? 'bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                        ? 'bg-gradient-to-br from-[#5C2F0E]/10 to-[#2D363F]/10 text-[#5C2F0E]'
                         : 'text-[#4E616F] hover:bg-[#FAFBFA]'
                     }`}
                   >
-                    <Icon className="h-6 w-6" />
-                    <span className="text-xs font-medium">{label}</span>
+                    <Icon className={`h-6 w-6 ${active ? 'stroke-[2px]' : ''}`} />
+                    <span className={`text-xs tracking-tight ${active ? 'font-semibold' : 'font-medium'}`}>{label}</span>
                   </Link>
                 );
               })}

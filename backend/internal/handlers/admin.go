@@ -229,7 +229,8 @@ func (h *AdminHandler) GetApprovedOrders(c *gin.Context) {
 		Preload("ApprovedBy").
 		Preload("PurchasedBy").
 		Preload("DeliveredBy").
-		Preload("CancelledBy")
+		Preload("CancelledBy").
+		Preload("Items")
 
 	// Filter by status
 	switch filter {

@@ -30,6 +30,8 @@ import { getTranslatedText } from '@/lib/translations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
+import type { DateRange } from 'react-day-picker';
 import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 
 type ViewMode = 'cards' | 'table';
@@ -47,14 +49,16 @@ export default function ApprovalsPage() {
   const { user } = useAuth();
   const [approvals, setApprovals] = useState<PurchaseRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  // GM sees all requests by default, others see pending
-  const [selectedTab, setSelectedTab] = useState(user?.role === 'general_manager' ? 'all' : 'pending');
+  // GM, Admin, and Purchase Admin see all requests by default
+  const canViewAll = user?.role === 'general_manager' || user?.role === 'admin' || user?.role === 'purchase_admin';
+  const [selectedTab, setSelectedTab] = useState(canViewAll ? 'all' : 'pending');
   const [selectedApproval, setSelectedApproval] = useState<PurchaseRequest | null>(null);
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [showMyActions, setShowMyActions] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   // Only general_manager can approve/reject - admin can only view
   const canApprove = user?.role === 'general_manager';
@@ -288,7 +292,7 @@ export default function ApprovalsPage() {
 
   useEffect(() => {
     fetchApprovals();
-  }, [selectedTab, showMyActions]);
+  }, [selectedTab, showMyActions, dateRange]);
 
   const fetchApprovals = async () => {
     setIsLoading(true);
@@ -396,15 +400,35 @@ export default function ApprovalsPage() {
   };
 
   const filteredApprovals = approvals.filter((approval) => {
+    // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      return (
+      const matchesSearch = (
         approval.request_number?.toLowerCase().includes(query) ||
         approval.po_number?.toLowerCase().includes(query) ||
         approval.requester?.name?.toLowerCase().includes(query) ||
         approval.product_title?.toLowerCase().includes(query)
       );
+      if (!matchesSearch) return false;
     }
+
+    // Filter by date range
+    if (dateRange?.from) {
+      const createdAt = new Date(approval.created_at);
+      createdAt.setHours(0, 0, 0, 0);
+
+      const fromDate = new Date(dateRange.from);
+      fromDate.setHours(0, 0, 0, 0);
+
+      if (createdAt < fromDate) return false;
+
+      if (dateRange.to) {
+        const toDate = new Date(dateRange.to);
+        toDate.setHours(23, 59, 59, 999);
+        if (createdAt > toDate) return false;
+      }
+    }
+
     return true;
   });
 
@@ -533,8 +557,16 @@ export default function ApprovalsPage() {
               ))}
             </div>
 
-            {/* My Approvals Toggle + Search */}
-            <div className="flex flex-1 gap-4 items-center md:ml-auto md:max-w-lg">
+            {/* Date Filter + My Approvals Toggle + Search */}
+            <div className="flex flex-1 gap-3 items-center md:ml-auto flex-wrap md:flex-nowrap">
+              {/* Date Range Filter */}
+              <DateRangePicker
+                dateRange={dateRange}
+                onDateRangeChange={setDateRange}
+                language={language}
+                className="min-w-[200px]"
+              />
+
               {/* My Approvals Toggle */}
               {canApprove && (
                 <button
@@ -552,7 +584,7 @@ export default function ApprovalsPage() {
               )}
 
               {/* Search */}
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-[150px]">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -632,7 +664,7 @@ export default function ApprovalsPage() {
                               <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                                 <Image
                                   src={item.product_image_url}
-                                  alt={item.product_title}
+                                  alt={getTranslatedText(item.product_title_translated, item.product_title, language)}
                                   width={64}
                                   height={64}
                                   className="object-contain w-full h-full"
@@ -809,7 +841,7 @@ export default function ApprovalsPage() {
                           <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                             <Image
                               src={item.product_image_url}
-                              alt={item.product_title}
+                              alt={getTranslatedText(item.product_title_translated, item.product_title, language)}
                               width={128}
                               height={128}
                               className="object-contain w-full h-full"

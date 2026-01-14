@@ -29,9 +29,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { adminApi, amazonConfigApi, type AmazonConfig } from '@/lib/api';
 import { getTranslatedText } from '@/lib/translations';
 import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
+import type { DateRange } from 'react-day-picker';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 type FilterType = 'amazon_cart' | 'pending_manual' | 'purchased' | 'delivered' | 'cancelled';
@@ -67,6 +69,10 @@ export default function ApprovedOrdersPage() {
   const [adminNotesInput, setAdminNotesInput] = useState<Record<number, string>>({});
   const [savingNotesId, setSavingNotesId] = useState<number | null>(null);
 
+  // Date filter state
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Amazon integration state
   const [amazonConfig, setAmazonConfig] = useState<AmazonConfig | null>(null);
   const isAmazonEnabled = amazonConfig?.is_active && amazonConfig?.has_password;
@@ -75,6 +81,7 @@ export default function ApprovedOrdersPage() {
     en: {
       title: 'Orders',
       subtitle: 'Manage approved purchase requests',
+      search: 'Search orders...',
       all: 'All',
       pendingPurchase: 'Pending',
       inCart: 'In Cart',
@@ -131,6 +138,7 @@ export default function ApprovedOrdersPage() {
     zh: {
       title: '订单',
       subtitle: '管理已批准的采购请求',
+      search: '搜索订单...',
       all: '全部',
       pendingPurchase: '待购买',
       inCart: '在购物车',
@@ -187,6 +195,7 @@ export default function ApprovedOrdersPage() {
     es: {
       title: 'Órdenes',
       subtitle: 'Gestionar solicitudes de compra aprobadas',
+      search: 'Buscar ordenes...',
       all: 'Todos',
       pendingPurchase: 'Pendientes',
       inCart: 'En Carrito',
@@ -511,6 +520,40 @@ export default function ApprovedOrdersPage() {
   const deliveredCount = orders.filter(o => o.status === 'delivered').length;
   const cancelledCount = orders.filter(o => o.status === 'cancelled').length;
 
+  // Filter orders by search and date range
+  const filteredOrders = orders.filter((order) => {
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      const matchesSearch = (
+        order.request_number?.toLowerCase().includes(query) ||
+        order.po_number?.toLowerCase().includes(query) ||
+        order.requester?.name?.toLowerCase().includes(query) ||
+        order.product_title?.toLowerCase().includes(query)
+      );
+      if (!matchesSearch) return false;
+    }
+
+    // Filter by date range
+    if (dateRange?.from) {
+      const createdAt = new Date(order.approved_at || order.created_at);
+      createdAt.setHours(0, 0, 0, 0);
+
+      const fromDate = new Date(dateRange.from);
+      fromDate.setHours(0, 0, 0, 0);
+
+      if (createdAt < fromDate) return false;
+
+      if (dateRange.to) {
+        const toDate = new Date(dateRange.to);
+        toDate.setHours(23, 59, 59, 999);
+        if (createdAt > toDate) return false;
+      }
+    }
+
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
@@ -586,19 +629,37 @@ export default function ApprovedOrdersPage() {
             </div>
 
             {/* Filters */}
-            <div className="flex gap-2 flex-wrap">
-              <Filter className="h-5 w-5 text-gray-500 mt-2" />
-              {filters.map((f) => (
-                <Button
-                  key={f.key}
-                  variant={filter === f.key ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilter(f.key)}
-                  className={filter === f.key ? 'bg-[#5C2F0E] hover:bg-[#2D363F]' : ''}
-                >
-                  {f.label}
-                </Button>
-              ))}
+            <div className="flex flex-col md:flex-row gap-4 md:items-center">
+              <div className="flex gap-2 flex-wrap items-center">
+                <Filter className="h-5 w-5 text-gray-500" />
+                {filters.map((f) => (
+                  <Button
+                    key={f.key}
+                    variant={filter === f.key ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilter(f.key)}
+                    className={filter === f.key ? 'bg-[#5C2F0E] hover:bg-[#2D363F]' : ''}
+                  >
+                    {f.label}
+                  </Button>
+                ))}
+              </div>
+
+              <div className="flex flex-1 gap-3 items-center md:ml-auto">
+                <DateRangePicker
+                  dateRange={dateRange}
+                  onDateRangeChange={setDateRange}
+                  language={language}
+                  className="min-w-[200px]"
+                />
+                <div className="flex-1 min-w-[150px] max-w-xs">
+                  <Input
+                    placeholder={t.search || 'Search...'}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -607,7 +668,7 @@ export default function ApprovedOrdersPage() {
             <div className="flex justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
             </div>
-          ) : orders.length === 0 ? (
+          ) : filteredOrders.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center text-gray-500">
                 <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -616,7 +677,7 @@ export default function ApprovedOrdersPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {orders.map((order) => {
+              {filteredOrders.map((order) => {
                 const items = getProductItems(order);
                 const progress = getCartProgress(items);
                 const total = calculateTotal(order);
@@ -661,7 +722,7 @@ export default function ApprovedOrdersPage() {
                             <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                               <Image
                                 src={item.product_image_url}
-                                alt={item.product_title}
+                                alt={getTranslatedText(item.product_title_translated, item.product_title, language)}
                                 width={64}
                                 height={64}
                                 className="object-contain w-full h-full"

@@ -24,10 +24,21 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
 import { purchaseRequestsApi, productsApi, type ProductMetadata, type PurchaseRequestConfig, type AddToCartInput, type CreatePurchaseRequestInput, type CreatePurchaseRequestItemInput, type TranslatedText } from '@/lib/api';
 
+// Helper to decode URL-encoded text
+const decodeText = (text: string | null | undefined): string => {
+  if (!text) return '';
+  try {
+    return decodeURIComponent(text);
+  } catch {
+    return text;
+  }
+};
+
 // Helper to get translated text based on current language
 const getTranslatedText = (translated: TranslatedText | undefined, fallback: string, lang: 'en' | 'zh' | 'es'): string => {
-  if (!translated) return fallback;
-  return translated[lang] || translated.original || fallback;
+  if (!translated) return decodeText(fallback);
+  const result = translated[lang] || translated.original || fallback;
+  return decodeText(result);
 };
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types';

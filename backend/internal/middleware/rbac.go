@@ -50,9 +50,10 @@ func RequireApprover() gin.HandlerFunc {
 	return RequireRole(models.RoleGeneralManager)
 }
 
-// RequireCanViewApprovals requires a role that can view pending approvals (read-only for admin)
+// RequireCanViewApprovals requires a role that can view all approvals
+// GM can approve/reject, Admin and Purchase Admin can only view
 func RequireCanViewApprovals() gin.HandlerFunc {
-	return RequireRole(models.RoleAdmin, models.RoleGeneralManager)
+	return RequireRole(models.RoleAdmin, models.RoleGeneralManager, models.RolePurchaseAdmin)
 }
 
 // RequireManager requires a manager-level role

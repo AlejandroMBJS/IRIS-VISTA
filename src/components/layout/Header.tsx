@@ -441,6 +441,31 @@ export function Header() {
                     {user?.role.replace('_', ' ')}
                   </p>
                 </div>
+                {/* Language selector for mobile */}
+                <div className="sm:hidden border-b border-[#ABC0B9]">
+                  <div className="px-4 py-2 text-xs font-medium text-[#4E616F] flex items-center gap-2">
+                    <Globe className="h-3 w-3" />
+                    {language === 'zh' ? '语言' : language === 'es' ? 'Idioma' : 'Language'}
+                  </div>
+                  <div className="flex px-2 pb-2 gap-1">
+                    {(['en', 'zh', 'es'] as const).map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang);
+                          setShowUserMenu(false);
+                        }}
+                        className={`flex-1 py-2 text-xs rounded-lg transition-colors ${
+                          language === lang
+                            ? 'bg-[#5C2F0E] text-white'
+                            : 'bg-[#FAFBFA] text-[#2D363F] hover:bg-[#ABC0B9]'
+                        }`}
+                      >
+                        {t.languages[lang]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <button
                   onClick={openPasswordModal}
                   className="w-full px-4 py-3 text-left text-sm text-[#2D363F] hover:bg-[#FAFBFA] transition-colors flex items-center gap-2 border-b border-[#ABC0B9]"

@@ -28,6 +28,8 @@ import { getTranslatedText } from '@/lib/translations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
+import type { DateRange } from 'react-day-picker';
 import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 
 // Format price to show all significant decimals (minimum 2)
@@ -51,6 +53,7 @@ export default function RequestsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState<PurchaseRequest | null>(null);
   const [filter, setFilter] = useState<FilterType>('all');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const text = {
     en: {
@@ -264,10 +267,29 @@ export default function RequestsPage() {
   const purchasedCount = requests.filter(r => r.status === 'purchased').length;
   const rejectedCount = requests.filter(r => r.status === 'rejected').length;
 
-  // Filter requests
+  // Filter requests by status and date
   const filteredRequests = requests.filter(r => {
-    if (filter === 'all') return true;
-    return r.status === filter;
+    // Filter by status
+    if (filter !== 'all' && r.status !== filter) return false;
+
+    // Filter by date range
+    if (dateRange?.from) {
+      const createdAt = new Date(r.created_at);
+      createdAt.setHours(0, 0, 0, 0);
+
+      const fromDate = new Date(dateRange.from);
+      fromDate.setHours(0, 0, 0, 0);
+
+      if (createdAt < fromDate) return false;
+
+      if (dateRange.to) {
+        const toDate = new Date(dateRange.to);
+        toDate.setHours(23, 59, 59, 999);
+        if (createdAt > toDate) return false;
+      }
+    }
+
+    return true;
   });
 
   const filters: { key: FilterType; label: string; count: number }[] = [
@@ -342,19 +364,27 @@ export default function RequestsPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex gap-2 flex-wrap mb-6">
-            <Filter className="h-5 w-5 text-gray-500 mt-2" />
-            {filters.map((f) => (
-              <Button
-                key={f.key}
-                variant={filter === f.key ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setFilter(f.key)}
-                className={filter === f.key ? 'bg-[#5C2F0E] hover:bg-[#2D363F]' : ''}
-              >
-                {f.label} ({f.count})
-              </Button>
-            ))}
+          <div className="flex flex-col md:flex-row gap-4 md:items-center mb-6">
+            <div className="flex gap-2 flex-wrap items-center">
+              <Filter className="h-5 w-5 text-gray-500" />
+              {filters.map((f) => (
+                <Button
+                  key={f.key}
+                  variant={filter === f.key ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilter(f.key)}
+                  className={filter === f.key ? 'bg-[#5C2F0E] hover:bg-[#2D363F]' : ''}
+                >
+                  {f.label} ({f.count})
+                </Button>
+              ))}
+            </div>
+            <DateRangePicker
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              language={language}
+              className="md:ml-auto min-w-[200px]"
+            />
           </div>
 
           {/* Requests List */}
@@ -426,7 +456,7 @@ export default function RequestsPage() {
                             <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                               <Image
                                 src={item.product_image_url}
-                                alt={item.product_title || 'Product'}
+                                alt={getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product'}
                                 width={64}
                                 height={64}
                                 className="object-contain w-full h-full"
@@ -576,7 +606,7 @@ export default function RequestsPage() {
                         <div className="w-20 h-20 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
                           <Image
                             src={item.product_image_url}
-                            alt={item.product_title || 'Product'}
+                            alt={getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product'}
                             width={80}
                             height={80}
                             className="object-contain"

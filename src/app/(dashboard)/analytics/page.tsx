@@ -23,6 +23,8 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { approvalsApi, adminApi, requestsApi } from '@/lib/api';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
+import type { DateRange } from 'react-day-picker';
 import type { ApprovalStats, DashboardStats, PurchaseRequest } from '@/types';
 
 // Simple bar component for charts
@@ -102,6 +104,7 @@ export default function AnalyticsPage() {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [recentRequests, setRecentRequests] = useState<PurchaseRequest[]>([]);
   const [timeRange, setTimeRange] = useState<'week' | 'month' | 'year'>('month');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const text = {
     en: {
@@ -282,14 +285,22 @@ export default function AnalyticsPage() {
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
 
         <div className="relative mx-auto max-w-7xl">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center">
-              <BarChart3 className="h-6 w-6 text-white" />
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center">
+                <BarChart3 className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-4xl text-white font-bold">{t.title}</h1>
+                <p className="text-white/70">{t.subtitle}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl text-white font-bold">{t.title}</h1>
-              <p className="text-white/70">{t.subtitle}</p>
-            </div>
+            <DateRangePicker
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              language={language}
+              className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+            />
           </div>
         </div>
       </section>

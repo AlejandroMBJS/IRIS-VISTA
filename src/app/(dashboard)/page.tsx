@@ -25,6 +25,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { adminApi, approvalsApi, requestsApi } from '@/lib/api';
+import { decodeText } from '@/lib/translations';
 import type { DashboardStats, ApprovalStats, PurchaseRequest } from '@/types';
 
 export default function HomePage() {
@@ -615,7 +616,7 @@ export default function HomePage() {
                               <p className="font-semibold text-[#2D363F] text-sm">{order.po_number || order.request_number}</p>
                               {getStatusBadge(order.status)}
                             </div>
-                            <p className="text-sm text-[#4E616F] truncate">{order.requester?.name} • {order.product_title || `${order.product_count} items`}</p>
+                            <p className="text-sm text-[#4E616F] truncate">{order.requester?.name} • {decodeText(order.product_title) || `${order.product_count} items`}</p>
                           </div>
                           <div className="text-right flex-shrink-0">
                             <p className="font-bold text-[#2D363F]">${((order.total_estimated || (order.estimated_price || 0) * order.quantity)).toLocaleString()}</p>
@@ -1015,7 +1016,7 @@ export default function HomePage() {
                             <p className="font-semibold text-[#2D363F] text-sm">{request.request_number}</p>
                             {getStatusBadge(request.status)}
                           </div>
-                          <p className="text-sm text-[#4E616F] truncate">{request.product_title || `${request.product_count} ${t.products}`}</p>
+                          <p className="text-sm text-[#4E616F] truncate">{decodeText(request.product_title) || `${request.product_count} ${t.products}`}</p>
                         </div>
 
                         {/* Price */}

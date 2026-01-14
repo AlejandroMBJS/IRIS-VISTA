@@ -20,6 +20,7 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
 import { purchaseRequestsApi, type CreatePurchaseRequestItemInput } from '@/lib/api';
+import { decodeText } from '@/lib/translations';
 import { Badge } from '@/components/ui/badge';
 
 // Format price with decimals
@@ -317,7 +318,7 @@ export default function CartPage() {
                       {item.product_image_url ? (
                         <img
                           src={item.product_image_url}
-                          alt={item.product_title}
+                          alt={decodeText(item.product_title)}
                           className="max-w-full max-h-full object-contain"
                         />
                       ) : (
@@ -330,7 +331,7 @@ export default function CartPage() {
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium text-[#2D363F] text-sm sm:text-base line-clamp-2">
-                            {item.product_title || item.url}
+                            {decodeText(item.product_title) || item.url}
                           </h3>
                           <div className="flex items-center gap-2 mt-1">
                             {item.is_amazon_url ? (

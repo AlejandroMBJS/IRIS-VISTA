@@ -117,12 +117,20 @@ export interface CartItem {
 export type RequestStatus = 'pending' | 'approved' | 'rejected' | 'info_requested' | 'purchased' | 'delivered' | 'cancelled';
 export type Urgency = 'normal' | 'urgent';
 
+export interface TranslatedText {
+  original: string;
+  en: string;
+  zh: string;
+  es: string;
+}
+
 export interface RequestHistory {
   id: number;
   user_id: number;
   user?: User;
   action: string;
   comment: string;
+  comment_translated?: TranslatedText;
   old_status: string;
   new_status: string;
   created_at: string;
@@ -219,6 +227,15 @@ export interface PurchaseRequest {
 
   // Admin notes (visible to admin, purchase_admin, gm, and requester)
   admin_notes?: string;
+
+  // Translated fields
+  justification_translated?: TranslatedText;
+  rejection_reason_translated?: TranslatedText;
+  info_request_note_translated?: TranslatedText;
+  purchase_notes_translated?: TranslatedText;
+  delivery_notes_translated?: TranslatedText;
+  cancellation_notes_translated?: TranslatedText;
+  admin_notes_translated?: TranslatedText;
 
   // History
   history?: RequestHistory[];

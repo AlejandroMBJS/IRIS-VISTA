@@ -95,7 +95,7 @@ export function MobileBottomNav() {
   return (
     <>
       {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#E4E1DD] bg-white md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ABC0B9] bg-white md:hidden">
         <div className="flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
           {primaryItems.map((item) => {
             const Icon = item.icon;
@@ -107,7 +107,7 @@ export function MobileBottomNav() {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center gap-1 px-3 py-2 text-xs ${
-                  active ? 'text-[#75534B]' : 'text-[#6E6B67]'
+                  active ? 'text-[#5C2F0E]' : 'text-[#4E616F]'
                 }`}
               >
                 <Icon className={`h-5 w-5 ${active ? 'stroke-2' : ''}`} />
@@ -121,7 +121,7 @@ export function MobileBottomNav() {
             <button
               onClick={() => setShowMore(!showMore)}
               className={`flex flex-col items-center gap-1 px-3 py-2 text-xs ${
-                isMoreActive || showMore ? 'text-[#75534B]' : 'text-[#6E6B67]'
+                isMoreActive || showMore ? 'text-[#5C2F0E]' : 'text-[#4E616F]'
               }`}
             >
               <MoreHorizontal className={`h-5 w-5 ${isMoreActive ? 'stroke-2' : ''}`} />
@@ -152,8 +152,8 @@ export function MobileBottomNav() {
                     onClick={() => setShowMore(false)}
                     className={`flex flex-col items-center gap-2 rounded-lg p-3 ${
                       active
-                        ? 'bg-[#75534B]/10 text-[#75534B]'
-                        : 'text-[#6E6B67] hover:bg-[#F9F8F6]'
+                        ? 'bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                        : 'text-[#4E616F] hover:bg-[#FAFBFA]'
                     }`}
                   >
                     <Icon className="h-6 w-6" />

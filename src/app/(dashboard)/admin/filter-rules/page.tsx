@@ -247,43 +247,43 @@ export default function FilterRulesPage() {
 
   const getRuleTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {
-      price_max: '#E08A4B',
-      price_min: '#3A6EA5',
-      category_allow: '#4BAF7E',
-      category_block: '#D1625B',
-      supplier_block: '#D1625B',
-      keyword_block: '#D1625B',
+      price_max: '#E95F20',
+      price_min: '#5C2F0E',
+      category_allow: '#5C2F0E',
+      category_block: '#AA2F0D',
+      supplier_block: '#AA2F0D',
+      keyword_block: '#AA2F0D',
     };
-    return colors[type] || '#75534B';
+    return colors[type] || '#5C2F0E';
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-8 py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-8 py-8">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-xl bg-[#75534B] flex items-center justify-center">
+            <div className="h-12 w-12 rounded-xl bg-[#5C2F0E] flex items-center justify-center">
               <Filter className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+              <h1 className="text-3xl text-[#2D363F]" style={{ fontWeight: 600 }}>
                 {t.title}
               </h1>
-              <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
+              <p className="text-base text-[#4E616F]">{t.subtitle}</p>
             </div>
           </div>
           <button
             onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
+            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
           >
             <Plus className="h-5 w-5" />
             {t.addRule}
@@ -295,13 +295,13 @@ export default function FilterRulesPage() {
       <section className="px-8 py-8">
         <div className="mx-auto max-w-7xl">
           {rules.length === 0 ? (
-            <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] p-12 text-center">
-              <Filter className="h-12 w-12 text-[#E4E1DD] mx-auto mb-4" />
-              <p className="text-[#6E6B67] mb-2">{t.noRules}</p>
-              <p className="text-sm text-[#6E6B67] mb-6">{t.createFirst}</p>
+            <div className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] p-12 text-center">
+              <Filter className="h-12 w-12 text-[#ABC0B9] mx-auto mb-4" />
+              <p className="text-[#4E616F] mb-2">{t.noRules}</p>
+              <p className="text-sm text-[#4E616F] mb-6">{t.createFirst}</p>
               <button
                 onClick={() => handleOpenModal()}
-                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
+                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
               >
                 <Plus className="h-5 w-5" />
                 {t.addRule}
@@ -315,7 +315,7 @@ export default function FilterRulesPage() {
                 return (
                   <div
                     key={rule.id}
-                    className="rounded-xl bg-white border border-[#E4E1DD] p-6 shadow-sm hover:shadow-md transition-all"
+                    className="rounded-xl bg-white border border-[#ABC0B9] p-6 shadow-sm hover:shadow-md transition-all"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-4">
@@ -327,7 +327,7 @@ export default function FilterRulesPage() {
                         </div>
                         <div>
                           <div className="flex items-center gap-3 mb-1">
-                            <h3 className="font-semibold text-[#2C2C2C]">{rule.name}</h3>
+                            <h3 className="font-semibold text-[#2D363F]">{rule.name}</h3>
                             <Badge
                               style={{
                                 backgroundColor: `${color}15`,
@@ -339,16 +339,16 @@ export default function FilterRulesPage() {
                             </Badge>
                           </div>
                           {rule.description && (
-                            <p className="text-sm text-[#6E6B67] mb-2">{rule.description}</p>
+                            <p className="text-sm text-[#4E616F] mb-2">{rule.description}</p>
                           )}
                           <div className="flex items-center gap-4 text-sm">
-                            <span className="text-[#6E6B67]">
+                            <span className="text-[#4E616F]">
                               {t.value}:{' '}
-                              <span className="font-medium text-[#2C2C2C]">{rule.value}</span>
+                              <span className="font-medium text-[#2D363F]">{rule.value}</span>
                             </span>
-                            <span className="text-[#6E6B67]">
+                            <span className="text-[#4E616F]">
                               {t.priority}:{' '}
-                              <span className="font-medium text-[#2C2C2C]">{rule.priority}</span>
+                              <span className="font-medium text-[#2D363F]">{rule.priority}</span>
                             </span>
                           </div>
                         </div>
@@ -361,25 +361,25 @@ export default function FilterRulesPage() {
                         >
                           {rule.is_active ? (
                             <>
-                              <ToggleRight className="h-6 w-6 text-[#4BAF7E]" />
-                              <span className="text-sm text-[#4BAF7E]">{t.active}</span>
+                              <ToggleRight className="h-6 w-6 text-[#5C2F0E]" />
+                              <span className="text-sm text-[#5C2F0E]">{t.active}</span>
                             </>
                           ) : (
                             <>
-                              <ToggleLeft className="h-6 w-6 text-[#6E6B67]" />
-                              <span className="text-sm text-[#6E6B67]">{t.inactive}</span>
+                              <ToggleLeft className="h-6 w-6 text-[#4E616F]" />
+                              <span className="text-sm text-[#4E616F]">{t.inactive}</span>
                             </>
                           )}
                         </button>
                         <button
                           onClick={() => handleOpenModal(rule)}
-                          className="p-2 text-[#75534B] hover:bg-[#75534B]/10 rounded-lg transition-colors"
+                          className="p-2 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-lg transition-colors"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(rule)}
-                          className="p-2 text-[#D1625B] hover:bg-[#D1625B]/10 rounded-lg transition-colors"
+                          className="p-2 text-[#AA2F0D] hover:bg-[#AA2F0D]/10 rounded-lg transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -397,7 +397,7 @@ export default function FilterRulesPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="bg-gradient-to-r from-[#75534B] to-[#5D423C] p-6 rounded-t-xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-6 rounded-t-xl flex items-center justify-between">
               <h2 className="text-xl text-white font-semibold">
                 {editingRule ? t.editRule : t.createRule}
               </h2>
@@ -408,31 +408,31 @@ export default function FilterRulesPage() {
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.name} <span className="text-[#EF4444]">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.description}
                 </label>
                 <input
                   type="text"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.type} <span className="text-[#EF4444]">*</span>
                 </label>
                 <select
@@ -440,7 +440,7 @@ export default function FilterRulesPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, rule_type: e.target.value as FilterRule['rule_type'] })
                   }
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 >
                   {Object.entries(t.ruleTypes).map(([key, label]) => (
                     <option key={key} value={key}>
@@ -448,14 +448,14 @@ export default function FilterRulesPage() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-1 text-xs text-[#6E6B67]">
+                <p className="mt-1 text-xs text-[#4E616F]">
                   {t.typeDescriptions[formData.rule_type as keyof typeof t.typeDescriptions]}
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.value} <span className="text-[#EF4444]">*</span>
                   </label>
                   <input
@@ -465,11 +465,11 @@ export default function FilterRulesPage() {
                     placeholder={
                       formData.rule_type.startsWith('price') ? '100.00' : 'Electronics'
                     }
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.priority}
                   </label>
                   <input
@@ -478,7 +478,7 @@ export default function FilterRulesPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })
                     }
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
                 </div>
               </div>
@@ -487,7 +487,7 @@ export default function FilterRulesPage() {
                 <button
                   onClick={() => setFormData({ ...formData, is_active: !formData.is_active })}
                   className={`relative h-6 w-11 rounded-full transition-colors ${
-                    formData.is_active ? 'bg-[#4BAF7E]' : 'bg-[#E4E1DD]'
+                    formData.is_active ? 'bg-[#5C2F0E]' : 'bg-[#ABC0B9]'
                   }`}
                 >
                   <div
@@ -496,23 +496,23 @@ export default function FilterRulesPage() {
                     }`}
                   />
                 </button>
-                <span className="text-sm text-[#2C2C2C]">
+                <span className="text-sm text-[#2D363F]">
                   {formData.is_active ? t.active : t.inactive}
                 </span>
               </div>
             </div>
 
-            <div className="border-t border-[#E4E1DD] p-6 flex items-center justify-between">
+            <div className="border-t border-[#ABC0B9] p-6 flex items-center justify-between">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-6 py-3 text-[#6E6B67] font-medium transition-colors hover:text-[#2C2C2C]"
+                className="px-6 py-3 text-[#4E616F] font-medium transition-colors hover:text-[#2D363F]"
               >
                 {t.cancel}
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !formData.name || !formData.value}
-                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 {t.save}

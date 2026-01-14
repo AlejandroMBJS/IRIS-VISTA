@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
@@ -97,6 +98,15 @@ type PurchaseRequest struct {
 
 	// Admin notes (visible to admin, purchase_admin, gm, and requester)
 	AdminNotes string `gorm:"type:text" json:"admin_notes,omitempty"`
+
+	// Translated fields (JSON containing {original, en, zh, es})
+	JustificationTranslated     datatypes.JSON `gorm:"type:json" json:"justification_translated,omitempty"`
+	RejectionReasonTranslated   datatypes.JSON `gorm:"type:json" json:"rejection_reason_translated,omitempty"`
+	InfoRequestNoteTranslated   datatypes.JSON `gorm:"type:json" json:"info_request_note_translated,omitempty"`
+	PurchaseNotesTranslated     datatypes.JSON `gorm:"type:json" json:"purchase_notes_translated,omitempty"`
+	DeliveryNotesTranslated     datatypes.JSON `gorm:"type:json" json:"delivery_notes_translated,omitempty"`
+	CancellationNotesTranslated datatypes.JSON `gorm:"type:json" json:"cancellation_notes_translated,omitempty"`
+	AdminNotesTranslated        datatypes.JSON `gorm:"type:json" json:"admin_notes_translated,omitempty"`
 
 	// Amazon automation status (legacy single-product)
 	IsAmazonURL       bool       `gorm:"default:false" json:"is_amazon_url"`

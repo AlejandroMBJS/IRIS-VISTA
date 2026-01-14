@@ -55,6 +55,11 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  // Add user language header for translations
+  if (typeof window !== 'undefined') {
+    const language = localStorage.getItem('language') || 'en';
+    config.headers['X-User-Language'] = language;
+  }
   return config;
 });
 

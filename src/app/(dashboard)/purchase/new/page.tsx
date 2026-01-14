@@ -765,27 +765,27 @@ export default function NewPurchaseRequestPage() {
   if (success) {
     const isDirectSubmit = successType === 'direct';
     return (
-      <div className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-8">
+      <div className="min-h-screen bg-[#FAFBFA] flex items-center justify-center p-8">
         <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-semibold text-[#2C2C2C] mb-2">
+          <h2 className="text-2xl font-semibold text-[#2D363F] mb-2">
             {isDirectSubmit ? t.directSubmitSuccess : t.success}
           </h2>
-          <p className="text-[#6E6B67] mb-6">
+          <p className="text-[#4E616F] mb-6">
             {isDirectSubmit ? t.directSubmitMessage : t.successMessage}
           </p>
           <div className="flex gap-3">
             <button
               onClick={() => router.push(isDirectSubmit ? '/requests' : '/cart')}
-              className="flex-1 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-3 text-white font-medium"
+              className="flex-1 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-4 py-3 text-white font-medium"
             >
               {isDirectSubmit ? (language === 'es' ? 'Ver Mis Solicitudes' : language === 'zh' ? '查看我的请求' : 'View My Requests') : t.viewRequests}
             </button>
             <button
               onClick={resetForm}
-              className="flex-1 rounded-lg border border-[#E4E1DD] px-4 py-3 text-[#2C2C2C] font-medium hover:bg-[#F9F8F6]"
+              className="flex-1 rounded-lg border border-[#ABC0B9] px-4 py-3 text-[#2D363F] font-medium hover:bg-[#FAFBFA]"
             >
               {t.createAnother}
             </button>
@@ -798,8 +798,8 @@ export default function NewPurchaseRequestPage() {
   // Loading config
   if (configLoading) {
     return (
-      <div className="min-h-screen bg-[#F9F8F6] flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+      <div className="min-h-screen bg-[#FAFBFA] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
@@ -807,19 +807,19 @@ export default function NewPurchaseRequestPage() {
   // Selection screen
   if (view === 'selection' && products.length === 0) {
     return (
-      <div className="min-h-screen bg-[#F9F8F6]">
+      <div className="min-h-screen bg-[#FAFBFA]">
         {/* Header */}
-        <section className="border-b border-[#E4E1DD] bg-white px-4 sm:px-8 py-6 sm:py-8">
+        <section className="border-b border-[#ABC0B9] bg-white px-4 sm:px-8 py-6 sm:py-8">
           <div className="mx-auto max-w-4xl">
             <div className="flex items-center gap-3 sm:gap-4 mb-2">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#75534B] to-[#5D423C] flex items-center justify-center flex-shrink-0">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] flex items-center justify-center flex-shrink-0">
                 <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+                <h1 className="text-2xl sm:text-3xl text-[#2D363F]" style={{ fontWeight: 600 }}>
                   {t.title}
                 </h1>
-                <p className="text-sm sm:text-base text-[#6E6B67]">{t.subtitle}</p>
+                <p className="text-sm sm:text-base text-[#4E616F]">{t.subtitle}</p>
               </div>
             </div>
           </div>
@@ -828,7 +828,7 @@ export default function NewPurchaseRequestPage() {
         {/* Selection Options */}
         <section className="px-4 sm:px-8 py-8 sm:py-12">
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-lg sm:text-xl font-semibold text-[#2C2C2C] text-center mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-semibold text-[#2D363F] text-center mb-6 sm:mb-8">
               {t.selectSourceTitle}
             </h2>
 
@@ -837,18 +837,18 @@ export default function NewPurchaseRequestPage() {
               {config?.show_internal_catalog && (
                 <button
                   onClick={openCatalogModal}
-                  className="bg-white rounded-xl border-2 border-[#E4E1DD] p-6 sm:p-8 text-left hover:border-[#75534B] hover:shadow-lg transition-all group"
+                  className="bg-white rounded-xl border-2 border-[#ABC0B9] p-6 sm:p-8 text-left hover:border-[#5C2F0E] hover:shadow-lg transition-all group"
                 >
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#75534B]/10 flex items-center justify-center mb-4 group-hover:bg-[#75534B]/20 transition-colors">
-                    <Package className="h-7 w-7 sm:h-8 sm:w-8 text-[#75534B]" />
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center mb-4 group-hover:bg-[#5C2F0E]/20 transition-colors">
+                    <Package className="h-7 w-7 sm:h-8 sm:w-8 text-[#5C2F0E]" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-[#2C2C2C] mb-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-[#2D363F] mb-2">
                     {t.catalogOption}
                   </h3>
-                  <p className="text-sm text-[#6E6B67] mb-4">
+                  <p className="text-sm text-[#4E616F] mb-4">
                     {t.catalogOptionDesc}
                   </p>
-                  <span className="inline-flex items-center gap-2 text-[#75534B] font-medium text-sm">
+                  <span className="inline-flex items-center gap-2 text-[#5C2F0E] font-medium text-sm">
                     <Grid3X3 className="h-4 w-4" />
                     {t.goToCatalog}
                   </span>
@@ -858,18 +858,18 @@ export default function NewPurchaseRequestPage() {
               {/* E-commerce Option */}
               <button
                 onClick={addExternalProduct}
-                className="bg-white rounded-xl border-2 border-[#E4E1DD] p-6 sm:p-8 text-left hover:border-[#75534B] hover:shadow-lg transition-all group"
+                className="bg-white rounded-xl border-2 border-[#ABC0B9] p-6 sm:p-8 text-left hover:border-[#5C2F0E] hover:shadow-lg transition-all group"
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#75534B]/10 flex items-center justify-center mb-4 group-hover:bg-[#75534B]/20 transition-colors">
-                  <Link2 className="h-7 w-7 sm:h-8 sm:w-8 text-[#75534B]" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center mb-4 group-hover:bg-[#5C2F0E]/20 transition-colors">
+                  <Link2 className="h-7 w-7 sm:h-8 sm:w-8 text-[#5C2F0E]" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#2C2C2C] mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#2D363F] mb-2">
                   {t.ecommerceOption}
                 </h3>
-                <p className="text-sm text-[#6E6B67] mb-4">
+                <p className="text-sm text-[#4E616F] mb-4">
                   {t.ecommerceOptionDesc}
                 </p>
-                <span className="inline-flex items-center gap-2 text-[#75534B] font-medium text-sm">
+                <span className="inline-flex items-center gap-2 text-[#5C2F0E] font-medium text-sm">
                   <Plus className="h-4 w-4" />
                   {t.addExternalUrl}
                 </span>
@@ -878,8 +878,8 @@ export default function NewPurchaseRequestPage() {
 
             {/* Tip - only show if catalog is enabled */}
             {config?.show_internal_catalog && (
-              <div className="bg-[#75534B]/5 border border-[#75534B]/20 rounded-lg p-4 text-center">
-                <p className="text-sm text-[#75534B]">
+              <div className="bg-[#5C2F0E]/5 border border-[#5C2F0E]/20 rounded-lg p-4 text-center">
+                <p className="text-sm text-[#5C2F0E]">
                   {t.combineTip}
                 </p>
               </div>
@@ -892,10 +892,10 @@ export default function NewPurchaseRequestPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
               {/* Modal Header */}
-              <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#E4E1DD] flex-shrink-0">
+              <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#ABC0B9] flex-shrink-0">
                 <div className="flex items-center gap-3">
-                  <Package className="h-5 w-5 text-[#75534B]" />
-                  <h2 className="text-lg sm:text-xl font-semibold text-[#2C2C2C]">{t.catalogTitle}</h2>
+                  <Package className="h-5 w-5 text-[#5C2F0E]" />
+                  <h2 className="text-lg sm:text-xl font-semibold text-[#2D363F]">{t.catalogTitle}</h2>
                 </div>
                 <button
                   onClick={() => {
@@ -904,29 +904,29 @@ export default function NewPurchaseRequestPage() {
                       setView('form');
                     }
                   }}
-                  className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors"
+                  className="p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors"
                 >
-                  <X className="h-5 w-5 text-[#6E6B67]" />
+                  <X className="h-5 w-5 text-[#4E616F]" />
                 </button>
               </div>
 
               {/* Filters */}
-              <div className="px-4 sm:px-6 py-4 border-b border-[#E4E1DD] flex-shrink-0">
+              <div className="px-4 sm:px-6 py-4 border-b border-[#ABC0B9] flex-shrink-0">
                 <div className="flex flex-col sm:flex-row gap-3">
                   <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6E6B67]" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#4E616F]" />
                     <input
                       type="text"
                       value={catalogSearch}
                       onChange={(e) => setCatalogSearch(e.target.value)}
                       placeholder={t.searchPlaceholder}
-                      className="w-full rounded-lg border border-[#E4E1DD] bg-white py-2 pl-10 pr-4 text-sm text-[#2C2C2C] placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none"
+                      className="w-full rounded-lg border border-[#ABC0B9] bg-white py-2 pl-10 pr-4 text-sm text-[#2D363F] placeholder:text-[#80959A] focus:border-[#5C2F0E] focus:outline-none"
                     />
                   </div>
                   <select
                     value={catalogCategory}
                     onChange={(e) => setCatalogCategory(e.target.value)}
-                    className="rounded-lg border border-[#E4E1DD] bg-white py-2 px-3 text-sm text-[#2C2C2C] focus:border-[#75534B] focus:outline-none"
+                    className="rounded-lg border border-[#ABC0B9] bg-white py-2 px-3 text-sm text-[#2D363F] focus:border-[#5C2F0E] focus:outline-none"
                   >
                     <option value="">{t.allCategories}</option>
                     {categories.map(cat => (
@@ -940,12 +940,12 @@ export default function NewPurchaseRequestPage() {
               <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
                 {catalogLoading ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+                    <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
                   </div>
                 ) : filteredCatalogProducts.length === 0 ? (
                   <div className="text-center py-12">
-                    <Package className="h-12 w-12 text-[#9B9792] mx-auto mb-4" />
-                    <p className="text-[#6E6B67]">{t.noProductsFound}</p>
+                    <Package className="h-12 w-12 text-[#80959A] mx-auto mb-4" />
+                    <p className="text-[#4E616F]">{t.noProductsFound}</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -956,9 +956,9 @@ export default function NewPurchaseRequestPage() {
                       return (
                         <div
                           key={product.id}
-                          className={`bg-[#F9F8F6] rounded-lg p-4 border ${isAdded ? 'border-[#75534B]' : 'border-transparent'}`}
+                          className={`bg-[#FAFBFA] rounded-lg p-4 border ${isAdded ? 'border-[#5C2F0E]' : 'border-transparent'}`}
                         >
-                          <div className="w-full h-24 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center mb-3 overflow-hidden">
+                          <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden">
                             {product.image_url ? (
                               <img
                                 src={product.image_url}
@@ -968,18 +968,18 @@ export default function NewPurchaseRequestPage() {
                             ) : product.image_emoji ? (
                               <span className="text-4xl">{product.image_emoji}</span>
                             ) : (
-                              <Package className="h-8 w-8 text-[#9B9792]" />
+                              <Package className="h-8 w-8 text-[#80959A]" />
                             )}
                           </div>
-                          <h4 className="font-medium text-[#2C2C2C] text-sm line-clamp-2 mb-1">
+                          <h4 className="font-medium text-[#2D363F] text-sm line-clamp-2 mb-1">
                             {product.name}
                           </h4>
-                          <p className="text-xs text-[#9B9792] mb-2">
+                          <p className="text-xs text-[#80959A] mb-2">
                             {product.sku && `SKU: ${product.sku} · `}
                             {t.stock}: {product.stock}
                           </p>
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-[#75534B]">
+                            <span className="font-bold text-[#5C2F0E]">
                               ${formatPrice(product.price)}
                             </span>
                             <button
@@ -987,10 +987,10 @@ export default function NewPurchaseRequestPage() {
                               disabled={isOutOfStock}
                               className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
                                 isAdded
-                                  ? 'bg-[#75534B] text-white'
+                                  ? 'bg-[#5C2F0E] text-white'
                                   : isOutOfStock
                                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                  : 'bg-[#75534B]/10 text-[#75534B] hover:bg-[#75534B]/20'
+                                  : 'bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20'
                               }`}
                             >
                               {isAdded ? (
@@ -1010,8 +1010,8 @@ export default function NewPurchaseRequestPage() {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[#E4E1DD] bg-[#F9F8F6] flex-shrink-0">
-                <p className="text-sm text-[#6E6B67]">
+              <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[#ABC0B9] bg-[#FAFBFA] flex-shrink-0">
+                <p className="text-sm text-[#4E616F]">
                   {products.filter(p => p.source === 'catalog').length} {t.totalProducts} {t.catalogBadge.toLowerCase()}
                 </p>
                 <button
@@ -1021,7 +1021,7 @@ export default function NewPurchaseRequestPage() {
                       setView('form');
                     }
                   }}
-                  className="px-4 py-2 rounded-lg bg-[#75534B] text-white font-medium hover:bg-[#5D423C] transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#2D363F] transition-colors"
                 >
                   {products.length > 0 ? t.close : t.close}
                 </button>
@@ -1035,9 +1035,9 @@ export default function NewPurchaseRequestPage() {
 
   // Form view
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 sm:px-8 py-6 sm:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 sm:px-8 py-6 sm:py-8">
         <div className="mx-auto max-w-4xl">
           <div className="flex items-center gap-3 sm:gap-4 mb-2">
             <button
@@ -1050,18 +1050,18 @@ export default function NewPurchaseRequestPage() {
                   setView('selection');
                 }
               }}
-              className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors -ml-2"
+              className="p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors -ml-2"
             >
-              <ArrowLeft className="h-5 w-5 text-[#6E6B67]" />
+              <ArrowLeft className="h-5 w-5 text-[#4E616F]" />
             </button>
-            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#75534B] to-[#5D423C] flex items-center justify-center flex-shrink-0">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] flex items-center justify-center flex-shrink-0">
               <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+              <h1 className="text-2xl sm:text-3xl text-[#2D363F]" style={{ fontWeight: 600 }}>
                 {t.title}
               </h1>
-              <p className="text-sm sm:text-base text-[#6E6B67]">{t.subtitle}</p>
+              <p className="text-sm sm:text-base text-[#4E616F]">{t.subtitle}</p>
             </div>
           </div>
         </div>
@@ -1073,15 +1073,15 @@ export default function NewPurchaseRequestPage() {
           <div className="space-y-4 sm:space-y-6">
             {/* Products */}
             {products.map((product, index) => (
-              <div key={product.id} className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6">
+              <div key={product.id} className="bg-white rounded-xl border border-[#ABC0B9] p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-[#2C2C2C]">
+                    <h3 className="text-sm font-semibold text-[#2D363F]">
                       {t.product} {index + 1}
                     </h3>
                     <Badge className={product.source === 'catalog'
-                      ? 'bg-[#75534B]/10 text-[#75534B] border-[#75534B]/30'
-                      : 'bg-[#6E6B67]/10 text-[#6E6B67] border-[#6E6B67]/30'
+                      ? 'bg-[#5C2F0E]/10 text-[#5C2F0E] border-[#5C2F0E]/30'
+                      : 'bg-[#4E616F]/10 text-[#4E616F] border-[#4E616F]/30'
                     }>
                       {product.source === 'catalog' ? t.catalogBadge : t.manualBadge}
                     </Badge>
@@ -1098,9 +1098,9 @@ export default function NewPurchaseRequestPage() {
 
                 {/* Catalog Product Preview */}
                 {product.source === 'catalog' && product.catalogProduct && (
-                  <div className="bg-[#F9F8F6] rounded-lg p-4">
+                  <div className="bg-[#FAFBFA] rounded-lg p-4">
                     <div className="flex gap-4">
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {product.catalogProduct.image_url ? (
                           <img
                             src={product.catalogProduct.image_url}
@@ -1110,22 +1110,22 @@ export default function NewPurchaseRequestPage() {
                         ) : product.catalogProduct.image_emoji ? (
                           <span className="text-3xl">{product.catalogProduct.image_emoji}</span>
                         ) : (
-                          <Package className="h-8 w-8 text-[#9B9792]" />
+                          <Package className="h-8 w-8 text-[#80959A]" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#2C2C2C] line-clamp-2 mb-1 text-sm">
+                        <h4 className="font-semibold text-[#2D363F] line-clamp-2 mb-1 text-sm">
                           {product.catalogProduct.name}
                         </h4>
                         {product.catalogProduct.sku && (
-                          <p className="text-xs text-[#9B9792] mb-1">SKU: {product.catalogProduct.sku}</p>
+                          <p className="text-xs text-[#80959A] mb-1">SKU: {product.catalogProduct.sku}</p>
                         )}
-                        <p className="text-base font-bold text-[#75534B]">
+                        <p className="text-base font-bold text-[#5C2F0E]">
                           {product.catalogProduct.currency || 'MXN'} ${formatPrice(product.catalogProduct.price)}
                         </p>
                       </div>
                       <div className="flex-shrink-0">
-                        <label className="block text-xs font-medium text-[#6E6B67] mb-1">
+                        <label className="block text-xs font-medium text-[#4E616F] mb-1">
                           {t.quantity}
                         </label>
                         <input
@@ -1133,7 +1133,7 @@ export default function NewPurchaseRequestPage() {
                           min="1"
                           value={product.quantity}
                           onChange={(e) => updateProduct(product.id, 'quantity', Math.max(1, parseInt(e.target.value) || 1))}
-                          className="w-16 sm:w-20 rounded-lg border border-[#E4E1DD] bg-white py-2 px-2 sm:px-3 text-sm text-[#2C2C2C] text-center focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                          className="w-16 sm:w-20 rounded-lg border border-[#ABC0B9] bg-white py-2 px-2 sm:px-3 text-sm text-[#2D363F] text-center focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                         />
                       </div>
                     </div>
@@ -1145,26 +1145,26 @@ export default function NewPurchaseRequestPage() {
                   <>
                     {/* URL Input */}
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-[#6E6B67] mb-2">
+                      <label className="block text-sm font-medium text-[#4E616F] mb-2">
                         {t.urlLabel} <span className="text-red-500">*</span>
                       </label>
                       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                         <div className="flex-1 relative">
-                          <Link2 className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6E6B67]" />
+                          <Link2 className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4E616F]" />
                           <input
                             type="url"
                             value={product.url}
                             onChange={(e) => updateProduct(product.id, 'url', e.target.value)}
                             onPaste={(e) => handleUrlPaste(product.id, e)}
                             placeholder={t.urlPlaceholder}
-                            className="w-full rounded-lg border border-[#E4E1DD] bg-white py-3 pl-10 sm:pl-12 pr-4 text-sm text-[#2C2C2C] transition-all placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                            className="w-full rounded-lg border border-[#ABC0B9] bg-white py-3 pl-10 sm:pl-12 pr-4 text-sm text-[#2D363F] transition-all placeholder:text-[#80959A] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                           />
                         </div>
                         <button
                           type="button"
                           onClick={() => fetchMetadata(product.id)}
                           disabled={!product.url.trim() || product.isLoadingMetadata}
-                          className="flex items-center justify-center gap-2 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] px-4 py-3 text-[#2C2C2C] font-medium hover:bg-[#E4E1DD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="flex items-center justify-center gap-2 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] px-4 py-3 text-[#2D363F] font-medium hover:bg-[#ABC0B9] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {product.isLoadingMetadata ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -1178,15 +1178,15 @@ export default function NewPurchaseRequestPage() {
 
                     {/* Product Preview / Manual Entry */}
                     {product.metadata && (
-                      <div className="bg-[#F9F8F6] rounded-lg p-4 mb-4">
+                      <div className="bg-[#FAFBFA] rounded-lg p-4 mb-4">
                         <div className="flex items-center justify-between mb-3">
                           {product.metadata.is_amazon ? (
-                            <Badge className="bg-[#E08A4B]/10 text-[#E08A4B] border-[#E08A4B]/30">
+                            <Badge className="bg-[#E95F20]/10 text-[#E95F20] border-[#E95F20]/30">
                               <Zap className="h-3 w-3 mr-1" />
                               {t.amazonBadge}
                             </Badge>
                           ) : (
-                            <Badge className="bg-[#6E6B67]/10 text-[#6E6B67] border-[#6E6B67]/30">
+                            <Badge className="bg-[#4E616F]/10 text-[#4E616F] border-[#4E616F]/30">
                               {t.manualBadge}
                             </Badge>
                           )}
@@ -1194,7 +1194,7 @@ export default function NewPurchaseRequestPage() {
                             href={product.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm text-[#75534B] hover:underline"
+                            className="flex items-center gap-1 text-sm text-[#5C2F0E] hover:underline"
                           >
                             <ExternalLink className="h-4 w-4" />
                           </a>
@@ -1202,7 +1202,7 @@ export default function NewPurchaseRequestPage() {
 
                         <div className="flex gap-4">
                           <div className="flex flex-col items-center gap-1">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
                               {product.metadata.image_url ? (
                                 <img
                                   src={product.metadata.image_url}
@@ -1210,7 +1210,7 @@ export default function NewPurchaseRequestPage() {
                                   className="max-w-full max-h-full object-contain"
                                 />
                               ) : (
-                                <span className="text-[#9B9792] text-xs text-center px-2">{t.noImage}</span>
+                                <span className="text-[#80959A] text-xs text-center px-2">{t.noImage}</span>
                               )}
                             </div>
                             {/* Image URL input */}
@@ -1222,7 +1222,7 @@ export default function NewPurchaseRequestPage() {
                                 updateProduct(product.id, 'metadata', newMetadata);
                               }}
                               placeholder={t.imageUrl}
-                              className="w-20 sm:w-24 text-[10px] text-[#6E6B67] bg-transparent border-b border-[#E4E1DD] focus:border-[#75534B] focus:outline-none text-center truncate"
+                              className="w-20 sm:w-24 text-[10px] text-[#4E616F] bg-transparent border-b border-[#ABC0B9] focus:border-[#5C2F0E] focus:outline-none text-center truncate"
                             />
                           </div>
 
@@ -1240,7 +1240,7 @@ export default function NewPurchaseRequestPage() {
                                 updateProduct(product.id, 'metadata', newMetadata);
                               }}
                               placeholder={t.productName}
-                              className="w-full font-semibold text-[#2C2C2C] text-sm bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-1"
+                              className="w-full font-semibold text-[#2D363F] text-sm bg-transparent border-b border-transparent hover:border-[#ABC0B9] focus:border-[#5C2F0E] focus:outline-none mb-1"
                             />
                             {/* Editable Description - shows translated version based on current language */}
                             <textarea
@@ -1255,11 +1255,11 @@ export default function NewPurchaseRequestPage() {
                               }}
                               placeholder={t.productDescription}
                               rows={2}
-                              className="w-full text-xs text-[#6E6B67] bg-transparent border-b border-transparent hover:border-[#E4E1DD] focus:border-[#75534B] focus:outline-none mb-2 resize-none"
+                              className="w-full text-xs text-[#4E616F] bg-transparent border-b border-transparent hover:border-[#ABC0B9] focus:border-[#5C2F0E] focus:outline-none mb-2 resize-none"
                             />
                             {/* Editable Price */}
                             <div className="flex items-center gap-2">
-                              <span className="text-sm text-[#6E6B67]">{product.metadata.currency || 'MXN'} $</span>
+                              <span className="text-sm text-[#4E616F]">{product.metadata.currency || 'MXN'} $</span>
                               <input
                                 type="number"
                                 step="0.01"
@@ -1270,13 +1270,13 @@ export default function NewPurchaseRequestPage() {
                                   updateProduct(product.id, 'metadata', newMetadata);
                                 }}
                                 placeholder="0.00"
-                                className="w-24 text-base font-bold text-[#75534B] bg-transparent border-b border-[#E4E1DD] hover:border-[#75534B] focus:border-[#75534B] focus:outline-none"
+                                className="w-24 text-base font-bold text-[#5C2F0E] bg-transparent border-b border-[#ABC0B9] hover:border-[#5C2F0E] focus:border-[#5C2F0E] focus:outline-none"
                               />
                             </div>
                           </div>
 
                           <div className="flex-shrink-0">
-                            <label className="block text-xs font-medium text-[#6E6B67] mb-1">
+                            <label className="block text-xs font-medium text-[#4E616F] mb-1">
                               {t.quantity}
                             </label>
                             <input
@@ -1284,7 +1284,7 @@ export default function NewPurchaseRequestPage() {
                               min="1"
                               value={product.quantity}
                               onChange={(e) => updateProduct(product.id, 'quantity', Math.max(1, parseInt(e.target.value) || 1))}
-                              className="w-16 sm:w-20 rounded-lg border border-[#E4E1DD] bg-white py-2 px-2 sm:px-3 text-sm text-[#2C2C2C] text-center focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                              className="w-16 sm:w-20 rounded-lg border border-[#ABC0B9] bg-white py-2 px-2 sm:px-3 text-sm text-[#2D363F] text-center focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                             />
                           </div>
                         </div>
@@ -1308,7 +1308,7 @@ export default function NewPurchaseRequestPage() {
               <button
                 type="button"
                 onClick={addExternalProduct}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#E4E1DD] py-4 text-[#6E6B67] hover:border-[#75534B] hover:text-[#75534B] transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#ABC0B9] py-4 text-[#4E616F] hover:border-[#5C2F0E] hover:text-[#5C2F0E] transition-colors"
               >
                 <Link2 className="h-5 w-5" />
                 {t.addProduct}
@@ -1317,7 +1317,7 @@ export default function NewPurchaseRequestPage() {
                 <button
                   type="button"
                   onClick={openCatalogModal}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#E4E1DD] py-4 text-[#6E6B67] hover:border-[#75534B] hover:text-[#75534B] transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#ABC0B9] py-4 text-[#4E616F] hover:border-[#5C2F0E] hover:text-[#5C2F0E] transition-colors"
                 >
                   <Package className="h-5 w-5" />
                   {t.addFromCatalog}
@@ -1326,33 +1326,33 @@ export default function NewPurchaseRequestPage() {
             </div>
 
             {/* Summary */}
-            <div className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6">
-              <h3 className="text-sm font-semibold text-[#2C2C2C] mb-4">{t.summary}</h3>
+            <div className="bg-white rounded-xl border border-[#ABC0B9] p-4 sm:p-6">
+              <h3 className="text-sm font-semibold text-[#2D363F] mb-4">{t.summary}</h3>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-[#6E6B67]">{products.length} {t.totalProducts}</span>
+                <span className="text-[#4E616F]">{products.length} {t.totalProducts}</span>
                 <div className="text-right">
                   {total > 0 ? (
-                    <span className="text-lg font-bold text-[#75534B]">
+                    <span className="text-lg font-bold text-[#5C2F0E]">
                       MXN ${formatPrice(total)}
                     </span>
                   ) : (
-                    <span className="text-[#9B9792]">{t.priceNotAvailable}</span>
+                    <span className="text-[#80959A]">{t.priceNotAvailable}</span>
                   )}
                   {!allHavePrices && total > 0 && (
-                    <p className="text-xs text-[#9B9792] mt-1">+ {t.priceNotAvailable}</p>
+                    <p className="text-xs text-[#80959A] mt-1">+ {t.priceNotAvailable}</p>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Justification & Urgency - Optional for cart, required for direct submit */}
-            <div className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6">
+            <div className="bg-white rounded-xl border border-[#ABC0B9] p-4 sm:p-6">
               <div className="space-y-4">
                 {/* Justification */}
                 <div>
-                  <label className="block text-sm font-medium text-[#6E6B67] mb-2">
+                  <label className="block text-sm font-medium text-[#4E616F] mb-2">
                     {t.justification}
-                    <span className="text-xs text-[#9B9792] ml-2">
+                    <span className="text-xs text-[#80959A] ml-2">
                       ({language === 'es' ? 'requerido para enviar directamente' : language === 'zh' ? '直接提交时必填' : 'required for direct submit'})
                     </span>
                   </label>
@@ -1361,14 +1361,14 @@ export default function NewPurchaseRequestPage() {
                     onChange={(e) => setJustification(e.target.value)}
                     placeholder={t.justificationPlaceholder}
                     rows={3}
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white py-3 px-4 text-sm text-[#2C2C2C] transition-all placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 resize-none"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white py-3 px-4 text-sm text-[#2D363F] transition-all placeholder:text-[#80959A] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 resize-none"
                   />
                 </div>
 
                 {/* Urgency - only show if config allows */}
                 {config?.allow_urgent && (
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-2">
+                    <label className="block text-sm font-medium text-[#4E616F] mb-2">
                       {t.urgency}
                     </label>
                     <div className="flex gap-3">
@@ -1377,8 +1377,8 @@ export default function NewPurchaseRequestPage() {
                         onClick={() => setUrgency('normal')}
                         className={`flex-1 flex items-center justify-center gap-2 rounded-lg border py-2.5 px-4 text-sm font-medium transition-all ${
                           urgency === 'normal'
-                            ? 'border-[#75534B] bg-[#75534B]/10 text-[#75534B]'
-                            : 'border-[#E4E1DD] text-[#6E6B67] hover:border-[#75534B]'
+                            ? 'border-[#5C2F0E] bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                            : 'border-[#ABC0B9] text-[#4E616F] hover:border-[#5C2F0E]'
                         }`}
                       >
                         {t.normal}
@@ -1388,8 +1388,8 @@ export default function NewPurchaseRequestPage() {
                         onClick={() => setUrgency('urgent')}
                         className={`flex-1 flex items-center justify-center gap-2 rounded-lg border py-2.5 px-4 text-sm font-medium transition-all ${
                           urgency === 'urgent'
-                            ? 'border-[#E08A4B] bg-[#E08A4B]/10 text-[#E08A4B]'
-                            : 'border-[#E4E1DD] text-[#6E6B67] hover:border-[#E08A4B]'
+                            ? 'border-[#E95F20] bg-[#E95F20]/10 text-[#E95F20]'
+                            : 'border-[#ABC0B9] text-[#4E616F] hover:border-[#E95F20]'
                         }`}
                       >
                         <Zap className="h-4 w-4" />
@@ -1416,7 +1416,7 @@ export default function NewPurchaseRequestPage() {
                 type="button"
                 onClick={handleReview}
                 disabled={isSubmitting || isSubmittingDirect || products.length === 0}
-                className="flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-[#75534B] px-6 py-4 text-[#75534B] font-medium transition-all hover:bg-[#75534B]/5 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-[#5C2F0E] px-6 py-4 text-[#5C2F0E] font-medium transition-all hover:bg-[#5C2F0E]/5 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ShoppingCart className="h-5 w-5" />
                 {t.submit}
@@ -1427,7 +1427,7 @@ export default function NewPurchaseRequestPage() {
                 type="button"
                 onClick={handleDirectSubmit}
                 disabled={isSubmitting || isSubmittingDirect || products.length === 0}
-                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-4 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-6 py-4 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmittingDirect ? (
                   <>
@@ -1451,10 +1451,10 @@ export default function NewPurchaseRequestPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#E4E1DD] flex-shrink-0">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#ABC0B9] flex-shrink-0">
               <div className="flex items-center gap-3">
-                <Package className="h-5 w-5 text-[#75534B]" />
-                <h2 className="text-lg sm:text-xl font-semibold text-[#2C2C2C]">{t.catalogTitle}</h2>
+                <Package className="h-5 w-5 text-[#5C2F0E]" />
+                <h2 className="text-lg sm:text-xl font-semibold text-[#2D363F]">{t.catalogTitle}</h2>
               </div>
               <button
                 onClick={() => {
@@ -1463,29 +1463,29 @@ export default function NewPurchaseRequestPage() {
                     setView('form');
                   }
                 }}
-                className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors"
+                className="p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors"
               >
-                <X className="h-5 w-5 text-[#6E6B67]" />
+                <X className="h-5 w-5 text-[#4E616F]" />
               </button>
             </div>
 
             {/* Filters */}
-            <div className="px-4 sm:px-6 py-4 border-b border-[#E4E1DD] flex-shrink-0">
+            <div className="px-4 sm:px-6 py-4 border-b border-[#ABC0B9] flex-shrink-0">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6E6B67]" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#4E616F]" />
                   <input
                     type="text"
                     value={catalogSearch}
                     onChange={(e) => setCatalogSearch(e.target.value)}
                     placeholder={t.searchPlaceholder}
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white py-2 pl-10 pr-4 text-sm text-[#2C2C2C] placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white py-2 pl-10 pr-4 text-sm text-[#2D363F] placeholder:text-[#80959A] focus:border-[#5C2F0E] focus:outline-none"
                   />
                 </div>
                 <select
                   value={catalogCategory}
                   onChange={(e) => setCatalogCategory(e.target.value)}
-                  className="rounded-lg border border-[#E4E1DD] bg-white py-2 px-3 text-sm text-[#2C2C2C] focus:border-[#75534B] focus:outline-none"
+                  className="rounded-lg border border-[#ABC0B9] bg-white py-2 px-3 text-sm text-[#2D363F] focus:border-[#5C2F0E] focus:outline-none"
                 >
                   <option value="">{t.allCategories}</option>
                   {categories.map(cat => (
@@ -1499,12 +1499,12 @@ export default function NewPurchaseRequestPage() {
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
               {catalogLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
                 </div>
               ) : filteredCatalogProducts.length === 0 ? (
                 <div className="text-center py-12">
-                  <Package className="h-12 w-12 text-[#9B9792] mx-auto mb-4" />
-                  <p className="text-[#6E6B67]">{t.noProductsFound}</p>
+                  <Package className="h-12 w-12 text-[#80959A] mx-auto mb-4" />
+                  <p className="text-[#4E616F]">{t.noProductsFound}</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1515,9 +1515,9 @@ export default function NewPurchaseRequestPage() {
                     return (
                       <div
                         key={product.id}
-                        className={`bg-[#F9F8F6] rounded-lg p-4 border ${isAdded ? 'border-[#75534B]' : 'border-transparent'}`}
+                        className={`bg-[#FAFBFA] rounded-lg p-4 border ${isAdded ? 'border-[#5C2F0E]' : 'border-transparent'}`}
                       >
-                        <div className="w-full h-24 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center mb-3 overflow-hidden">
+                        <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden">
                           {product.image_url ? (
                             <img
                               src={product.image_url}
@@ -1527,18 +1527,18 @@ export default function NewPurchaseRequestPage() {
                           ) : product.image_emoji ? (
                             <span className="text-4xl">{product.image_emoji}</span>
                           ) : (
-                            <Package className="h-8 w-8 text-[#9B9792]" />
+                            <Package className="h-8 w-8 text-[#80959A]" />
                           )}
                         </div>
-                        <h4 className="font-medium text-[#2C2C2C] text-sm line-clamp-2 mb-1">
+                        <h4 className="font-medium text-[#2D363F] text-sm line-clamp-2 mb-1">
                           {product.name}
                         </h4>
-                        <p className="text-xs text-[#9B9792] mb-2">
+                        <p className="text-xs text-[#80959A] mb-2">
                           {product.sku && `SKU: ${product.sku} · `}
                           {t.stock}: {product.stock}
                         </p>
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-[#75534B]">
+                          <span className="font-bold text-[#5C2F0E]">
                             ${formatPrice(product.price)}
                           </span>
                           <button
@@ -1546,10 +1546,10 @@ export default function NewPurchaseRequestPage() {
                             disabled={isOutOfStock}
                             className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
                               isAdded
-                                ? 'bg-[#75534B] text-white'
+                                ? 'bg-[#5C2F0E] text-white'
                                 : isOutOfStock
                                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                : 'bg-[#75534B]/10 text-[#75534B] hover:bg-[#75534B]/20'
+                                : 'bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20'
                             }`}
                           >
                             {isAdded ? (
@@ -1569,8 +1569,8 @@ export default function NewPurchaseRequestPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[#E4E1DD] bg-[#F9F8F6] flex-shrink-0">
-              <p className="text-sm text-[#6E6B67]">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[#ABC0B9] bg-[#FAFBFA] flex-shrink-0">
+              <p className="text-sm text-[#4E616F]">
                 {products.filter(p => p.source === 'catalog').length} {t.totalProducts} {t.catalogBadge.toLowerCase()}
               </p>
               <button
@@ -1580,7 +1580,7 @@ export default function NewPurchaseRequestPage() {
                     setView('form');
                   }
                 }}
-                className="px-4 py-2 rounded-lg bg-[#75534B] text-white font-medium hover:bg-[#5D423C] transition-colors"
+                className="px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#2D363F] transition-colors"
               >
                 {products.length > 0 ? t.close : t.close}
               </button>
@@ -1594,32 +1594,32 @@ export default function NewPurchaseRequestPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#E4E1DD]">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#ABC0B9]">
               <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-[#2C2C2C]">{t.confirmTitle}</h2>
-                <p className="text-sm text-[#6E6B67]">{t.confirmSubtitle}</p>
+                <h2 className="text-lg sm:text-xl font-semibold text-[#2D363F]">{t.confirmTitle}</h2>
+                <p className="text-sm text-[#4E616F]">{t.confirmSubtitle}</p>
               </div>
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors"
+                className="p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors"
               >
-                <X className="h-5 w-5 text-[#6E6B67]" />
+                <X className="h-5 w-5 text-[#4E616F]" />
               </button>
             </div>
 
             {/* Modal Body */}
             <div className="px-4 sm:px-6 py-4 overflow-y-auto max-h-[60vh]">
               {/* Products Table */}
-              <h3 className="text-sm font-semibold text-[#2C2C2C] mb-3">
+              <h3 className="text-sm font-semibold text-[#2D363F] mb-3">
                 {t.productsToRequest}
               </h3>
               <div className="space-y-3 mb-6">
                 {products.map((product) => {
                   const info = getProductDisplayInfo(product);
                   return (
-                    <div key={product.id} className="flex items-center gap-3 sm:gap-4 p-3 bg-[#F9F8F6] rounded-lg">
+                    <div key={product.id} className="flex items-center gap-3 sm:gap-4 p-3 bg-[#FAFBFA] rounded-lg">
                       {/* Image */}
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {info.image ? (
                           <img
                             src={info.image}
@@ -1629,23 +1629,23 @@ export default function NewPurchaseRequestPage() {
                         ) : product.source === 'catalog' && product.catalogProduct?.image_emoji ? (
                           <span className="text-2xl">{product.catalogProduct.image_emoji}</span>
                         ) : (
-                          <Package className="h-6 w-6 text-[#9B9792]" />
+                          <Package className="h-6 w-6 text-[#80959A]" />
                         )}
                       </div>
 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-[#2C2C2C] text-sm line-clamp-1">
+                        <p className="font-medium text-[#2D363F] text-sm line-clamp-1">
                           {info.name}
                         </p>
                         <div className="flex items-center gap-2">
                           <Badge className={product.source === 'catalog'
-                            ? 'bg-[#75534B]/10 text-[#75534B] border-[#75534B]/30 text-xs'
-                            : 'bg-[#6E6B67]/10 text-[#6E6B67] border-[#6E6B67]/30 text-xs'
+                            ? 'bg-[#5C2F0E]/10 text-[#5C2F0E] border-[#5C2F0E]/30 text-xs'
+                            : 'bg-[#4E616F]/10 text-[#4E616F] border-[#4E616F]/30 text-xs'
                           }>
                             {product.source === 'catalog' ? t.catalogBadge : t.manualBadge}
                           </Badge>
-                          <span className="text-xs text-[#6E6B67]">
+                          <span className="text-xs text-[#4E616F]">
                             {t.quantity}: {product.quantity}
                           </span>
                         </div>
@@ -1654,11 +1654,11 @@ export default function NewPurchaseRequestPage() {
                       {/* Subtotal */}
                       <div className="text-right flex-shrink-0">
                         {info.price ? (
-                          <p className="font-bold text-[#75534B]">
+                          <p className="font-bold text-[#5C2F0E]">
                             ${formatPrice(info.price * product.quantity)}
                           </p>
                         ) : (
-                          <p className="text-xs text-[#9B9792]">-</p>
+                          <p className="text-xs text-[#80959A]">-</p>
                         )}
                       </div>
                     </div>
@@ -1667,36 +1667,36 @@ export default function NewPurchaseRequestPage() {
               </div>
 
               {/* Total */}
-              <div className="border-t border-[#E4E1DD] pt-4">
+              <div className="border-t border-[#ABC0B9] pt-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-[#2C2C2C]">{t.total}</span>
+                  <span className="text-sm font-semibold text-[#2D363F]">{t.total}</span>
                   {total > 0 ? (
-                    <span className="text-xl font-bold text-[#75534B]">
+                    <span className="text-xl font-bold text-[#5C2F0E]">
                       MXN ${formatPrice(total)}
                     </span>
                   ) : (
-                    <span className="text-[#9B9792]">{t.priceNotAvailable}</span>
+                    <span className="text-[#80959A]">{t.priceNotAvailable}</span>
                   )}
                 </div>
                 {!allHavePrices && total > 0 && (
-                  <p className="text-xs text-[#9B9792] text-right mt-1">+ {t.priceNotAvailable}</p>
+                  <p className="text-xs text-[#80959A] text-right mt-1">+ {t.priceNotAvailable}</p>
                 )}
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-[#E4E1DD] bg-[#F9F8F6]">
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-[#ABC0B9] bg-[#FAFBFA]">
               <button
                 onClick={() => setShowConfirmModal(false)}
                 disabled={isSubmitting}
-                className="w-full sm:w-auto px-4 py-2 rounded-lg border border-[#E4E1DD] bg-white text-[#2C2C2C] font-medium hover:bg-[#F9F8F6] transition-colors disabled:opacity-50"
+                className="w-full sm:w-auto px-4 py-2 rounded-lg border border-[#ABC0B9] bg-white text-[#2D363F] font-medium hover:bg-[#FAFBFA] transition-colors disabled:opacity-50"
               >
                 {t.backToEdit}
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white font-medium hover:shadow-lg transition-all disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

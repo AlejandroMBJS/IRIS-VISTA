@@ -198,17 +198,17 @@ export default function CartPage() {
   // Success screen
   if (success) {
     return (
-      <div className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-8">
+      <div className="min-h-screen bg-[#FAFBFA] flex items-center justify-center p-8">
         <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-semibold text-[#2C2C2C] mb-2">{t.success}</h2>
-          <p className="text-[#6E6B67] mb-6">{t.successMessage}</p>
+          <h2 className="text-2xl font-semibold text-[#2D363F] mb-2">{t.success}</h2>
+          <p className="text-[#4E616F] mb-6">{t.successMessage}</p>
           <div className="flex gap-3">
             <button
               onClick={() => router.push('/requests')}
-              className="flex-1 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-3 text-white font-medium"
+              className="flex-1 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-4 py-3 text-white font-medium"
             >
               {t.viewRequests}
             </button>
@@ -219,7 +219,7 @@ export default function CartPage() {
                 setUrgency('normal');
                 router.push('/purchase/new');
               }}
-              className="flex-1 rounded-lg border border-[#E4E1DD] px-4 py-3 text-[#2C2C2C] font-medium hover:bg-[#F9F8F6]"
+              className="flex-1 rounded-lg border border-[#ABC0B9] px-4 py-3 text-[#2D363F] font-medium hover:bg-[#FAFBFA]"
             >
               {t.createAnother}
             </button>
@@ -232,19 +232,19 @@ export default function CartPage() {
   // Empty cart
   if (!isLoading && items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#F9F8F6]">
+      <div className="min-h-screen bg-[#FAFBFA]">
         {/* Header */}
-        <section className="border-b border-[#E4E1DD] bg-white px-4 sm:px-8 py-6 sm:py-8">
+        <section className="border-b border-[#ABC0B9] bg-white px-4 sm:px-8 py-6 sm:py-8">
           <div className="mx-auto max-w-4xl">
             <div className="flex items-center gap-3 sm:gap-4">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#75534B] to-[#5D423C] flex items-center justify-center flex-shrink-0">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] flex items-center justify-center flex-shrink-0">
                 <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+                <h1 className="text-2xl sm:text-3xl text-[#2D363F]" style={{ fontWeight: 600 }}>
                   {t.title}
                 </h1>
-                <p className="text-sm sm:text-base text-[#6E6B67]">{t.subtitle}</p>
+                <p className="text-sm sm:text-base text-[#4E616F]">{t.subtitle}</p>
               </div>
             </div>
           </div>
@@ -252,14 +252,14 @@ export default function CartPage() {
 
         {/* Empty state */}
         <div className="flex flex-col items-center justify-center py-16 px-4">
-          <div className="w-20 h-20 bg-[#E4E1DD] rounded-full flex items-center justify-center mb-6">
-            <ShoppingCart className="h-10 w-10 text-[#9B9792]" />
+          <div className="w-20 h-20 bg-[#ABC0B9] rounded-full flex items-center justify-center mb-6">
+            <ShoppingCart className="h-10 w-10 text-[#80959A]" />
           </div>
-          <h2 className="text-xl font-semibold text-[#2C2C2C] mb-2">{t.emptyCart}</h2>
-          <p className="text-[#6E6B67] mb-6 text-center">{t.emptyCartDesc}</p>
+          <h2 className="text-xl font-semibold text-[#2D363F] mb-2">{t.emptyCart}</h2>
+          <p className="text-[#4E616F] mb-6 text-center">{t.emptyCartDesc}</p>
           <Link
             href="/purchase/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-white font-medium hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-6 py-3 text-white font-medium hover:shadow-lg transition-all"
           >
             <Plus className="h-5 w-5" />
             {t.startShopping}
@@ -270,29 +270,29 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 sm:px-8 py-6 sm:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 sm:px-8 py-6 sm:py-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/purchase/new"
-              className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors -ml-2"
+              className="p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors -ml-2"
             >
-              <ArrowLeft className="h-5 w-5 text-[#6E6B67]" />
+              <ArrowLeft className="h-5 w-5 text-[#4E616F]" />
             </Link>
-            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#75534B] to-[#5D423C] flex items-center justify-center flex-shrink-0">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] flex items-center justify-center flex-shrink-0">
               <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+              <h1 className="text-2xl sm:text-3xl text-[#2D363F]" style={{ fontWeight: 600 }}>
                 {t.title}
               </h1>
-              <p className="text-sm sm:text-base text-[#6E6B67]">{t.subtitle}</p>
+              <p className="text-sm sm:text-base text-[#4E616F]">{t.subtitle}</p>
             </div>
             <button
               onClick={() => clearCart()}
-              className="text-sm text-[#D1625B] hover:text-[#B04840] font-medium hidden sm:block"
+              className="text-sm text-[#AA2F0D] hover:text-[#B04840] font-medium hidden sm:block"
             >
               {t.clearCart}
             </button>
@@ -309,11 +309,11 @@ export default function CartPage() {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6"
+                  className="bg-white rounded-xl border border-[#ABC0B9] p-4 sm:p-6"
                 >
                   <div className="flex gap-4">
                     {/* Image */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
                       {item.product_image_url ? (
                         <img
                           src={item.product_image_url}
@@ -321,7 +321,7 @@ export default function CartPage() {
                           className="max-w-full max-h-full object-contain"
                         />
                       ) : (
-                        <Package className="h-8 w-8 text-[#9B9792]" />
+                        <Package className="h-8 w-8 text-[#80959A]" />
                       )}
                     </div>
 
@@ -329,21 +329,21 @@ export default function CartPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-[#2C2C2C] text-sm sm:text-base line-clamp-2">
+                          <h3 className="font-medium text-[#2D363F] text-sm sm:text-base line-clamp-2">
                             {item.product_title || item.url}
                           </h3>
                           <div className="flex items-center gap-2 mt-1">
                             {item.is_amazon_url ? (
-                              <Badge className="bg-[#E08A4B]/10 text-[#E08A4B] border-[#E08A4B]/30 text-xs">
+                              <Badge className="bg-[#E95F20]/10 text-[#E95F20] border-[#E95F20]/30 text-xs">
                                 <Zap className="h-3 w-3 mr-1" />
                                 {t.amazonBadge}
                               </Badge>
                             ) : item.source === 'catalog' ? (
-                              <Badge className="bg-[#75534B]/10 text-[#75534B] border-[#75534B]/30 text-xs">
+                              <Badge className="bg-[#5C2F0E]/10 text-[#5C2F0E] border-[#5C2F0E]/30 text-xs">
                                 {t.catalogBadge}
                               </Badge>
                             ) : (
-                              <Badge className="bg-[#6E6B67]/10 text-[#6E6B67] border-[#6E6B67]/30 text-xs">
+                              <Badge className="bg-[#4E616F]/10 text-[#4E616F] border-[#4E616F]/30 text-xs">
                                 {t.ecommerceBadge}
                               </Badge>
                             )}
@@ -352,7 +352,7 @@ export default function CartPage() {
                                 href={item.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[#75534B] hover:underline"
+                                className="text-[#5C2F0E] hover:underline"
                               >
                                 <ExternalLink className="h-3.5 w-3.5" />
                               </a>
@@ -361,7 +361,7 @@ export default function CartPage() {
                         </div>
                         <button
                           onClick={() => removeItem(item.id)}
-                          className="p-2 text-[#D1625B] hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-[#AA2F0D] hover:bg-red-50 rounded-lg transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -372,16 +372,16 @@ export default function CartPage() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handleQuantityChange(item.id, -1)}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E4E1DD] text-[#6E6B67] hover:bg-[#F9F8F6] transition-colors"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#ABC0B9] text-[#4E616F] hover:bg-[#FAFBFA] transition-colors"
                           >
                             <Minus className="h-4 w-4" />
                           </button>
-                          <span className="w-8 text-center font-medium text-[#2C2C2C]">
+                          <span className="w-8 text-center font-medium text-[#2D363F]">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => handleQuantityChange(item.id, 1)}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E4E1DD] text-[#6E6B67] hover:bg-[#F9F8F6] transition-colors"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#ABC0B9] text-[#4E616F] hover:bg-[#FAFBFA] transition-colors"
                           >
                             <Plus className="h-4 w-4" />
                           </button>
@@ -391,15 +391,15 @@ export default function CartPage() {
                         <div className="text-right">
                           {item.estimated_price > 0 ? (
                             <>
-                              <p className="text-sm text-[#6E6B67]">
+                              <p className="text-sm text-[#4E616F]">
                                 {item.currency} ${formatPrice(item.estimated_price)} x {item.quantity}
                               </p>
-                              <p className="font-bold text-[#75534B]">
+                              <p className="font-bold text-[#5C2F0E]">
                                 {item.currency} ${formatPrice(item.subtotal)}
                               </p>
                             </>
                           ) : (
-                            <p className="text-sm text-[#9B9792]">-</p>
+                            <p className="text-sm text-[#80959A]">-</p>
                           )}
                         </div>
                       </div>
@@ -411,7 +411,7 @@ export default function CartPage() {
               {/* Mobile clear cart */}
               <button
                 onClick={() => clearCart()}
-                className="w-full text-center text-sm text-[#D1625B] hover:text-[#B04840] font-medium py-2 sm:hidden"
+                className="w-full text-center text-sm text-[#AA2F0D] hover:text-[#B04840] font-medium py-2 sm:hidden"
               >
                 {t.clearCart}
               </button>
@@ -419,22 +419,22 @@ export default function CartPage() {
 
             {/* Order Summary */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl border border-[#E4E1DD] p-4 sm:p-6 sticky top-24">
-                <h2 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.summary}</h2>
+              <div className="bg-white rounded-xl border border-[#ABC0B9] p-4 sm:p-6 sticky top-24">
+                <h2 className="text-lg font-semibold text-[#2D363F] mb-4">{t.summary}</h2>
 
                 {/* Items count */}
                 <div className="flex items-center justify-between text-sm mb-4">
-                  <span className="text-[#6E6B67]">{itemCount} {t.items}</span>
-                  <span className="font-bold text-[#75534B]">
+                  <span className="text-[#4E616F]">{itemCount} {t.items}</span>
+                  <span className="font-bold text-[#5C2F0E]">
                     {currency} ${formatPrice(total)}
                   </span>
                 </div>
 
-                <hr className="border-[#E4E1DD] my-4" />
+                <hr className="border-[#ABC0B9] my-4" />
 
                 {/* Justification */}
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-[#2C2C2C] mb-2">
+                  <label className="block text-sm font-medium text-[#2D363F] mb-2">
                     {t.justification} <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -442,13 +442,13 @@ export default function CartPage() {
                     onChange={(e) => setJustification(e.target.value)}
                     placeholder={t.justificationPlaceholder}
                     rows={3}
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white py-2 px-3 text-sm text-[#2C2C2C] placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 resize-none"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white py-2 px-3 text-sm text-[#2D363F] placeholder:text-[#80959A] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 resize-none"
                   />
                 </div>
 
                 {/* Urgency */}
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-[#2C2C2C] mb-2">
+                  <label className="block text-sm font-medium text-[#2D363F] mb-2">
                     {t.urgency}
                   </label>
                   <div className="flex gap-2">
@@ -456,8 +456,8 @@ export default function CartPage() {
                       onClick={() => setUrgency('normal')}
                       className={`flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-all ${
                         urgency === 'normal'
-                          ? 'bg-[#75534B] text-white'
-                          : 'bg-[#F9F8F6] text-[#6E6B67] border border-[#E4E1DD] hover:bg-[#E4E1DD]'
+                          ? 'bg-[#5C2F0E] text-white'
+                          : 'bg-[#FAFBFA] text-[#4E616F] border border-[#ABC0B9] hover:bg-[#ABC0B9]'
                       }`}
                     >
                       {t.normal}
@@ -466,8 +466,8 @@ export default function CartPage() {
                       onClick={() => setUrgency('urgent')}
                       className={`flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-all ${
                         urgency === 'urgent'
-                          ? 'bg-[#D1625B] text-white'
-                          : 'bg-[#F9F8F6] text-[#6E6B67] border border-[#E4E1DD] hover:bg-[#E4E1DD]'
+                          ? 'bg-[#AA2F0D] text-white'
+                          : 'bg-[#FAFBFA] text-[#4E616F] border border-[#ABC0B9] hover:bg-[#ABC0B9]'
                       }`}
                     >
                       {t.urgent}
@@ -495,7 +495,7 @@ export default function CartPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting || items.length === 0}
-                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-4 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>

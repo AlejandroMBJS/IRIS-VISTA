@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -9,22 +10,43 @@ import (
 	"vista-backend/internal/middleware"
 	"vista-backend/internal/models"
 	"vista-backend/internal/services/amazon"
+	"vista-backend/internal/services/translation"
 	"vista-backend/pkg/crypto"
 	"vista-backend/pkg/response"
 )
 
 type AdminHandler struct {
-	db            *gorm.DB
-	encryptionSvc *crypto.EncryptionService
-	amazonSvc     *amazon.AutomationService
+	db              *gorm.DB
+	encryptionSvc   *crypto.EncryptionService
+	amazonSvc       *amazon.AutomationService
+	asyncTranslator *translation.AsyncTranslator
 }
 
 func NewAdminHandler(db *gorm.DB, encryptionSvc *crypto.EncryptionService, amazonSvc *amazon.AutomationService) *AdminHandler {
 	return &AdminHandler{
-		db:            db,
-		encryptionSvc: encryptionSvc,
-		amazonSvc:     amazonSvc,
+		db:              db,
+		encryptionSvc:   encryptionSvc,
+		amazonSvc:       amazonSvc,
+		asyncTranslator: translation.NewAsyncTranslator(db),
 	}
+}
+
+// getUserLanguage extracts user's preferred language from request headers
+func (h *AdminHandler) getUserLanguage(c *gin.Context) string {
+	if lang := c.GetHeader("X-User-Language"); lang != "" {
+		lang = strings.ToLower(lang)
+		if lang == "en" || lang == "zh" || lang == "es" {
+			return lang
+		}
+	}
+	acceptLang := c.GetHeader("Accept-Language")
+	if strings.HasPrefix(strings.ToLower(acceptLang), "zh") {
+		return "zh"
+	}
+	if strings.HasPrefix(strings.ToLower(acceptLang), "es") {
+		return "es"
+	}
+	return "en"
 }
 
 // Amazon Config types
@@ -310,6 +332,23 @@ func (h *AdminHandler) MarkAsPurchased(c *gin.Context) {
 	request.PurchaseNotes = input.Notes
 	request.OrderNumber = input.OrderNumber
 
+	// Translate purchase notes
+	if input.Notes != "" {
+		userLang := h.getUserLanguage(c)
+		translationResult, _ := h.asyncTranslator.TranslateField(
+			input.Notes,
+			userLang,
+			func(t *translation.TranslatedText) error {
+				return h.db.Model(&models.PurchaseRequest{}).
+					Where("id = ?", request.ID).
+					Update("purchase_notes_translated", translation.ToJSON(t)).Error
+			},
+		)
+		if translationResult != nil {
+			request.PurchaseNotesTranslated = translationResult.JSON
+		}
+	}
+
 	err = h.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&request).Error; err != nil {
 			return err
@@ -444,6 +483,24 @@ func (h *AdminHandler) UpdateOrderNotes(c *gin.Context) {
 
 	// Update admin notes
 	request.AdminNotes = input.AdminNotes
+
+	// Translate admin notes
+	if input.AdminNotes != "" {
+		userLang := h.getUserLanguage(c)
+		translationResult, _ := h.asyncTranslator.TranslateField(
+			input.AdminNotes,
+			userLang,
+			func(t *translation.TranslatedText) error {
+				return h.db.Model(&models.PurchaseRequest{}).
+					Where("id = ?", request.ID).
+					Update("admin_notes_translated", translation.ToJSON(t)).Error
+			},
+		)
+		if translationResult != nil {
+			request.AdminNotesTranslated = translationResult.JSON
+		}
+	}
+
 	if err := h.db.Save(&request).Error; err != nil {
 		response.InternalServerError(c, "Failed to update notes")
 		return
@@ -495,6 +552,23 @@ func (h *AdminHandler) MarkAsDelivered(c *gin.Context) {
 	request.DeliveredByID = &userID
 	request.DeliveredAt = &now
 	request.DeliveryNotes = input.Notes
+
+	// Translate delivery notes
+	if input.Notes != "" {
+		userLang := h.getUserLanguage(c)
+		translationResult, _ := h.asyncTranslator.TranslateField(
+			input.Notes,
+			userLang,
+			func(t *translation.TranslatedText) error {
+				return h.db.Model(&models.PurchaseRequest{}).
+					Where("id = ?", request.ID).
+					Update("delivery_notes_translated", translation.ToJSON(t)).Error
+			},
+		)
+		if translationResult != nil {
+			request.DeliveryNotesTranslated = translationResult.JSON
+		}
+	}
 
 	err = h.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&request).Error; err != nil {
@@ -564,6 +638,21 @@ func (h *AdminHandler) CancelOrder(c *gin.Context) {
 	request.CancelledByID = &userID
 	request.CancelledAt = &now
 	request.CancellationNotes = input.Notes
+
+	// Translate cancellation notes
+	userLang := h.getUserLanguage(c)
+	translationResult, _ := h.asyncTranslator.TranslateField(
+		input.Notes,
+		userLang,
+		func(t *translation.TranslatedText) error {
+			return h.db.Model(&models.PurchaseRequest{}).
+				Where("id = ?", request.ID).
+				Update("cancellation_notes_translated", translation.ToJSON(t)).Error
+		},
+	)
+	if translationResult != nil {
+		request.CancellationNotesTranslated = translationResult.JSON
+	}
 
 	err = h.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&request).Error; err != nil {

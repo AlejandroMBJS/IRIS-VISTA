@@ -15,7 +15,7 @@ interface LayoutProps {
 
 export function Layout({ children, language, setLanguage, cartItemCount, currentPage, navigateTo }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       <Header 
         language={language} 
         setLanguage={setLanguage}

@@ -129,16 +129,16 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
   };
 
   return (
-    <div className="rounded-xl border border-[#E4E1DD] bg-white shadow-sm">
+    <div className="rounded-xl border border-[#ABC0B9] bg-white shadow-sm">
       {/* Header */}
-      <div className="border-b border-[#E4E1DD] px-6 py-4">
+      <div className="border-b border-[#ABC0B9] px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#2C2C2C]/10">
-            <LayoutGrid className="h-5 w-5 text-[#2C2C2C]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#2D363F]/10">
+            <LayoutGrid className="h-5 w-5 text-[#2D363F]" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.title}</h2>
-            <p className="text-sm text-[#6E6B67]">{t.subtitle}</p>
+            <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>
+            <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
       <div className="p-6 space-y-6">
         {/* Default View */}
         <div>
-          <label className="mb-3 block text-sm font-medium text-[#2C2C2C]">
+          <label className="mb-3 block text-sm font-medium text-[#2D363F]">
             {t.defaultView}
           </label>
           <div className="flex gap-3">
@@ -157,9 +157,9 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
                 name="defaultView"
                 checked={config.admin_default_view === 'cards'}
                 onChange={() => onChange({ admin_default_view: 'cards' })}
-                className="h-4 w-4 border-[#E4E1DD] text-[#75534B] focus:ring-[#75534B]"
+                className="h-4 w-4 border-[#ABC0B9] text-[#5C2F0E] focus:ring-[#5C2F0E]"
               />
-              <span className="text-sm text-[#2C2C2C]">{t.viewCards}</span>
+              <span className="text-sm text-[#2D363F]">{t.viewCards}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -167,16 +167,16 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
                 name="defaultView"
                 checked={config.admin_default_view === 'table'}
                 onChange={() => onChange({ admin_default_view: 'table' })}
-                className="h-4 w-4 border-[#E4E1DD] text-[#75534B] focus:ring-[#75534B]"
+                className="h-4 w-4 border-[#ABC0B9] text-[#5C2F0E] focus:ring-[#5C2F0E]"
               />
-              <span className="text-sm text-[#2C2C2C]">{t.viewTable}</span>
+              <span className="text-sm text-[#2D363F]">{t.viewTable}</span>
             </label>
           </div>
         </div>
 
         {/* Visible Columns */}
         <div>
-          <label className="mb-3 block text-sm font-medium text-[#2C2C2C]">
+          <label className="mb-3 block text-sm font-medium text-[#2D363F]">
             {t.visibleColumns}
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -194,7 +194,7 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
                       onChange={() => handleColumnToggle(column.id)}
                       className="sr-only peer"
                     />
-                    <div className="h-5 w-5 rounded border-2 border-[#E4E1DD] bg-white peer-checked:border-[#4BAF7E] peer-checked:bg-[#4BAF7E] transition-colors" />
+                    <div className="h-5 w-5 rounded border-2 border-[#ABC0B9] bg-white peer-checked:border-[#5C2F0E] peer-checked:bg-[#5C2F0E] transition-colors" />
                     <svg
                       className={`absolute inset-0 h-5 w-5 text-white transition-opacity ${isChecked ? 'opacity-100' : 'opacity-0'}`}
                       fill="none"
@@ -205,7 +205,7 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-sm text-[#2C2C2C]">
+                  <span className="text-sm text-[#2D363F]">
                     {t[column.labelKey as keyof typeof t]}
                   </span>
                 </label>
@@ -216,13 +216,13 @@ export function AdminPanelSection({ config, onChange, language }: Props) {
 
         {/* Default Sort */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-[#2C2C2C]">
+          <label className="mb-2 block text-sm font-medium text-[#2D363F]">
             {t.defaultSort}
           </label>
           <select
             value={config.admin_default_sort}
             onChange={(e) => onChange({ admin_default_sort: e.target.value })}
-            className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+            className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
           >
             {SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>

@@ -481,36 +481,36 @@ export default function UsersPage() {
   const getStatusBadge = (status: User['status']) => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-[#4BAF7E]/10 text-[#4BAF7E] border-0">{t.approved}</Badge>;
+        return <Badge className="bg-[#5C2F0E]/10 text-[#5C2F0E] border-0">{t.approved}</Badge>;
       case 'pending':
         return <Badge className="bg-amber-100 text-amber-700 border-0">{t.pending}</Badge>;
       case 'rejected':
-        return <Badge className="bg-[#D1625B]/10 text-[#D1625B] border-0">{t.rejected}</Badge>;
+        return <Badge className="bg-[#AA2F0D]/10 text-[#AA2F0D] border-0">{t.rejected}</Badge>;
       case 'disabled':
-        return <Badge className="bg-[#6E6B67]/10 text-[#6E6B67] border-0">{t.disabled}</Badge>;
+        return <Badge className="bg-[#4E616F]/10 text-[#4E616F] border-0">{t.disabled}</Badge>;
       default:
-        return <Badge className="bg-[#6E6B67]/10 text-[#6E6B67] border-0">{status}</Badge>;
+        return <Badge className="bg-[#4E616F]/10 text-[#4E616F] border-0">{status}</Badge>;
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+            <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
               {t.title}
             </h1>
-            <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
+            <p className="text-base text-[#4E616F]">{t.subtitle}</p>
           </div>
           <div className="flex gap-3">
             <button
@@ -519,14 +519,14 @@ export default function UsersPage() {
                 setCsvText('');
                 setImportResults(null);
               }}
-              className="flex items-center gap-2 rounded-lg border border-[#75534B] px-5 py-3 text-[#75534B] font-medium transition-all hover:bg-[#75534B]/5 active:scale-95"
+              className="flex items-center gap-2 rounded-lg border border-[#5C2F0E] px-5 py-3 text-[#5C2F0E] font-medium transition-all hover:bg-[#5C2F0E]/5 active:scale-95"
             >
               <Upload className="h-5 w-5" />
               {t.importUsers}
             </button>
             <button
               onClick={() => handleOpenModal()}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
+              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
             >
               <Plus className="h-5 w-5" />
               {t.addUser}
@@ -536,14 +536,14 @@ export default function UsersPage() {
       </section>
 
       {/* Tabs */}
-      <section className="px-4 md:px-8 py-4 bg-white border-b border-[#E4E1DD]">
+      <section className="px-4 md:px-8 py-4 bg-white border-b border-[#ABC0B9]">
         <div className="mx-auto max-w-7xl flex gap-4">
           <button
             onClick={() => setActiveTab('all')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'all'
-                ? 'bg-[#75534B] text-white'
-                : 'text-[#6E6B67] hover:bg-[#E4E1DD]/50'
+                ? 'bg-[#5C2F0E] text-white'
+                : 'text-[#4E616F] hover:bg-[#ABC0B9]/50'
             }`}
           >
             <Users className="h-4 w-4" />
@@ -553,8 +553,8 @@ export default function UsersPage() {
             onClick={() => setActiveTab('pending')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'pending'
-                ? 'bg-[#75534B] text-white'
-                : 'text-[#6E6B67] hover:bg-[#E4E1DD]/50'
+                ? 'bg-[#5C2F0E] text-white'
+                : 'text-[#4E616F] hover:bg-[#ABC0B9]/50'
             }`}
           >
             <Clock className="h-4 w-4" />
@@ -570,16 +570,16 @@ export default function UsersPage() {
 
       {/* Search */}
       {activeTab === 'all' && (
-        <section className="px-4 md:px-8 py-6 bg-white border-b border-[#E4E1DD]">
+        <section className="px-4 md:px-8 py-6 bg-white border-b border-[#ABC0B9]">
           <div className="mx-auto max-w-7xl">
             <div className="relative max-w-md">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6E6B67]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4E616F]" />
               <input
                 type="text"
                 placeholder={t.search}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-[#E4E1DD] bg-white py-2.5 pl-12 pr-4 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-full rounded-lg border border-[#ABC0B9] bg-white py-2.5 pl-12 pr-4 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
             </div>
           </div>
@@ -592,32 +592,32 @@ export default function UsersPage() {
           {activeTab === 'all' ? (
             /* All Users Table */
             filteredUsers.length === 0 ? (
-              <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] p-12 text-center">
-                <Users className="h-12 w-12 text-[#E4E1DD] mx-auto mb-4" />
-                <p className="text-[#6E6B67]">{t.noUsers}</p>
+              <div className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] p-12 text-center">
+                <Users className="h-12 w-12 text-[#ABC0B9] mx-auto mb-4" />
+                <p className="text-[#4E616F]">{t.noUsers}</p>
               </div>
             ) : (
-              <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] overflow-hidden">
+              <div className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] overflow-hidden">
                 <div className="overflow-x-auto">
                 <table className="w-full min-w-[800px]">
                   <thead>
-                    <tr className="border-b border-[#E4E1DD] bg-[#F9F8F6]">
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
+                    <tr className="border-b border-[#ABC0B9] bg-[#FAFBFA]">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2D363F] uppercase tracking-wide">
                         {t.employeeNumber}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2D363F] uppercase tracking-wide">
                         {t.name}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2D363F] uppercase tracking-wide">
                         {t.email}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2D363F] uppercase tracking-wide">
                         {t.role}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2D363F] uppercase tracking-wide">
                         {t.status}
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-[#2D363F] uppercase tracking-wide">
                         {t.actions}
                       </th>
                     </tr>
@@ -626,17 +626,17 @@ export default function UsersPage() {
                     {filteredUsers.map((user) => (
                       <tr
                         key={user.id}
-                        className="border-b border-[#E4E1DD] last:border-0 hover:bg-[#F9F8F6] transition-colors"
+                        className="border-b border-[#ABC0B9] last:border-0 hover:bg-[#FAFBFA] transition-colors"
                       >
-                        <td className="px-6 py-4 font-mono text-sm text-[#75534B]">
+                        <td className="px-6 py-4 font-mono text-sm text-[#5C2F0E]">
                           {user.employee_number}
                         </td>
-                        <td className="px-6 py-4 font-semibold text-[#2C2C2C]">
+                        <td className="px-6 py-4 font-semibold text-[#2D363F]">
                           {user.name}
                         </td>
-                        <td className="px-6 py-4 text-sm text-[#6E6B67]">{user.email}</td>
+                        <td className="px-6 py-4 text-sm text-[#4E616F]">{user.email}</td>
                         <td className="px-6 py-4">
-                          <Badge className="bg-[#75534B]/10 text-[#75534B] hover:bg-[#75534B]/10 border-0">
+                          <Badge className="bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 border-0">
                             {t.roles[user.role as keyof typeof t.roles] || user.role}
                           </Badge>
                         </td>
@@ -648,13 +648,13 @@ export default function UsersPage() {
                             >
                               {user.status === 'approved' ? (
                                 <>
-                                  <ToggleRight className="h-6 w-6 text-[#4BAF7E]" />
-                                  <span className="text-sm text-[#4BAF7E]">{t.approved}</span>
+                                  <ToggleRight className="h-6 w-6 text-[#5C2F0E]" />
+                                  <span className="text-sm text-[#5C2F0E]">{t.approved}</span>
                                 </>
                               ) : (
                                 <>
-                                  <ToggleLeft className="h-6 w-6 text-[#6E6B67]" />
-                                  <span className="text-sm text-[#6E6B67]">{t.disabled}</span>
+                                  <ToggleLeft className="h-6 w-6 text-[#4E616F]" />
+                                  <span className="text-sm text-[#4E616F]">{t.disabled}</span>
                                 </>
                               )}
                             </button>
@@ -666,13 +666,13 @@ export default function UsersPage() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleOpenModal(user)}
-                              className="p-2 text-[#75534B] hover:bg-[#75534B]/10 rounded-lg transition-colors"
+                              className="p-2 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-lg transition-colors"
                             >
                               <Edit className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => handleDelete(user)}
-                              className="p-2 text-[#D1625B] hover:bg-[#D1625B]/10 rounded-lg transition-colors"
+                              className="p-2 text-[#AA2F0D] hover:bg-[#AA2F0D]/10 rounded-lg transition-colors"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -688,16 +688,16 @@ export default function UsersPage() {
           ) : (
             /* Pending Users */
             pendingUsers.length === 0 ? (
-              <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] p-12 text-center">
-                <CheckCircle className="h-12 w-12 text-[#4BAF7E] mx-auto mb-4" />
-                <p className="text-[#6E6B67]">{t.noPendingUsers}</p>
+              <div className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] p-12 text-center">
+                <CheckCircle className="h-12 w-12 text-[#5C2F0E] mx-auto mb-4" />
+                <p className="text-[#4E616F]">{t.noPendingUsers}</p>
               </div>
             ) : (
               <div className="grid gap-4">
                 {pendingUsers.map((user) => (
                   <div
                     key={user.id}
-                    className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] p-6"
+                    className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] p-6"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -705,12 +705,12 @@ export default function UsersPage() {
                           <Clock className="h-6 w-6 text-amber-600" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-[#2C2C2C]">{user.name}</h3>
-                          <div className="flex items-center gap-4 mt-1 text-sm text-[#6E6B67]">
-                            <span className="font-mono text-[#75534B]">{user.employee_number}</span>
+                          <h3 className="font-semibold text-[#2D363F]">{user.name}</h3>
+                          <div className="flex items-center gap-4 mt-1 text-sm text-[#4E616F]">
+                            <span className="font-mono text-[#5C2F0E]">{user.employee_number}</span>
                             <span>{user.email}</span>
                           </div>
-                          <p className="text-xs text-[#6E6B67] mt-1">
+                          <p className="text-xs text-[#4E616F] mt-1">
                             {t.registeredAt}: {new Date(user.created_at).toLocaleDateString()}
                           </p>
                         </div>
@@ -718,14 +718,14 @@ export default function UsersPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleOpenApprovalModal(user)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#4BAF7E] text-white font-medium hover:bg-[#3D9066] transition-colors"
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#3D9066] transition-colors"
                         >
                           <UserCheck className="h-4 w-4" />
                           {t.approve}
                         </button>
                         <button
                           onClick={() => handleOpenRejectModal(user)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-[#D1625B] text-[#D1625B] font-medium hover:bg-[#D1625B]/5 transition-colors"
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-[#AA2F0D] text-[#AA2F0D] font-medium hover:bg-[#AA2F0D]/5 transition-colors"
                         >
                           <UserX className="h-4 w-4" />
                           {t.reject}
@@ -744,7 +744,7 @@ export default function UsersPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="bg-gradient-to-r from-[#75534B] to-[#5D423C] p-6 rounded-t-xl flex items-center justify-between sticky top-0">
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-6 rounded-t-xl flex items-center justify-between sticky top-0">
               <h2 className="text-xl text-white font-semibold">
                 {editingUser ? t.editUser : t.createUser}
               </h2>
@@ -758,57 +758,57 @@ export default function UsersPage() {
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.employeeNumber} <span className="text-[#EF4444]">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.employee_number}
                   onChange={(e) => setFormData({ ...formData, employee_number: e.target.value })}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.name} <span className="text-[#EF4444]">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.email} <span className="text-[#EF4444]">*</span>
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
 
               {!editingUser && (
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.password} <span className="text-[#EF4444]">*</span>
                   </label>
                   <input
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
                 </div>
               )}
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.role} <span className="text-[#EF4444]">*</span>
                 </label>
                 <select
@@ -816,7 +816,7 @@ export default function UsersPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, role: e.target.value as UserRole })
                   }
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 >
                   {Object.entries(t.roles).map(([key, label]) => (
                     <option key={key} value={key}>
@@ -828,7 +828,7 @@ export default function UsersPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.department}
                   </label>
                   <input
@@ -837,11 +837,11 @@ export default function UsersPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, department: e.target.value })
                     }
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.costCenter}
                   </label>
                   <input
@@ -850,23 +850,23 @@ export default function UsersPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, cost_center: e.target.value })
                     }
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-[#E4E1DD] p-6 flex items-center justify-between">
+            <div className="border-t border-[#ABC0B9] p-6 flex items-center justify-between">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-6 py-3 text-[#6E6B67] font-medium transition-colors hover:text-[#2C2C2C]"
+                className="px-6 py-3 text-[#4E616F] font-medium transition-colors hover:text-[#2D363F]"
               >
                 {t.cancel}
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 {t.save}
@@ -880,7 +880,7 @@ export default function UsersPage() {
       {showApprovalModal && selectedPendingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="bg-gradient-to-r from-[#4BAF7E] to-[#3D9066] p-6 rounded-t-xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#3D9066] p-6 rounded-t-xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <UserCheck className="h-6 w-6 text-white" />
                 <h2 className="text-xl text-white font-semibold">{t.approveUser}</h2>
@@ -894,19 +894,19 @@ export default function UsersPage() {
             </div>
 
             <div className="p-6">
-              <div className="mb-6 p-4 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD]">
-                <p className="font-semibold text-[#2C2C2C]">{selectedPendingUser.name}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">
-                  <span className="font-mono text-[#75534B]">{selectedPendingUser.employee_number}</span>
+              <div className="mb-6 p-4 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9]">
+                <p className="font-semibold text-[#2D363F]">{selectedPendingUser.name}</p>
+                <p className="text-sm text-[#4E616F] mt-1">
+                  <span className="font-mono text-[#5C2F0E]">{selectedPendingUser.employee_number}</span>
                   {' - '}{selectedPendingUser.email}
                 </p>
               </div>
 
-              <p className="text-sm text-[#6E6B67] mb-4">{t.approveDescription}</p>
+              <p className="text-sm text-[#4E616F] mb-4">{t.approveDescription}</p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.role} <span className="text-[#EF4444]">*</span>
                   </label>
                   <select
@@ -914,7 +914,7 @@ export default function UsersPage() {
                     onChange={(e) =>
                       setApprovalData({ ...approvalData, role: e.target.value as UserRole })
                     }
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#4BAF7E] focus:outline-none focus:ring-2 focus:ring-[#4BAF7E]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   >
                     {Object.entries(t.roles).map(([key, label]) => (
                       <option key={key} value={key}>
@@ -926,7 +926,7 @@ export default function UsersPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                    <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                       {t.department}
                     </label>
                     <input
@@ -935,11 +935,11 @@ export default function UsersPage() {
                       onChange={(e) =>
                         setApprovalData({ ...approvalData, department: e.target.value })
                       }
-                      className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#4BAF7E] focus:outline-none focus:ring-2 focus:ring-[#4BAF7E]/20"
+                      className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                    <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                       {t.costCenter}
                     </label>
                     <input
@@ -948,24 +948,24 @@ export default function UsersPage() {
                       onChange={(e) =>
                         setApprovalData({ ...approvalData, cost_center: e.target.value })
                       }
-                      className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#4BAF7E] focus:outline-none focus:ring-2 focus:ring-[#4BAF7E]/20"
+                      className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-[#E4E1DD] p-6 flex items-center justify-between">
+            <div className="border-t border-[#ABC0B9] p-6 flex items-center justify-between">
               <button
                 onClick={() => setShowApprovalModal(false)}
-                className="px-6 py-3 text-[#6E6B67] font-medium transition-colors hover:text-[#2C2C2C]"
+                className="px-6 py-3 text-[#4E616F] font-medium transition-colors hover:text-[#2D363F]"
               >
                 {t.cancel}
               </button>
               <button
                 onClick={handleApprove}
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-lg bg-[#4BAF7E] text-white font-medium shadow-sm transition-all hover:bg-[#3D9066] active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-[#5C2F0E] text-white font-medium shadow-sm transition-all hover:bg-[#3D9066] active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 <CheckCircle className="h-4 w-4" />
@@ -980,7 +980,7 @@ export default function UsersPage() {
       {showRejectModal && selectedPendingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="bg-gradient-to-r from-[#D1625B] to-[#B94D47] p-6 rounded-t-xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#AA2F0D] to-[#B94D47] p-6 rounded-t-xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <UserX className="h-6 w-6 text-white" />
                 <h2 className="text-xl text-white font-semibold">{t.rejectUser}</h2>
@@ -994,16 +994,16 @@ export default function UsersPage() {
             </div>
 
             <div className="p-6">
-              <div className="mb-6 p-4 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD]">
-                <p className="font-semibold text-[#2C2C2C]">{selectedPendingUser.name}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">
-                  <span className="font-mono text-[#75534B]">{selectedPendingUser.employee_number}</span>
+              <div className="mb-6 p-4 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9]">
+                <p className="font-semibold text-[#2D363F]">{selectedPendingUser.name}</p>
+                <p className="text-sm text-[#4E616F] mt-1">
+                  <span className="font-mono text-[#5C2F0E]">{selectedPendingUser.employee_number}</span>
                   {' - '}{selectedPendingUser.email}
                 </p>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.rejectionReason} <span className="text-[#EF4444]">*</span>
                 </label>
                 <textarea
@@ -1011,22 +1011,22 @@ export default function UsersPage() {
                   onChange={(e) => setRejectionReason(e.target.value)}
                   placeholder={t.rejectionPlaceholder}
                   rows={4}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#D1625B] focus:outline-none focus:ring-2 focus:ring-[#D1625B]/20 resize-none"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#AA2F0D] focus:outline-none focus:ring-2 focus:ring-[#AA2F0D]/20 resize-none"
                 />
               </div>
             </div>
 
-            <div className="border-t border-[#E4E1DD] p-6 flex items-center justify-between">
+            <div className="border-t border-[#ABC0B9] p-6 flex items-center justify-between">
               <button
                 onClick={() => setShowRejectModal(false)}
-                className="px-6 py-3 text-[#6E6B67] font-medium transition-colors hover:text-[#2C2C2C]"
+                className="px-6 py-3 text-[#4E616F] font-medium transition-colors hover:text-[#2D363F]"
               >
                 {t.cancel}
               </button>
               <button
                 onClick={handleReject}
                 disabled={isSubmitting || !rejectionReason.trim()}
-                className="px-6 py-3 rounded-lg bg-[#D1625B] text-white font-medium shadow-sm transition-all hover:bg-[#B94D47] active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-[#AA2F0D] text-white font-medium shadow-sm transition-all hover:bg-[#B94D47] active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 <XCircle className="h-4 w-4" />
@@ -1041,13 +1041,13 @@ export default function UsersPage() {
       {showImportModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-[#E4E1DD] flex items-center justify-between">
+            <div className="p-6 border-b border-[#ABC0B9] flex items-center justify-between">
               <div>
-                <h2 className="text-xl text-[#2C2C2C] font-semibold">{t.importFromCSV}</h2>
+                <h2 className="text-xl text-[#2D363F] font-semibold">{t.importFromCSV}</h2>
               </div>
               <button
                 onClick={() => setShowImportModal(false)}
-                className="text-[#6E6B67] hover:text-[#2C2C2C] transition-colors"
+                className="text-[#4E616F] hover:text-[#2D363F] transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -1057,7 +1057,7 @@ export default function UsersPage() {
               {/* Download Template Button */}
               <button
                 onClick={handleDownloadTemplate}
-                className="flex items-center gap-2 text-[#75534B] font-medium hover:underline"
+                className="flex items-center gap-2 text-[#5C2F0E] font-medium hover:underline"
               >
                 <Download className="h-4 w-4" />
                 {t.downloadTemplate}
@@ -1065,9 +1065,9 @@ export default function UsersPage() {
 
               {/* File Upload */}
               <div>
-                <label className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-[#E4E1DD] rounded-lg cursor-pointer hover:border-[#75534B] transition-colors">
-                  <FileText className="h-5 w-5 text-[#6E6B67]" />
-                  <span className="text-[#6E6B67]">{t.uploadFile}</span>
+                <label className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-[#ABC0B9] rounded-lg cursor-pointer hover:border-[#5C2F0E] transition-colors">
+                  <FileText className="h-5 w-5 text-[#4E616F]" />
+                  <span className="text-[#4E616F]">{t.uploadFile}</span>
                   <input
                     type="file"
                     accept=".csv,.txt"
@@ -1083,12 +1083,12 @@ export default function UsersPage() {
                 onChange={(e) => setCsvText(e.target.value)}
                 placeholder={t.csvPlaceholder}
                 rows={10}
-                className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] font-mono transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] font-mono transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
 
               {/* Import Results */}
               {importResults && (
-                <div className="rounded-lg border border-[#E4E1DD] bg-[#F9F8F6] p-4">
+                <div className="rounded-lg border border-[#ABC0B9] bg-[#FAFBFA] p-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-5 w-5 text-green-600" />
@@ -1114,10 +1114,10 @@ export default function UsersPage() {
               )}
             </div>
 
-            <div className="p-6 border-t border-[#E4E1DD] flex justify-end gap-3">
+            <div className="p-6 border-t border-[#ABC0B9] flex justify-end gap-3">
               <button
                 onClick={() => setShowImportModal(false)}
-                className="px-6 py-3 text-[#6E6B67] font-medium transition-colors hover:text-[#2C2C2C]"
+                className="px-6 py-3 text-[#4E616F] font-medium transition-colors hover:text-[#2D363F]"
               >
                 {t.close}
               </button>
@@ -1125,7 +1125,7 @@ export default function UsersPage() {
                 <button
                   onClick={handleImport}
                   disabled={isImporting || !csvText.trim()}
-                  className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                  className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
                 >
                   {isImporting && <Loader2 className="h-4 w-4 animate-spin" />}
                   <Upload className="h-4 w-4" />

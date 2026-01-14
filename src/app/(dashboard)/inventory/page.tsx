@@ -687,28 +687,28 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:justify-between md:items-start gap-4">
           <div>
-            <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+            <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
               {t.title}
             </h1>
-            <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
+            <p className="text-base text-[#4E616F]">{t.subtitle}</p>
           </div>
           {canEdit && (
             <div className="flex gap-3">
               <button
                 onClick={() => setShowImportModal(true)}
-                className="flex items-center gap-2 rounded-xl border border-[#75534B] px-6 py-3 text-[#75534B] hover:bg-[#75534B]/10 transition-all"
+                className="flex items-center gap-2 rounded-xl border border-[#5C2F0E] px-6 py-3 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 transition-all"
               >
                 <FileSpreadsheet className="h-5 w-5" />
                 {t.importProducts}
               </button>
               <button
                 onClick={() => handleOpenModal()}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-white shadow-md hover:opacity-90 transition-all"
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-6 py-3 text-white shadow-md hover:opacity-90 transition-all"
               >
                 <Plus className="h-5 w-5" />
                 {t.addProduct}
@@ -719,22 +719,22 @@ export default function InventoryPage() {
       </section>
 
       {/* Filters */}
-      <section className="px-4 md:px-8 py-4 border-b border-[#E4E1DD] bg-white">
+      <section className="px-4 md:px-8 py-4 border-b border-[#ABC0B9] bg-white">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6E6B67]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4E616F]" />
             <input
               type="text"
               placeholder={t.search}
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }}
-              className="w-full pl-10 pr-4 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+              className="w-full pl-10 pr-4 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
             />
           </div>
           <select
             value={categoryFilter}
             onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}
-            className="px-4 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+            className="px-4 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
           >
             <option value="all">{t.all}</option>
             {categories.map((cat) => (
@@ -748,46 +748,46 @@ export default function InventoryPage() {
       <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           {loading ? (
-            <div className="text-center py-12 text-[#6E6B67]">{t.loading}</div>
+            <div className="text-center py-12 text-[#4E616F]">{t.loading}</div>
           ) : products.length === 0 ? (
-            <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] p-12 text-center">
-              <Package className="h-16 w-16 text-[#E4E1DD] mx-auto mb-4" />
-              <p className="text-xl text-[#6E6B67]">{t.noProducts}</p>
+            <div className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] p-12 text-center">
+              <Package className="h-16 w-16 text-[#ABC0B9] mx-auto mb-4" />
+              <p className="text-xl text-[#4E616F]">{t.noProducts}</p>
             </div>
           ) : (
             <>
-              <div className="bg-white rounded-lg shadow-sm border border-[#E4E1DD] overflow-hidden">
+              <div className="bg-white rounded-lg shadow-sm border border-[#ABC0B9] overflow-hidden">
                 <div className="overflow-x-auto">
                 <table className="w-full min-w-[800px]">
-                  <thead className="bg-[#F9F8F6] border-b border-[#E4E1DD]">
+                  <thead className="bg-[#FAFBFA] border-b border-[#ABC0B9]">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-[#6E6B67]">{t.sku}</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-[#6E6B67]">{t.name}</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-[#6E6B67]">{t.category}</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-[#6E6B67]">{t.supplier}</th>
-                      <th className="px-4 py-3 text-right text-sm font-medium text-[#6E6B67]">{t.price}</th>
-                      <th className="px-4 py-3 text-right text-sm font-medium text-[#6E6B67]">{t.stock}</th>
-                      <th className="px-4 py-3 text-center text-sm font-medium text-[#6E6B67]">{t.actions}</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-[#4E616F]">{t.sku}</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-[#4E616F]">{t.name}</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-[#4E616F]">{t.category}</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-[#4E616F]">{t.supplier}</th>
+                      <th className="px-4 py-3 text-right text-sm font-medium text-[#4E616F]">{t.price}</th>
+                      <th className="px-4 py-3 text-right text-sm font-medium text-[#4E616F]">{t.stock}</th>
+                      <th className="px-4 py-3 text-center text-sm font-medium text-[#4E616F]">{t.actions}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {products.map((product) => (
-                      <tr key={product.id} className="border-b border-[#E4E1DD] hover:bg-[#F9F8F6]">
-                        <td className="px-4 py-3 text-sm text-[#2C2C2C]">{product.sku}</td>
+                      <tr key={product.id} className="border-b border-[#ABC0B9] hover:bg-[#FAFBFA]">
+                        <td className="px-4 py-3 text-sm text-[#2D363F]">{product.sku}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             {product.image_emoji && <span className="text-xl">{product.image_emoji}</span>}
-                            <span className="text-sm text-[#2C2C2C]">{product.name}</span>
+                            <span className="text-sm text-[#2D363F]">{product.name}</span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm text-[#6E6B67]">{product.category}</td>
-                        <td className="px-4 py-3 text-sm text-[#6E6B67]">{product.supplier}</td>
-                        <td className="px-4 py-3 text-sm text-right text-[#2C2C2C]">
+                        <td className="px-4 py-3 text-sm text-[#4E616F]">{product.category}</td>
+                        <td className="px-4 py-3 text-sm text-[#4E616F]">{product.supplier}</td>
+                        <td className="px-4 py-3 text-sm text-right text-[#2D363F]">
                           {product.currency} {formatPrice(product.price)}
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <span className="text-sm text-[#2C2C2C]">{product.stock}</span>
+                            <span className="text-sm text-[#2D363F]">{product.stock}</span>
                             {getStockStatusBadge(product.stock_status)}
                           </div>
                         </td>
@@ -796,7 +796,7 @@ export default function InventoryPage() {
                             <div className="flex justify-center gap-2">
                               <button
                                 onClick={() => handleOpenModal(product)}
-                                className="p-2 text-[#75534B] hover:bg-[#F9F8F6] rounded-lg transition-colors"
+                                className="p-2 text-[#5C2F0E] hover:bg-[#FAFBFA] rounded-lg transition-colors"
                               >
                                 <Edit2 className="h-4 w-4" />
                               </button>
@@ -819,24 +819,24 @@ export default function InventoryPage() {
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="mt-4 flex justify-between items-center">
-                  <p className="text-sm text-[#6E6B67]">
+                  <p className="text-sm text-[#4E616F]">
                     {total} products total
                   </p>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setPage(p => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-4 py-2 border border-[#E4E1DD] rounded-lg disabled:opacity-50 hover:bg-[#F9F8F6]"
+                      className="px-4 py-2 border border-[#ABC0B9] rounded-lg disabled:opacity-50 hover:bg-[#FAFBFA]"
                     >
                       Previous
                     </button>
-                    <span className="px-4 py-2 text-sm text-[#6E6B67]">
+                    <span className="px-4 py-2 text-sm text-[#4E616F]">
                       Page {page} of {totalPages}
                     </span>
                     <button
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="px-4 py-2 border border-[#E4E1DD] rounded-lg disabled:opacity-50 hover:bg-[#F9F8F6]"
+                      className="px-4 py-2 border border-[#ABC0B9] rounded-lg disabled:opacity-50 hover:bg-[#FAFBFA]"
                     >
                       Next
                     </button>
@@ -852,11 +852,11 @@ export default function InventoryPage() {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-[#E4E1DD] px-6 py-4 flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-[#2C2C2C]">
+            <div className="sticky top-0 bg-white border-b border-[#ABC0B9] px-6 py-4 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-[#2D363F]">
                 {editingProduct ? t.editProduct : t.addProduct}
               </h2>
-              <button onClick={handleCloseModal} className="p-2 hover:bg-[#F9F8F6] rounded-lg">
+              <button onClick={handleCloseModal} className="p-2 hover:bg-[#FAFBFA] rounded-lg">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -871,25 +871,25 @@ export default function InventoryPage() {
             <div className="p-6 space-y-6">
               {/* Basic Information */}
               <div>
-                <h3 className="text-lg font-medium text-[#2C2C2C] mb-4">{t.basicInfo}</h3>
+                <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.basicInfo}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.sku} *</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.sku} *</label>
                     <input
                       type="text"
                       value={formData.sku}
                       onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
                       disabled={!!editingProduct}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B] disabled:bg-gray-100"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E] disabled:bg-gray-100"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.category} *</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.category} *</label>
                     <input
                       type="text"
                       value={formData.category}
                       onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                       list="categories"
                     />
                     <datalist id="categories">
@@ -897,40 +897,40 @@ export default function InventoryPage() {
                     </datalist>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.model}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.model}</label>
                     <input
                       type="text"
                       value={formData.model}
                       onChange={(e) => setFormData(prev => ({ ...prev, model: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.supplier}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.supplier}</label>
                     <input
                       type="text"
                       value={formData.supplier}
                       onChange={(e) => setFormData(prev => ({ ...prev, supplier: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.supplierCode}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.supplierCode}</label>
                     <input
                       type="text"
                       value={formData.supplier_code}
                       onChange={(e) => setFormData(prev => ({ ...prev, supplier_code: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.clickupId}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.clickupId}</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
                         value={formData.clickup_id}
                         onChange={(e) => setFormData(prev => ({ ...prev, clickup_id: e.target.value }))}
-                        className="flex-1 px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                        className="flex-1 px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                         placeholder="e.g., abc123"
                       />
                       {formData.clickup_id && (
@@ -938,7 +938,7 @@ export default function InventoryPage() {
                           href={`https://app.clickup.com/t/${formData.clickup_id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 text-[#75534B] hover:bg-[#F9F8F6] rounded-lg"
+                          className="p-2 text-[#5C2F0E] hover:bg-[#FAFBFA] rounded-lg"
                         >
                           <ExternalLink className="h-5 w-5" />
                         </a>
@@ -950,95 +950,95 @@ export default function InventoryPage() {
 
               {/* Localization */}
               <div>
-                <h3 className="text-lg font-medium text-[#2C2C2C] mb-4">{t.localization}</h3>
+                <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.localization}</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.nameEn} *</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.nameEn} *</label>
                     <input
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.nameZh}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.nameZh}</label>
                     <input
                       type="text"
                       value={formData.name_zh}
                       onChange={(e) => setFormData(prev => ({ ...prev, name_zh: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.nameEs}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.nameEs}</label>
                     <input
                       type="text"
                       value={formData.name_es}
                       onChange={(e) => setFormData(prev => ({ ...prev, name_es: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.specEn}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.specEn}</label>
                     <input
                       type="text"
                       value={formData.specification}
                       onChange={(e) => setFormData(prev => ({ ...prev, specification: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.specZh}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.specZh}</label>
                     <input
                       type="text"
                       value={formData.spec_zh}
                       onChange={(e) => setFormData(prev => ({ ...prev, spec_zh: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.specEs}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.specEs}</label>
                     <input
                       type="text"
                       value={formData.spec_es}
                       onChange={(e) => setFormData(prev => ({ ...prev, spec_es: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                 </div>
                 <div className="mt-4">
-                  <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.description}</label>
+                  <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.description}</label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                    className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                   />
                 </div>
               </div>
 
               {/* Pricing & Stock */}
               <div>
-                <h3 className="text-lg font-medium text-[#2C2C2C] mb-4">{t.pricing}</h3>
+                <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.pricing}</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.price} *</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.price} *</label>
                     <input
                       type="number"
                       value={formData.price}
                       onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
                       min="0"
                       step="0.01"
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.currency}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.currency}</label>
                     <select
                       value={formData.currency}
                       onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     >
                       <option value="USD">USD</option>
                       <option value="MXN">MXN</option>
@@ -1047,43 +1047,43 @@ export default function InventoryPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.location}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.location}</label>
                     <input
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                       placeholder="e.g., Warehouse A, Shelf B3"
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.stock}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.stock}</label>
                     <input
                       type="number"
                       value={formData.stock}
                       onChange={(e) => setFormData(prev => ({ ...prev, stock: parseInt(e.target.value) || 0 }))}
                       min="0"
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.minStock}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.minStock}</label>
                     <input
                       type="number"
                       value={formData.min_stock}
                       onChange={(e) => setFormData(prev => ({ ...prev, min_stock: parseInt(e.target.value) || 0 }))}
                       min="0"
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.maxStock}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.maxStock}</label>
                     <input
                       type="number"
                       value={formData.max_stock}
                       onChange={(e) => setFormData(prev => ({ ...prev, max_stock: parseInt(e.target.value) || 0 }))}
                       min="0"
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                 </div>
@@ -1091,33 +1091,33 @@ export default function InventoryPage() {
 
               {/* Media & Images */}
               <div>
-                <h3 className="text-lg font-medium text-[#2C2C2C] mb-4">{t.media}</h3>
+                <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.media}</h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.imageEmoji}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.imageEmoji}</label>
                     <input
                       type="text"
                       value={formData.image_emoji}
                       onChange={(e) => setFormData(prev => ({ ...prev, image_emoji: e.target.value }))}
                       placeholder="e.g., ⌨️"
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.imageUrl}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.imageUrl}</label>
                     <input
                       type="text"
                       value={formData.image_url}
                       onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
                       placeholder="https://..."
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#6E6B67] mb-2">{t.images}</label>
-                  <p className="text-xs text-[#6E6B67] mb-3">{t.uploadRequirements}</p>
+                  <label className="block text-sm font-medium text-[#4E616F] mb-2">{t.images}</label>
+                  <p className="text-xs text-[#4E616F] mb-3">{t.uploadRequirements}</p>
 
                   <div className="flex flex-wrap gap-3 mb-3">
                     {formData.images.map((img, index) => (
@@ -1125,7 +1125,7 @@ export default function InventoryPage() {
                         <img
                           src={img.url.startsWith('/uploads') ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '')}${img.url}` : img.url}
                           alt={`Product ${index + 1}`}
-                          className={`w-24 h-24 object-cover rounded-lg border-2 ${img.is_primary ? 'border-[#75534B]' : 'border-[#E4E1DD]'}`}
+                          className={`w-24 h-24 object-cover rounded-lg border-2 ${img.is_primary ? 'border-[#5C2F0E]' : 'border-[#ABC0B9]'}`}
                         />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-1">
                           <button
@@ -1145,7 +1145,7 @@ export default function InventoryPage() {
                           </button>
                         </div>
                         {img.is_primary && (
-                          <span className="absolute -top-2 -right-2 bg-[#75534B] text-white text-xs px-1.5 py-0.5 rounded">
+                          <span className="absolute -top-2 -right-2 bg-[#5C2F0E] text-white text-xs px-1.5 py-0.5 rounded">
                             Primary
                           </span>
                         )}
@@ -1156,7 +1156,7 @@ export default function InventoryPage() {
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploading}
-                      className="w-24 h-24 border-2 border-dashed border-[#E4E1DD] rounded-lg flex flex-col items-center justify-center text-[#6E6B67] hover:border-[#75534B] hover:text-[#75534B] transition-colors disabled:opacity-50"
+                      className="w-24 h-24 border-2 border-dashed border-[#ABC0B9] rounded-lg flex flex-col items-center justify-center text-[#4E616F] hover:border-[#5C2F0E] hover:text-[#5C2F0E] transition-colors disabled:opacity-50"
                     >
                       {uploading ? (
                         <span className="text-xs">Uploading...</span>
@@ -1182,25 +1182,25 @@ export default function InventoryPage() {
 
               {/* E-commerce Section */}
               <div>
-                <h3 className="text-lg font-medium text-[#2C2C2C] mb-4">{t.ecommerce}</h3>
-                <p className="text-sm text-[#6E6B67] mb-4">{t.ecommerceHint}</p>
+                <h3 className="text-lg font-medium text-[#2D363F] mb-4">{t.ecommerce}</h3>
+                <p className="text-sm text-[#4E616F] mb-4">{t.ecommerceHint}</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.productUrl}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.productUrl}</label>
                     <div className="flex gap-2">
                       <input
                         type="url"
                         value={formData.product_url}
                         onChange={(e) => setFormData(prev => ({ ...prev, product_url: e.target.value }))}
                         placeholder="https://www.amazon.com.mx/dp/..."
-                        className="flex-1 px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                        className="flex-1 px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                       />
                       {formData.product_url && (
                         <a
                           href={formData.product_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 text-[#75534B] hover:bg-[#F9F8F6] rounded-lg"
+                          className="p-2 text-[#5C2F0E] hover:bg-[#FAFBFA] rounded-lg"
                         >
                           <ExternalLink className="h-5 w-5" />
                         </a>
@@ -1208,22 +1208,22 @@ export default function InventoryPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.brand}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.brand}</label>
                     <input
                       type="text"
                       value={formData.brand}
                       onChange={(e) => setFormData(prev => ({ ...prev, brand: e.target.value }))}
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.asin}</label>
+                    <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.asin}</label>
                     <input
                       type="text"
                       value={formData.asin}
                       onChange={(e) => setFormData(prev => ({ ...prev, asin: e.target.value }))}
                       placeholder="B0BWK6PXZX"
-                      className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                     />
                   </div>
                   <div className="col-span-2 flex items-center gap-2 mt-2">
@@ -1232,9 +1232,9 @@ export default function InventoryPage() {
                       id="is_ecommerce"
                       checked={formData.is_ecommerce}
                       onChange={(e) => setFormData(prev => ({ ...prev, is_ecommerce: e.target.checked }))}
-                      className="h-4 w-4 rounded border-[#E4E1DD] text-[#75534B] focus:ring-[#75534B]"
+                      className="h-4 w-4 rounded border-[#ABC0B9] text-[#5C2F0E] focus:ring-[#5C2F0E]"
                     />
-                    <label htmlFor="is_ecommerce" className="text-sm text-[#6E6B67]">{t.isEcommerce}</label>
+                    <label htmlFor="is_ecommerce" className="text-sm text-[#4E616F]">{t.isEcommerce}</label>
                   </div>
                 </div>
               </div>
@@ -1246,24 +1246,24 @@ export default function InventoryPage() {
                   id="is_active"
                   checked={formData.is_active}
                   onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))}
-                  className="h-4 w-4 rounded border-[#E4E1DD] text-[#75534B] focus:ring-[#75534B]"
+                  className="h-4 w-4 rounded border-[#ABC0B9] text-[#5C2F0E] focus:ring-[#5C2F0E]"
                 />
-                <label htmlFor="is_active" className="text-sm text-[#6E6B67]">{t.active}</label>
+                <label htmlFor="is_active" className="text-sm text-[#4E616F]">{t.active}</label>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-white border-t border-[#E4E1DD] px-6 py-4 flex justify-end gap-3">
+            <div className="sticky bottom-0 bg-white border-t border-[#ABC0B9] px-6 py-4 flex justify-end gap-3">
               <button
                 onClick={handleCloseModal}
-                className="px-6 py-2 border border-[#E4E1DD] rounded-lg text-[#6E6B67] hover:bg-[#F9F8F6] transition-colors"
+                className="px-6 py-2 border border-[#ABC0B9] rounded-lg text-[#4E616F] hover:bg-[#FAFBFA] transition-colors"
               >
                 {t.cancel}
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-6 py-2 bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white rounded-lg shadow-md hover:opacity-90 transition-all disabled:opacity-50"
+                className="px-6 py-2 bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white rounded-lg shadow-md hover:opacity-90 transition-all disabled:opacity-50"
               >
                 {saving ? '...' : t.save}
               </button>
@@ -1276,11 +1276,11 @@ export default function InventoryPage() {
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.confirmDelete}</h3>
+            <h3 className="text-lg font-semibold text-[#2D363F] mb-4">{t.confirmDelete}</h3>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="px-4 py-2 border border-[#E4E1DD] rounded-lg text-[#6E6B67] hover:bg-[#F9F8F6]"
+                className="px-4 py-2 border border-[#ABC0B9] rounded-lg text-[#4E616F] hover:bg-[#FAFBFA]"
               >
                 {t.no}
               </button>
@@ -1299,9 +1299,9 @@ export default function InventoryPage() {
       {showImportModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-[#E4E1DD] px-6 py-4 flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-[#2C2C2C]">{t.importFromCSV}</h2>
-              <button onClick={handleCloseImportModal} className="p-2 hover:bg-[#F9F8F6] rounded-lg">
+            <div className="sticky top-0 bg-white border-b border-[#ABC0B9] px-6 py-4 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-[#2D363F]">{t.importFromCSV}</h2>
+              <button onClick={handleCloseImportModal} className="p-2 hover:bg-[#FAFBFA] rounded-lg">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -1311,7 +1311,7 @@ export default function InventoryPage() {
               <div>
                 <button
                   onClick={handleDownloadTemplate}
-                  className="flex items-center gap-2 px-4 py-2 border border-[#75534B] text-[#75534B] rounded-lg hover:bg-[#75534B]/10 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 border border-[#5C2F0E] text-[#5C2F0E] rounded-lg hover:bg-[#5C2F0E]/10 transition-colors"
                 >
                   <Download className="h-5 w-5" />
                   {t.downloadTemplate}
@@ -1319,7 +1319,7 @@ export default function InventoryPage() {
               </div>
 
               {/* CSV Format Info */}
-              <p className="text-xs text-[#6E6B67] bg-[#F9F8F6] p-3 rounded-lg break-all">{t.csvFormat}</p>
+              <p className="text-xs text-[#4E616F] bg-[#FAFBFA] p-3 rounded-lg break-all">{t.csvFormat}</p>
 
               {/* File Upload */}
               <div>
@@ -1328,18 +1328,18 @@ export default function InventoryPage() {
                   type="file"
                   accept=".csv"
                   onChange={handleCsvFileChange}
-                  className="block w-full text-sm text-[#6E6B67] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-[#E4E1DD] file:text-sm file:font-medium file:bg-white file:text-[#75534B] hover:file:bg-[#F9F8F6]"
+                  className="block w-full text-sm text-[#4E616F] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-[#ABC0B9] file:text-sm file:font-medium file:bg-white file:text-[#5C2F0E] hover:file:bg-[#FAFBFA]"
                 />
               </div>
 
               {/* CSV Textarea */}
               <div>
-                <label className="block text-sm font-medium text-[#6E6B67] mb-1">{t.pasteCSV}</label>
+                <label className="block text-sm font-medium text-[#4E616F] mb-1">{t.pasteCSV}</label>
                 <textarea
                   value={csvText}
                   onChange={(e) => setCsvText(e.target.value)}
                   rows={10}
-                  className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B] font-mono text-sm"
+                  className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E] font-mono text-sm"
                   placeholder="sku,name,category,..."
                 />
               </div>
@@ -1347,7 +1347,7 @@ export default function InventoryPage() {
               {/* Import Results */}
               {importResults && (
                 <div className={`p-4 rounded-lg ${importResults.failed > 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-green-50 border border-green-200'}`}>
-                  <p className="font-medium text-[#2C2C2C] mb-2">
+                  <p className="font-medium text-[#2D363F] mb-2">
                     {t.importSuccess}: {importResults.success} {t.imported}, {importResults.failed} {t.failed}
                   </p>
                   {importResults.results.filter(r => !r.success).length > 0 && (
@@ -1364,10 +1364,10 @@ export default function InventoryPage() {
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-white border-t border-[#E4E1DD] px-6 py-4 flex justify-end gap-3">
+            <div className="sticky bottom-0 bg-white border-t border-[#ABC0B9] px-6 py-4 flex justify-end gap-3">
               <button
                 onClick={handleCloseImportModal}
-                className="px-6 py-2 border border-[#E4E1DD] rounded-lg text-[#6E6B67] hover:bg-[#F9F8F6] transition-colors"
+                className="px-6 py-2 border border-[#ABC0B9] rounded-lg text-[#4E616F] hover:bg-[#FAFBFA] transition-colors"
               >
                 {importResults ? t.close : t.cancel}
               </button>
@@ -1375,7 +1375,7 @@ export default function InventoryPage() {
                 <button
                   onClick={handleImport}
                   disabled={importing || !csvText.trim()}
-                  className="px-6 py-2 bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white rounded-lg shadow-md hover:opacity-90 transition-all disabled:opacity-50"
+                  className="px-6 py-2 bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white rounded-lg shadow-md hover:opacity-90 transition-all disabled:opacity-50"
                 >
                   {importing ? '...' : t.import}
                 </button>

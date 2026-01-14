@@ -72,7 +72,7 @@ export function Sidebar({ language, currentPage, navigateTo }: SidebarProps) {
   const t = text[language];
 
   return (
-    <aside className="fixed left-0 top-[73px] bottom-0 w-64 border-r border-[#E4E1DD] bg-white overflow-y-auto">
+    <aside className="fixed left-0 top-[73px] bottom-0 w-64 border-r border-[#ABC0B9] bg-white overflow-y-auto">
       <nav className="flex flex-col gap-1 p-4">
         {t.menu.map((item, index) => {
           const Icon = item.icon;
@@ -84,8 +84,8 @@ export function Sidebar({ language, currentPage, navigateTo }: SidebarProps) {
               onClick={() => navigateTo(item.page)}
               className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 ${
                 isActive
-                  ? 'bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white shadow-md'
-                  : 'text-[#75534B] hover:bg-[#F9F8F6] active:scale-95'
+                  ? 'bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white shadow-md'
+                  : 'text-[#5C2F0E] hover:bg-[#FAFBFA] active:scale-95'
               }`}
               style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 500 }}
             >

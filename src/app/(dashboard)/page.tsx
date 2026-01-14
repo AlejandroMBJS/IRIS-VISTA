@@ -305,7 +305,7 @@ export default function HomePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
@@ -313,9 +313,9 @@ export default function HomePage() {
   // ============ ADMIN DASHBOARD ============
   if (user?.role === 'admin') {
     return (
-      <div className="min-h-screen bg-[#F9F8F6]">
+      <div className="min-h-screen bg-[#FAFBFA]">
         {/* Hero Header */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#75534B] via-[#8A6056] to-[#5D423C] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -333,9 +333,9 @@ export default function HomePage() {
               {/* Quick CTA Button */}
               <Link
                 href="/admin/users"
-                className="inline-flex items-center gap-3 bg-white text-[#75534B] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
+                className="inline-flex items-center gap-3 bg-white text-[#5C2F0E] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#75534B]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-lg bg-[#5C2F0E]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Users className="h-5 w-5" />
                 </div>
                 {t.manageUsers}
@@ -348,48 +348,48 @@ export default function HomePage() {
         <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                     <Users className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Users</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{dashboardStats?.total_users || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.totalUsers}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{dashboardStats?.total_users || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.totalUsers}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <UserCheck className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Pending</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{dashboardStats?.pending_users || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.pendingUsers}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{dashboardStats?.pending_users || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.pendingUsers}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-sm">
                     <FileText className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Requests</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{dashboardStats?.total_requests || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.totalRequests}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{dashboardStats?.total_requests || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.totalRequests}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-sm">
                     <AlertCircle className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Pending</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.pending || dashboardStats?.pending_approvals || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.pendingApprovals}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.pending || dashboardStats?.pending_approvals || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.pendingApprovals}</p>
               </div>
             </div>
           </div>
@@ -401,60 +401,60 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Quick Actions - Takes 2 columns */}
               <div className="lg:col-span-2">
-                <h2 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.quickActions}</h2>
+                <h2 className="text-lg font-semibold text-[#2D363F] mb-4">{t.quickActions}</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <Link
                     href="/admin/users"
-                    className="bg-white rounded-2xl p-6 border border-[#E4E1DD] shadow-sm hover:shadow-lg hover:border-[#75534B] transition-all group"
+                    className="bg-white rounded-2xl p-6 border border-[#ABC0B9] shadow-sm hover:shadow-lg hover:border-[#5C2F0E] transition-all group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#75534B]/10 to-[#75534B]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Users className="h-6 w-6 text-[#75534B]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5C2F0E]/10 to-[#5C2F0E]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <Users className="h-6 w-6 text-[#5C2F0E]" />
                     </div>
-                    <h3 className="font-semibold text-[#2C2C2C] mb-1">{t.manageUsers}</h3>
-                    <p className="text-sm text-[#6E6B67]">View and manage all users</p>
+                    <h3 className="font-semibold text-[#2D363F] mb-1">{t.manageUsers}</h3>
+                    <p className="text-sm text-[#4E616F]">View and manage all users</p>
                   </Link>
 
                   <Link
                     href="/admin"
-                    className="bg-white rounded-2xl p-6 border border-[#E4E1DD] shadow-sm hover:shadow-lg hover:border-[#75534B] transition-all group"
+                    className="bg-white rounded-2xl p-6 border border-[#ABC0B9] shadow-sm hover:shadow-lg hover:border-[#5C2F0E] transition-all group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#75534B]/10 to-[#75534B]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Settings className="h-6 w-6 text-[#75534B]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5C2F0E]/10 to-[#5C2F0E]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <Settings className="h-6 w-6 text-[#5C2F0E]" />
                     </div>
-                    <h3 className="font-semibold text-[#2C2C2C] mb-1">{t.systemSettings}</h3>
-                    <p className="text-sm text-[#6E6B67]">Configure system settings</p>
+                    <h3 className="font-semibold text-[#2D363F] mb-1">{t.systemSettings}</h3>
+                    <p className="text-sm text-[#4E616F]">Configure system settings</p>
                   </Link>
 
                   <Link
                     href="/analytics"
-                    className="bg-white rounded-2xl p-6 border border-[#E4E1DD] shadow-sm hover:shadow-lg hover:border-[#75534B] transition-all group"
+                    className="bg-white rounded-2xl p-6 border border-[#ABC0B9] shadow-sm hover:shadow-lg hover:border-[#5C2F0E] transition-all group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#75534B]/10 to-[#75534B]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <BarChart3 className="h-6 w-6 text-[#75534B]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5C2F0E]/10 to-[#5C2F0E]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <BarChart3 className="h-6 w-6 text-[#5C2F0E]" />
                     </div>
-                    <h3 className="font-semibold text-[#2C2C2C] mb-1">{t.viewAnalytics}</h3>
-                    <p className="text-sm text-[#6E6B67]">View reports and analytics</p>
+                    <h3 className="font-semibold text-[#2D363F] mb-1">{t.viewAnalytics}</h3>
+                    <p className="text-sm text-[#4E616F]">View reports and analytics</p>
                   </Link>
 
                   <Link
                     href="/admin/purchase-config"
-                    className="bg-white rounded-2xl p-6 border border-[#E4E1DD] shadow-sm hover:shadow-lg hover:border-[#75534B] transition-all group"
+                    className="bg-white rounded-2xl p-6 border border-[#ABC0B9] shadow-sm hover:shadow-lg hover:border-[#5C2F0E] transition-all group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#75534B]/10 to-[#75534B]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <ShoppingCart className="h-6 w-6 text-[#75534B]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5C2F0E]/10 to-[#5C2F0E]/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <ShoppingCart className="h-6 w-6 text-[#5C2F0E]" />
                     </div>
-                    <h3 className="font-semibold text-[#2C2C2C] mb-1">{t.purchaseConfig}</h3>
-                    <p className="text-sm text-[#6E6B67]">Configure purchase settings</p>
+                    <h3 className="font-semibold text-[#2D363F] mb-1">{t.purchaseConfig}</h3>
+                    <p className="text-sm text-[#4E616F]">Configure purchase settings</p>
                   </Link>
                 </div>
               </div>
 
               {/* Sidebar */}
               <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.systemOverview}</h2>
+                <h2 className="text-lg font-semibold text-[#2D363F]">{t.systemOverview}</h2>
 
                 {/* System Health Card */}
-                <div className="bg-gradient-to-br from-[#75534B] to-[#5D423C] rounded-2xl p-6 text-white relative overflow-hidden">
+                <div className="bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] rounded-2xl p-6 text-white relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="relative">
                     <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4">
@@ -472,15 +472,15 @@ export default function HomePage() {
                 {/* Quick Link */}
                 <Link
                   href="/admin/orders"
-                  className="block bg-white rounded-2xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#75534B] transition-all group"
+                  className="block bg-white rounded-2xl p-5 border border-[#ABC0B9] shadow-sm hover:shadow-md hover:border-[#5C2F0E] transition-all group"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#75534B]/10 flex items-center justify-center group-hover:bg-[#75534B]/20 transition-colors">
-                      <ClipboardList className="h-5 w-5 text-[#75534B]" />
+                    <div className="w-11 h-11 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center group-hover:bg-[#5C2F0E]/20 transition-colors">
+                      <ClipboardList className="h-5 w-5 text-[#5C2F0E]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2C2C]">View Orders</h3>
-                      <p className="text-sm text-[#6E6B67]">Manage all orders</p>
+                      <h3 className="font-semibold text-[#2D363F]">View Orders</h3>
+                      <p className="text-sm text-[#4E616F]">Manage all orders</p>
                     </div>
                   </div>
                 </Link>
@@ -495,9 +495,9 @@ export default function HomePage() {
   // ============ PURCHASE ADMIN / SUPPLY CHAIN DASHBOARD ============
   if (user?.role === 'purchase_admin' || user?.role === 'supply_chain_manager') {
     return (
-      <div className="min-h-screen bg-[#F9F8F6]">
+      <div className="min-h-screen bg-[#FAFBFA]">
         {/* Hero Header */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#3A6EA5] via-[#4A7EB5] to-[#2D5A8A] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -515,9 +515,9 @@ export default function HomePage() {
               {/* Quick CTA Button */}
               <Link
                 href="/admin/orders"
-                className="inline-flex items-center gap-3 bg-white text-[#3A6EA5] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
+                className="inline-flex items-center gap-3 bg-white text-[#5C2F0E] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#3A6EA5]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-lg bg-[#5C2F0E]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <DollarSign className="h-5 w-5" />
                 </div>
                 {t.processOrders}
@@ -530,48 +530,48 @@ export default function HomePage() {
         <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <Clock className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Pending</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{pendingOrders.length}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.pendingOrders}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{pendingOrders.length}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.pendingOrders}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                     <ShoppingCart className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">In Cart</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">0</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.inCart}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">0</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.inCart}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                     <CheckCircle className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Done</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">0</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.purchased}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">0</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.purchased}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-sm">
                     <TrendingUp className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Monthly</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">$0</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.thisMonth}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">$0</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.thisMonth}</p>
               </div>
             </div>
           </div>
@@ -584,42 +584,42 @@ export default function HomePage() {
               {/* Pending Orders - Takes 2 columns */}
               <div className="lg:col-span-2">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.ordersToProcess}</h2>
-                  <Link href="/admin/orders" className="text-sm text-[#3A6EA5] hover:text-[#2D5A8A] font-medium flex items-center gap-1 transition-colors">
+                  <h2 className="text-lg font-semibold text-[#2D363F]">{t.ordersToProcess}</h2>
+                  <Link href="/admin/orders" className="text-sm text-[#5C2F0E] hover:text-[#2D363F] font-medium flex items-center gap-1 transition-colors">
                     {t.viewAllOrders} <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
 
                 {pendingOrders.length === 0 ? (
-                  <div className="bg-white rounded-2xl p-10 border border-[#E4E1DD] text-center shadow-sm">
+                  <div className="bg-white rounded-2xl p-10 border border-[#ABC0B9] text-center shadow-sm">
                     <div className="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center mx-auto mb-4">
                       <CheckCircle className="h-8 w-8 text-green-500" />
                     </div>
-                    <h3 className="text-lg font-semibold text-[#2C2C2C] mb-2">All caught up!</h3>
-                    <p className="text-[#6E6B67]">{t.noOrdersPending}</p>
+                    <h3 className="text-lg font-semibold text-[#2D363F] mb-2">All caught up!</h3>
+                    <p className="text-[#4E616F]">{t.noOrdersPending}</p>
                   </div>
                 ) : (
-                  <div className="bg-white rounded-2xl border border-[#E4E1DD] overflow-hidden shadow-sm">
+                  <div className="bg-white rounded-2xl border border-[#ABC0B9] overflow-hidden shadow-sm">
                     {pendingOrders.map((order, idx) => (
                       <Link
                         key={order.id}
                         href="/admin/orders"
-                        className={`block p-4 hover:bg-[#F9F8F6] transition-colors ${idx !== pendingOrders.length - 1 ? 'border-b border-[#E4E1DD]' : ''}`}
+                        className={`block p-4 hover:bg-[#FAFBFA] transition-colors ${idx !== pendingOrders.length - 1 ? 'border-b border-[#ABC0B9]' : ''}`}
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0">
-                            <Package className="h-5 w-5 text-[#6E6B67]" />
+                          <div className="w-12 h-12 rounded-xl bg-[#FAFBFA] border border-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                            <Package className="h-5 w-5 text-[#4E616F]" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <p className="font-semibold text-[#2C2C2C] text-sm">{order.po_number || order.request_number}</p>
+                              <p className="font-semibold text-[#2D363F] text-sm">{order.po_number || order.request_number}</p>
                               {getStatusBadge(order.status)}
                             </div>
-                            <p className="text-sm text-[#6E6B67] truncate">{order.requester?.name} • {order.product_title || `${order.product_count} items`}</p>
+                            <p className="text-sm text-[#4E616F] truncate">{order.requester?.name} • {order.product_title || `${order.product_count} items`}</p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="font-bold text-[#2C2C2C]">${((order.total_estimated || (order.estimated_price || 0) * order.quantity)).toLocaleString()}</p>
-                            <p className="text-xs text-[#9B9792]">{order.currency || 'MXN'}</p>
+                            <p className="font-bold text-[#2D363F]">${((order.total_estimated || (order.estimated_price || 0) * order.quantity)).toLocaleString()}</p>
+                            <p className="text-xs text-[#80959A]">{order.currency || 'MXN'}</p>
                           </div>
                         </div>
                       </Link>
@@ -630,12 +630,12 @@ export default function HomePage() {
 
               {/* Quick Actions Sidebar */}
               <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.quickActions}</h2>
+                <h2 className="text-lg font-semibold text-[#2D363F]">{t.quickActions}</h2>
 
                 {/* Main CTA */}
                 <Link
                   href="/admin/orders"
-                  className="block bg-gradient-to-br from-[#3A6EA5] to-[#2D5A8A] rounded-2xl p-6 text-white hover:shadow-xl transition-all group relative overflow-hidden"
+                  className="block bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] rounded-2xl p-6 text-white hover:shadow-xl transition-all group relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="relative">
@@ -650,30 +650,30 @@ export default function HomePage() {
                 {/* Secondary Actions */}
                 <Link
                   href="/purchase/new"
-                  className="block bg-white rounded-2xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#3A6EA5] transition-all group"
+                  className="block bg-white rounded-2xl p-5 border border-[#ABC0B9] shadow-sm hover:shadow-md hover:border-[#5C2F0E] transition-all group"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#3A6EA5]/10 flex items-center justify-center group-hover:bg-[#3A6EA5]/20 transition-colors">
-                      <Plus className="h-5 w-5 text-[#3A6EA5]" />
+                    <div className="w-11 h-11 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center group-hover:bg-[#5C2F0E]/20 transition-colors">
+                      <Plus className="h-5 w-5 text-[#5C2F0E]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2C2C]">{t.newPurchase}</h3>
-                      <p className="text-sm text-[#6E6B67]">Create new purchase request</p>
+                      <h3 className="font-semibold text-[#2D363F]">{t.newPurchase}</h3>
+                      <p className="text-sm text-[#4E616F]">Create new purchase request</p>
                     </div>
                   </div>
                 </Link>
 
                 <Link
                   href="/catalog"
-                  className="block bg-white rounded-2xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#3A6EA5] transition-all group"
+                  className="block bg-white rounded-2xl p-5 border border-[#ABC0B9] shadow-sm hover:shadow-md hover:border-[#5C2F0E] transition-all group"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#3A6EA5]/10 flex items-center justify-center group-hover:bg-[#3A6EA5]/20 transition-colors">
-                      <Package className="h-5 w-5 text-[#3A6EA5]" />
+                    <div className="w-11 h-11 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center group-hover:bg-[#5C2F0E]/20 transition-colors">
+                      <Package className="h-5 w-5 text-[#5C2F0E]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2C2C]">{t.viewCatalog}</h3>
-                      <p className="text-sm text-[#6E6B67]">Browse product catalog</p>
+                      <h3 className="font-semibold text-[#2D363F]">{t.viewCatalog}</h3>
+                      <p className="text-sm text-[#4E616F]">Browse product catalog</p>
                     </div>
                   </div>
                 </Link>
@@ -688,9 +688,9 @@ export default function HomePage() {
   // ============ GENERAL MANAGER DASHBOARD ============
   if (user?.role === 'general_manager') {
     return (
-      <div className="min-h-screen bg-[#F9F8F6]">
+      <div className="min-h-screen bg-[#FAFBFA]">
         {/* Hero Header */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#4BAF7E] via-[#5BC090] to-[#3A9068] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#80959A] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -707,9 +707,9 @@ export default function HomePage() {
               {/* Quick CTA Button */}
               <Link
                 href="/approvals"
-                className="inline-flex items-center gap-3 bg-white text-[#4BAF7E] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
+                className="inline-flex items-center gap-3 bg-white text-[#5C2F0E] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#4BAF7E]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-lg bg-[#5C2F0E]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <CheckSquare className="h-5 w-5" />
                 </div>
                 {t.reviewApprovals}
@@ -727,48 +727,48 @@ export default function HomePage() {
         <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <Clock className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Pending</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.pending || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.awaitingReview}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.pending || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.awaitingReview}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                     <CheckCircle className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Approved</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.approved || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.approvedThisMonth}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.approved || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.approvedThisMonth}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-sm">
                     <XCircle className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">Rejected</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.rejected || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.rejectedThisMonth}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.rejected || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.rejectedThisMonth}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-sm">
                     <DollarSign className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Total</span>
                 </div>
-                <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.total || 0}</p>
-                <p className="text-sm text-[#6E6B67] mt-1">{t.totalValue}</p>
+                <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.total || 0}</p>
+                <p className="text-sm text-[#4E616F] mt-1">{t.totalValue}</p>
               </div>
             </div>
           </div>
@@ -780,12 +780,12 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Main CTA Card - Takes 2 columns */}
               <div className="lg:col-span-2">
-                <h2 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.approvalsOverview}</h2>
+                <h2 className="text-lg font-semibold text-[#2D363F] mb-4">{t.approvalsOverview}</h2>
 
                 {/* Pending Approvals CTA */}
                 <Link
                   href="/approvals"
-                  className="block bg-gradient-to-br from-[#4BAF7E] to-[#3A9068] rounded-2xl p-8 text-white hover:shadow-xl transition-all group relative overflow-hidden"
+                  className="block bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] rounded-2xl p-8 text-white hover:shadow-xl transition-all group relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="absolute bottom-0 left-1/3 w-24 h-24 bg-white/5 rounded-full" />
@@ -823,20 +823,20 @@ export default function HomePage() {
 
               {/* Quick Actions Sidebar */}
               <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.quickActions}</h2>
+                <h2 className="text-lg font-semibold text-[#2D363F]">{t.quickActions}</h2>
 
                 {/* View All Approvals */}
                 <Link
                   href="/approvals"
-                  className="block bg-white rounded-2xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#4BAF7E] transition-all group"
+                  className="block bg-white rounded-2xl p-5 border border-[#ABC0B9] shadow-sm hover:shadow-md hover:border-[#5C2F0E] transition-all group"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#4BAF7E]/10 flex items-center justify-center group-hover:bg-[#4BAF7E]/20 transition-colors">
-                      <CheckSquare className="h-5 w-5 text-[#4BAF7E]" />
+                    <div className="w-11 h-11 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center group-hover:bg-[#5C2F0E]/20 transition-colors">
+                      <CheckSquare className="h-5 w-5 text-[#5C2F0E]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2C2C]">{t.viewAllApprovals}</h3>
-                      <p className="text-sm text-[#6E6B67]">Review all requests</p>
+                      <h3 className="font-semibold text-[#2D363F]">{t.viewAllApprovals}</h3>
+                      <p className="text-sm text-[#4E616F]">Review all requests</p>
                     </div>
                   </div>
                 </Link>
@@ -844,15 +844,15 @@ export default function HomePage() {
                 {/* View Analytics */}
                 <Link
                   href="/analytics"
-                  className="block bg-white rounded-2xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#4BAF7E] transition-all group"
+                  className="block bg-white rounded-2xl p-5 border border-[#ABC0B9] shadow-sm hover:shadow-md hover:border-[#5C2F0E] transition-all group"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#4BAF7E]/10 flex items-center justify-center group-hover:bg-[#4BAF7E]/20 transition-colors">
-                      <BarChart3 className="h-5 w-5 text-[#4BAF7E]" />
+                    <div className="w-11 h-11 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center group-hover:bg-[#5C2F0E]/20 transition-colors">
+                      <BarChart3 className="h-5 w-5 text-[#5C2F0E]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2C2C]">{t.viewAnalytics}</h3>
-                      <p className="text-sm text-[#6E6B67]">View reports and trends</p>
+                      <h3 className="font-semibold text-[#2D363F]">{t.viewAnalytics}</h3>
+                      <p className="text-sm text-[#4E616F]">View reports and trends</p>
                     </div>
                   </div>
                 </Link>
@@ -881,9 +881,9 @@ export default function HomePage() {
 
   // ============ EMPLOYEE DASHBOARD (default) ============
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#75534B] via-[#8A6056] to-[#5D423C] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -900,9 +900,9 @@ export default function HomePage() {
             {/* Quick Create Button in Header */}
             <Link
               href="/purchase/new"
-              className="inline-flex items-center gap-3 bg-white text-[#75534B] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
+              className="inline-flex items-center gap-3 bg-white text-[#5C2F0E] px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg hover:shadow-xl group"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#75534B]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-8 h-8 rounded-lg bg-[#5C2F0E]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Plus className="h-5 w-5" />
               </div>
               {t.createRequest}
@@ -915,48 +915,48 @@ export default function HomePage() {
       <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                   <FileText className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{t.totalBadge}</span>
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.length}</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.activeRequests}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{myRequests.length}</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.activeRequests}</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                   <Clock className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">{t.waitingBadge}</span>
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'pending').length}</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.pending}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{myRequests.filter(r => r.status === 'pending').length}</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.pending}</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                   <CheckCircle className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">{t.readyBadge}</span>
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'approved' || r.status === 'purchased').length}</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.approved}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{myRequests.filter(r => r.status === 'approved' || r.status === 'purchased').length}</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.approved}</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md hover:shadow-lg transition-shadow">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-sm">
                   <XCircle className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{t.rejectedBadge}</span>
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{myRequests.filter(r => r.status === 'rejected').length}</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.rejected}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{myRequests.filter(r => r.status === 'rejected').length}</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.rejected}</p>
             </div>
           </div>
         </div>
@@ -970,60 +970,60 @@ export default function HomePage() {
             {/* Recent Requests - Takes 2 columns */}
             <div className="lg:col-span-2">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.recentRequests}</h2>
-                <Link href="/requests" className="text-sm text-[#75534B] hover:text-[#5D423C] font-medium flex items-center gap-1 transition-colors">
+                <h2 className="text-lg font-semibold text-[#2D363F]">{t.recentRequests}</h2>
+                <Link href="/requests" className="text-sm text-[#5C2F0E] hover:text-[#2D363F] font-medium flex items-center gap-1 transition-colors">
                   {t.viewAll} <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
 
               {myRequests.length === 0 ? (
-                <div className="bg-white rounded-2xl p-10 border border-[#E4E1DD] text-center shadow-sm">
-                  <div className="w-16 h-16 rounded-2xl bg-[#F9F8F6] flex items-center justify-center mx-auto mb-4">
-                    <FileText className="h-8 w-8 text-[#9B9792]" />
+                <div className="bg-white rounded-2xl p-10 border border-[#ABC0B9] text-center shadow-sm">
+                  <div className="w-16 h-16 rounded-2xl bg-[#FAFBFA] flex items-center justify-center mx-auto mb-4">
+                    <FileText className="h-8 w-8 text-[#80959A]" />
                   </div>
-                  <h3 className="text-lg font-semibold text-[#2C2C2C] mb-2">{t.noRequestsTitle}</h3>
-                  <p className="text-[#6E6B67] mb-6 max-w-sm mx-auto">{t.noRequests}</p>
+                  <h3 className="text-lg font-semibold text-[#2D363F] mb-2">{t.noRequestsTitle}</h3>
+                  <p className="text-[#4E616F] mb-6 max-w-sm mx-auto">{t.noRequests}</p>
                   <Link
                     href="/purchase/new"
-                    className="inline-flex items-center gap-2 bg-[#75534B] text-white px-5 py-2.5 rounded-xl font-medium hover:bg-[#5D423C] transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#5C2F0E] text-white px-5 py-2.5 rounded-xl font-medium hover:bg-[#2D363F] transition-colors"
                   >
                     <Plus className="h-4 w-4" />
                     {t.createRequest}
                   </Link>
                 </div>
               ) : (
-                <div className="bg-white rounded-2xl border border-[#E4E1DD] overflow-hidden shadow-sm">
+                <div className="bg-white rounded-2xl border border-[#ABC0B9] overflow-hidden shadow-sm">
                   {myRequests.slice(0, 5).map((request, idx) => (
                     <Link
                       key={request.id}
                       href="/requests"
-                      className={`block p-4 hover:bg-[#F9F8F6] transition-colors ${idx !== Math.min(myRequests.length, 5) - 1 ? 'border-b border-[#E4E1DD]' : ''}`}
+                      className={`block p-4 hover:bg-[#FAFBFA] transition-colors ${idx !== Math.min(myRequests.length, 5) - 1 ? 'border-b border-[#ABC0B9]' : ''}`}
                     >
                       <div className="flex items-center gap-4">
                         {/* Product Image/Icon */}
-                        <div className="w-12 h-12 rounded-xl bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        <div className="w-12 h-12 rounded-xl bg-[#FAFBFA] border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
                           {request.product_image_url ? (
                             <img src={request.product_image_url} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <Package className="h-5 w-5 text-[#9B9792]" />
+                            <Package className="h-5 w-5 text-[#80959A]" />
                           )}
                         </div>
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <p className="font-semibold text-[#2C2C2C] text-sm">{request.request_number}</p>
+                            <p className="font-semibold text-[#2D363F] text-sm">{request.request_number}</p>
                             {getStatusBadge(request.status)}
                           </div>
-                          <p className="text-sm text-[#6E6B67] truncate">{request.product_title || `${request.product_count} ${t.products}`}</p>
+                          <p className="text-sm text-[#4E616F] truncate">{request.product_title || `${request.product_count} ${t.products}`}</p>
                         </div>
 
                         {/* Price */}
                         <div className="text-right flex-shrink-0">
-                          <p className="font-bold text-[#2C2C2C]">
+                          <p className="font-bold text-[#2D363F]">
                             ${((request.estimated_price || 0) * request.quantity).toLocaleString()}
                           </p>
-                          <p className="text-xs text-[#9B9792]">{request.currency || 'MXN'}</p>
+                          <p className="text-xs text-[#80959A]">{request.currency || 'MXN'}</p>
                         </div>
                       </div>
                     </Link>
@@ -1034,12 +1034,12 @@ export default function HomePage() {
 
             {/* Quick Actions Sidebar */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.quickActions}</h2>
+              <h2 className="text-lg font-semibold text-[#2D363F]">{t.quickActions}</h2>
 
               {/* Main CTA */}
               <Link
                 href="/purchase/new"
-                className="block bg-gradient-to-br from-[#75534B] to-[#5D423C] rounded-2xl p-6 text-white hover:shadow-xl transition-all group relative overflow-hidden"
+                className="block bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] rounded-2xl p-6 text-white hover:shadow-xl transition-all group relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="relative">
@@ -1054,15 +1054,15 @@ export default function HomePage() {
               {/* Secondary Action */}
               <Link
                 href="/requests"
-                className="block bg-white rounded-2xl p-5 border border-[#E4E1DD] shadow-sm hover:shadow-md hover:border-[#75534B] transition-all group"
+                className="block bg-white rounded-2xl p-5 border border-[#ABC0B9] shadow-sm hover:shadow-md hover:border-[#5C2F0E] transition-all group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[#75534B]/10 flex items-center justify-center group-hover:bg-[#75534B]/20 transition-colors">
-                    <ClipboardList className="h-5 w-5 text-[#75534B]" />
+                  <div className="w-11 h-11 rounded-xl bg-[#5C2F0E]/10 flex items-center justify-center group-hover:bg-[#5C2F0E]/20 transition-colors">
+                    <ClipboardList className="h-5 w-5 text-[#5C2F0E]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#2C2C2C]">{t.viewMyRequests}</h3>
-                    <p className="text-sm text-[#6E6B67]">{t.viewFullHistory}</p>
+                    <h3 className="font-semibold text-[#2D363F]">{t.viewMyRequests}</h3>
+                    <p className="text-sm text-[#4E616F]">{t.viewFullHistory}</p>
                   </div>
                 </div>
               </Link>

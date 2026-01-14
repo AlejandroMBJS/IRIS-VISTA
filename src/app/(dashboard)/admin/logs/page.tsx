@@ -357,7 +357,7 @@ export default function ActivityLogsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <RefreshCw className="h-8 w-8 animate-spin text-[#75534B]" />
+        <RefreshCw className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
@@ -402,7 +402,7 @@ export default function ActivityLogsPage() {
             <p className="text-2xl font-bold text-gray-900">{stats.unique_users.toLocaleString()}</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-4">
-            <div className="flex items-center gap-2 text-[#75534B] mb-2">
+            <div className="flex items-center gap-2 text-[#5C2F0E] mb-2">
               <LogIn className="h-5 w-5" />
               <span className="text-sm font-medium">{t.stats.todayLogins}</span>
             </div>
@@ -424,7 +424,7 @@ export default function ActivityLogsPage() {
           onClick={() => setActiveTab('all')}
           className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'all'
-              ? 'border-[#75534B] text-[#75534B]'
+              ? 'border-[#5C2F0E] text-[#5C2F0E]'
               : 'border-transparent text-gray-500 hover:text-gray-700'
           }`}
         >
@@ -434,7 +434,7 @@ export default function ActivityLogsPage() {
           onClick={() => setActiveTab('sessions')}
           className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'sessions'
-              ? 'border-[#75534B] text-[#75534B]'
+              ? 'border-[#5C2F0E] text-[#5C2F0E]'
               : 'border-transparent text-gray-500 hover:text-gray-700'
           }`}
         >
@@ -460,7 +460,7 @@ export default function ActivityLogsPage() {
                       setSearchQuery(e.target.value);
                       setPage(1);
                     }}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
                 </div>
               </div>
@@ -472,7 +472,7 @@ export default function ActivityLogsPage() {
                   setFilters({ ...filters, type: e.target.value || undefined });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               >
                 <option value="">{t.filters.all}</option>
                 <option value="login">{t.filters.login}</option>
@@ -492,7 +492,7 @@ export default function ActivityLogsPage() {
                   });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               >
                 <option value="">{t.filters.success}</option>
                 <option value="true">{t.filters.successful}</option>
@@ -507,7 +507,7 @@ export default function ActivityLogsPage() {
                   setFilters({ ...filters, start_date: e.target.value || undefined });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
               <input
                 type="date"
@@ -516,7 +516,7 @@ export default function ActivityLogsPage() {
                   setFilters({ ...filters, end_date: e.target.value || undefined });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
 
               {/* Clear Filters */}
@@ -534,7 +534,7 @@ export default function ActivityLogsPage() {
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             {loadingLogs ? (
               <div className="flex items-center justify-center py-12">
-                <RefreshCw className="h-6 w-6 animate-spin text-[#75534B]" />
+                <RefreshCw className="h-6 w-6 animate-spin text-[#5C2F0E]" />
               </div>
             ) : logs.length === 0 ? (
               <div className="flex items-center justify-center py-12">

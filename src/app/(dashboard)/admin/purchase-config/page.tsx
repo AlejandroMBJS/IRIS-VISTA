@@ -177,8 +177,8 @@ export default function PurchaseConfigPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F9F8F6]">
-        <div className="flex items-center gap-3 text-[#6E6B67]">
+      <div className="flex min-h-screen items-center justify-center bg-[#FAFBFA]">
+        <div className="flex items-center gap-3 text-[#4E616F]">
           <Loader2 className="h-6 w-6 animate-spin" />
           <span>Loading configuration...</span>
         </div>
@@ -188,34 +188,34 @@ export default function PurchaseConfigPage() {
 
   if (!config) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F9F8F6]">
+      <div className="flex min-h-screen items-center justify-center bg-[#FAFBFA]">
         <div className="text-center">
-          <AlertCircle className="mx-auto h-12 w-12 text-[#D1625B]" />
-          <p className="mt-4 text-[#6E6B67]">{t.loadError}</p>
+          <AlertCircle className="mx-auto h-12 w-12 text-[#AA2F0D]" />
+          <p className="mt-4 text-[#4E616F]">{t.loadError}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <div className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6">
+      <div className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E08A4B] to-[#D47A3B]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E95F20] to-[#D47A3B]">
               <ShoppingCart className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[#2C2C2C]">{t.title}</h1>
-              <p className="text-sm text-[#6E6B67]">{t.subtitle}</p>
+              <h1 className="text-2xl font-bold text-[#2D363F]">{t.title}</h1>
+              <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
             </div>
           </div>
 
           {/* Save button */}
           <div className="flex items-center gap-4">
             {hasChanges && (
-              <div className="flex items-center gap-2 text-[#E08A4B]">
+              <div className="flex items-center gap-2 text-[#E95F20]">
                 <AlertCircle className="h-4 w-4" />
                 <span className="text-sm">{t.unsavedChanges}</span>
               </div>
@@ -223,7 +223,7 @@ export default function PurchaseConfigPage() {
             <button
               onClick={handleSave}
               disabled={isSaving || !hasChanges}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -240,8 +240,8 @@ export default function PurchaseConfigPage() {
           <div
             className={`mt-4 flex items-center gap-2 rounded-lg px-4 py-3 ${
               message.type === 'success'
-                ? 'bg-[#4BAF7E]/10 text-[#4BAF7E]'
-                : 'bg-[#D1625B]/10 text-[#D1625B]'
+                ? 'bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                : 'bg-[#AA2F0D]/10 text-[#AA2F0D]'
             }`}
           >
             {message.type === 'success' ? (
@@ -264,8 +264,8 @@ export default function PurchaseConfigPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-[#75534B] text-white'
-                    : 'text-[#6E6B67] hover:bg-[#E4E1DD]/50'
+                    ? 'bg-[#5C2F0E] text-white'
+                    : 'text-[#4E616F] hover:bg-[#ABC0B9]/50'
                 }`}
               >
                 <Icon className="h-4 w-4" />

@@ -26,6 +26,7 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { approvalsApi } from '@/lib/api';
+import { getTranslatedText } from '@/lib/translations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -463,7 +464,7 @@ export default function ApprovalsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
@@ -472,14 +473,14 @@ export default function ApprovalsPage() {
   const urgentCount = approvals.filter(a => a.urgency === 'urgent' && a.status === 'pending').length;
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl md:text-4xl text-[#2C2C2C] font-semibold">
+                <h1 className="text-2xl md:text-4xl text-[#2D363F] font-semibold">
                   {t.title}
                 </h1>
                 {pendingCount > 0 && (
@@ -488,7 +489,7 @@ export default function ApprovalsPage() {
                   </Badge>
                 )}
               </div>
-              <p className="text-sm md:text-base text-[#6E6B67] mt-1">{t.subtitle}</p>
+              <p className="text-sm md:text-base text-[#4E616F] mt-1">{t.subtitle}</p>
             </div>
             <Button
               variant="outline"
@@ -516,8 +517,8 @@ export default function ApprovalsPage() {
                   onClick={() => setSelectedTab(tab)}
                   className={`whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
                     selectedTab === tab
-                      ? 'bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white shadow-sm'
-                      : 'bg-white text-[#6E6B67] border border-[#E4E1DD] hover:bg-[#F9F8F6]'
+                      ? 'bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white shadow-sm'
+                      : 'bg-white text-[#4E616F] border border-[#ABC0B9] hover:bg-[#FAFBFA]'
                   }`}
                 >
                   {t.statuses[tab]}
@@ -538,8 +539,8 @@ export default function ApprovalsPage() {
                   onClick={() => setShowMyActions(!showMyActions)}
                   className={`whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-all flex items-center gap-2 ${
                     showMyActions
-                      ? 'bg-[#75534B] text-white'
-                      : 'bg-white text-[#6E6B67] border border-[#E4E1DD] hover:bg-[#F9F8F6]'
+                      ? 'bg-[#5C2F0E] text-white'
+                      : 'bg-white text-[#4E616F] border border-[#ABC0B9] hover:bg-[#FAFBFA]'
                   }`}
                   title={t.myApprovalsHint}
                 >
@@ -565,9 +566,9 @@ export default function ApprovalsPage() {
 
           {/* Approvals List */}
           {filteredApprovals.length === 0 ? (
-            <div className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] p-12 text-center">
-              <CheckSquare className="h-12 w-12 text-[#E4E1DD] mx-auto mb-4" />
-              <p className="text-[#6E6B67]">{t.noApprovals}</p>
+            <div className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] p-12 text-center">
+              <CheckSquare className="h-12 w-12 text-[#ABC0B9] mx-auto mb-4" />
+              <p className="text-[#4E616F]">{t.noApprovals}</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -578,13 +579,13 @@ export default function ApprovalsPage() {
                 return (
                   <div
                     key={approval.id}
-                    className="rounded-lg bg-white shadow-sm border border-[#E4E1DD] overflow-hidden hover:shadow-md transition-shadow"
+                    className="rounded-lg bg-white shadow-sm border border-[#ABC0B9] overflow-hidden hover:shadow-md transition-shadow"
                   >
                     {/* Card Header */}
-                    <div className="p-4 md:p-6 border-b border-[#E4E1DD]">
+                    <div className="p-4 md:p-6 border-b border-[#ABC0B9]">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-semibold text-[#2C2C2C]">
+                          <span className="text-lg font-semibold text-[#2D363F]">
                             {getDisplayNumber(approval)}
                           </span>
                           {approval.urgency === 'urgent' && (
@@ -594,7 +595,7 @@ export default function ApprovalsPage() {
                           )}
                           {getStatusBadge(approval.status)}
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-[#6E6B67]">
+                        <div className="flex items-center gap-4 text-sm text-[#4E616F]">
                           <span className="flex items-center gap-1">
                             <User className="h-4 w-4" />
                             {approval.requester?.name || 'Unknown'}
@@ -615,18 +616,18 @@ export default function ApprovalsPage() {
 
                     {/* Products Preview */}
                     <div className="p-4 md:p-6">
-                      <p className="text-sm font-medium text-[#6E6B67] mb-3">
+                      <p className="text-sm font-medium text-[#4E616F] mb-3">
                         {t.products} ({items.length}):
                       </p>
                       <div className="space-y-3">
                         {items.slice(0, 3).map((item, idx) => (
                           <div
                             key={idx}
-                            className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]"
+                            className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]"
                           >
                             {/* Product Image */}
                             {item.product_image_url ? (
-                              <div className="w-16 h-16 rounded bg-white border border-[#E4E1DD] overflow-hidden flex-shrink-0">
+                              <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                                 <Image
                                   src={item.product_image_url}
                                   alt={item.product_title}
@@ -637,20 +638,20 @@ export default function ApprovalsPage() {
                                 />
                               </div>
                             ) : (
-                              <div className="w-16 h-16 rounded bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
-                                <Package className="h-6 w-6 text-[#6E6B67]" />
+                              <div className="w-16 h-16 rounded bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                                <Package className="h-6 w-6 text-[#4E616F]" />
                               </div>
                             )}
 
                             {/* Product Info */}
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-[#2C2C2C] truncate">
+                              <p className="font-medium text-[#2D363F] truncate">
                                 {item.product_title}
                               </p>
-                              <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#6E6B67]">
+                              <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#4E616F]">
                                 <span>{t.quantity}: {item.quantity}</span>
                                 {item.estimated_price && (
-                                  <span className="font-medium text-[#75534B]">
+                                  <span className="font-medium text-[#5C2F0E]">
                                     {item.currency || approval.currency || 'MXN'} ${((item.estimated_price || 0) * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                   </span>
                                 )}
@@ -664,7 +665,7 @@ export default function ApprovalsPage() {
                           </div>
                         ))}
                         {items.length > 3 && (
-                          <div className="flex items-center justify-center py-2 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] text-sm font-medium text-[#6E6B67]">
+                          <div className="flex items-center justify-center py-2 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] text-sm font-medium text-[#4E616F]">
                             +{items.length - 3} {t.products.toLowerCase()}
                           </div>
                         )}
@@ -672,17 +673,17 @@ export default function ApprovalsPage() {
 
                       {/* Justification Preview */}
                       {approval.justification && (
-                        <div className="mt-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]">
-                          <p className="text-sm text-[#6E6B67] line-clamp-2">
-                            {approval.justification}
+                        <div className="mt-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]">
+                          <p className="text-sm text-[#4E616F] line-clamp-2">
+                            {getTranslatedText(approval.justification_translated, approval.justification, language)}
                           </p>
                         </div>
                       )}
                     </div>
 
                     {/* Card Footer */}
-                    <div className="px-4 md:px-6 py-4 bg-[#F9F8F6] border-t border-[#E4E1DD] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                      <div className="text-lg font-semibold text-[#75534B]">
+                    <div className="px-4 md:px-6 py-4 bg-[#FAFBFA] border-t border-[#ABC0B9] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                      <div className="text-lg font-semibold text-[#5C2F0E]">
                         {t.total}: {approval.currency}${totals.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </div>
                       <div className="flex gap-2">
@@ -731,7 +732,7 @@ export default function ApprovalsPage() {
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="w-full max-w-4xl my-8 rounded-xl bg-white shadow-2xl">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-[#75534B] to-[#5D423C] p-4 md:p-6 rounded-t-xl flex items-center justify-between z-10">
+            <div className="sticky top-0 bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-4 md:p-6 rounded-t-xl flex items-center justify-between z-10">
               <div>
                 <div className="flex items-center gap-3">
                   <h2 className="text-xl md:text-2xl text-white font-semibold">
@@ -761,27 +762,27 @@ export default function ApprovalsPage() {
             {/* Modal Content */}
             <div className="p-4 md:p-6 space-y-6 max-h-[70vh] overflow-y-auto">
               {/* Requester Info */}
-              <div className="rounded-lg bg-[#F9F8F6] p-4 border border-[#E4E1DD]">
-                <h3 className="text-sm font-semibold text-[#2C2C2C] mb-3 flex items-center gap-2">
+              <div className="rounded-lg bg-[#FAFBFA] p-4 border border-[#ABC0B9]">
+                <h3 className="text-sm font-semibold text-[#2D363F] mb-3 flex items-center gap-2">
                   <User className="h-4 w-4" />
                   {t.requesterInfo}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
-                    <p className="text-[#6E6B67]">{t.requester}</p>
-                    <p className="font-medium text-[#2C2C2C]">{selectedApproval.requester?.name}</p>
+                    <p className="text-[#4E616F]">{t.requester}</p>
+                    <p className="font-medium text-[#2D363F]">{selectedApproval.requester?.name}</p>
                   </div>
                   <div>
-                    <p className="text-[#6E6B67]">{t.employeeNumber}</p>
-                    <p className="font-medium text-[#2C2C2C]">{selectedApproval.requester?.employee_number}</p>
+                    <p className="text-[#4E616F]">{t.employeeNumber}</p>
+                    <p className="font-medium text-[#2D363F]">{selectedApproval.requester?.employee_number}</p>
                   </div>
                   <div>
-                    <p className="text-[#6E6B67]">{t.department}</p>
-                    <p className="font-medium text-[#2C2C2C]">{selectedApproval.requester?.department || '-'}</p>
+                    <p className="text-[#4E616F]">{t.department}</p>
+                    <p className="font-medium text-[#2D363F]">{selectedApproval.requester?.department || '-'}</p>
                   </div>
                   <div>
-                    <p className="text-[#6E6B67]">{t.date}</p>
-                    <p className="font-medium text-[#2C2C2C]">
+                    <p className="text-[#4E616F]">{t.date}</p>
+                    <p className="font-medium text-[#2D363F]">
                       {new Date(selectedApproval.created_at).toLocaleDateString()} ({getTimeAgo(selectedApproval.created_at)})
                     </p>
                   </div>
@@ -790,7 +791,7 @@ export default function ApprovalsPage() {
 
               {/* Products */}
               <div>
-                <h3 className="text-lg font-semibold text-[#2C2C2C] mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[#2D363F] mb-4 flex items-center gap-2">
                   <ShoppingBag className="h-5 w-5" />
                   {t.productDetails} ({getProductItems(selectedApproval).length})
                 </h3>
@@ -798,12 +799,12 @@ export default function ApprovalsPage() {
                   {getProductItems(selectedApproval).map((item, idx) => (
                     <div
                       key={idx}
-                      className="rounded-lg border border-[#E4E1DD] bg-white overflow-hidden"
+                      className="rounded-lg border border-[#ABC0B9] bg-white overflow-hidden"
                     >
                       <div className="p-4 flex gap-4">
                         {/* Product Image */}
                         {item.product_image_url ? (
-                          <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] overflow-hidden flex-shrink-0">
+                          <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                             <Image
                               src={item.product_image_url}
                               alt={item.product_title}
@@ -814,15 +815,15 @@ export default function ApprovalsPage() {
                             />
                           </div>
                         ) : (
-                          <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] flex items-center justify-center flex-shrink-0">
-                            <Package className="h-10 w-10 text-[#6E6B67]" />
+                          <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                            <Package className="h-10 w-10 text-[#4E616F]" />
                           </div>
                         )}
 
                         {/* Product Details */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2">
-                            <h4 className="font-semibold text-[#2C2C2C] line-clamp-2">
+                            <h4 className="font-semibold text-[#2D363F] line-clamp-2">
                               {idx + 1}. {item.product_title}
                             </h4>
                             <Badge
@@ -834,25 +835,25 @@ export default function ApprovalsPage() {
                           </div>
 
                           {item.product_description && (
-                            <p className="text-sm text-[#6E6B67] mt-1 line-clamp-2">
+                            <p className="text-sm text-[#4E616F] mt-1 line-clamp-2">
                               {item.product_description}
                             </p>
                           )}
 
                           <div className="mt-3 flex flex-wrap gap-4 text-sm">
                             <div>
-                              <span className="text-[#6E6B67]">{t.unitPrice}: </span>
-                              <span className="font-semibold text-[#2C2C2C]">
+                              <span className="text-[#4E616F]">{t.unitPrice}: </span>
+                              <span className="font-semibold text-[#2D363F]">
                                 {item.currency}${(item.estimated_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                               </span>
                             </div>
                             <div>
-                              <span className="text-[#6E6B67]">{t.quantity}: </span>
-                              <span className="font-semibold text-[#2C2C2C]">{item.quantity}</span>
+                              <span className="text-[#4E616F]">{t.quantity}: </span>
+                              <span className="font-semibold text-[#2D363F]">{item.quantity}</span>
                             </div>
                             <div>
-                              <span className="text-[#6E6B67]">{t.subtotal}: </span>
-                              <span className="font-semibold text-[#75534B]">
+                              <span className="text-[#4E616F]">{t.subtotal}: </span>
+                              <span className="font-semibold text-[#5C2F0E]">
                                 {item.currency}${((item.estimated_price || 0) * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                               </span>
                             </div>
@@ -877,8 +878,8 @@ export default function ApprovalsPage() {
               </div>
 
               {/* Financial Summary */}
-              <div className="rounded-lg bg-[#F9F8F6] p-4 border border-[#E4E1DD]">
-                <h3 className="text-sm font-semibold text-[#2C2C2C] mb-3">
+              <div className="rounded-lg bg-[#FAFBFA] p-4 border border-[#ABC0B9]">
+                <h3 className="text-sm font-semibold text-[#2D363F] mb-3">
                   {t.financialSummary}
                 </h3>
                 {(() => {
@@ -887,7 +888,7 @@ export default function ApprovalsPage() {
                     <div className="space-y-2 text-sm">
                       {totals.catalogCount > 0 && (
                         <div className="flex justify-between">
-                          <span className="text-[#6E6B67]">
+                          <span className="text-[#4E616F]">
                             {t.catalogProducts} ({totals.catalogCount})
                           </span>
                           <span className="font-medium">{selectedApproval.currency}${totals.catalogTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
@@ -895,15 +896,15 @@ export default function ApprovalsPage() {
                       )}
                       {totals.externalCount > 0 && (
                         <div className="flex justify-between">
-                          <span className="text-[#6E6B67]">
+                          <span className="text-[#4E616F]">
                             {t.externalProducts} ({totals.externalCount})
                           </span>
                           <span className="font-medium">{selectedApproval.currency}${totals.externalTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                         </div>
                       )}
-                      <div className="border-t border-[#E4E1DD] pt-2 flex justify-between">
-                        <span className="font-semibold text-[#2C2C2C]">{t.totalEstimated}</span>
-                        <span className="font-bold text-lg text-[#75534B]">
+                      <div className="border-t border-[#ABC0B9] pt-2 flex justify-between">
+                        <span className="font-semibold text-[#2D363F]">{t.totalEstimated}</span>
+                        <span className="font-bold text-lg text-[#5C2F0E]">
                           {selectedApproval.currency}${totals.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </span>
                       </div>
@@ -914,26 +915,26 @@ export default function ApprovalsPage() {
 
               {/* Justification */}
               {selectedApproval.justification && (
-                <div className="rounded-lg bg-[#F9F8F6] p-4 border border-[#E4E1DD]">
-                  <h3 className="text-sm font-semibold text-[#2C2C2C] mb-2 flex items-center gap-2">
+                <div className="rounded-lg bg-[#FAFBFA] p-4 border border-[#ABC0B9]">
+                  <h3 className="text-sm font-semibold text-[#2D363F] mb-2 flex items-center gap-2">
                     <MessageSquare className="h-4 w-4" />
                     {t.justification}
                   </h3>
-                  <p className="text-sm text-[#2C2C2C] whitespace-pre-wrap">
-                    {selectedApproval.justification}
+                  <p className="text-sm text-[#2D363F] whitespace-pre-wrap">
+                    {getTranslatedText(selectedApproval.justification_translated, selectedApproval.justification, language)}
                   </p>
                 </div>
               )}
 
               {/* Admin/Internal Notes - visible to GM, admin, purchase_admin */}
               {selectedApproval.admin_notes && (
-                <div className="rounded-lg bg-[#75534B]/5 p-4 border border-[#75534B]/20">
-                  <h3 className="text-sm font-semibold text-[#75534B] mb-2 flex items-center gap-2">
+                <div className="rounded-lg bg-[#5C2F0E]/5 p-4 border border-[#5C2F0E]/20">
+                  <h3 className="text-sm font-semibold text-[#5C2F0E] mb-2 flex items-center gap-2">
                     <MessageSquare className="h-4 w-4" />
                     Internal Notes
                   </h3>
-                  <p className="text-sm text-[#6E6B67] whitespace-pre-wrap">
-                    {selectedApproval.admin_notes}
+                  <p className="text-sm text-[#4E616F] whitespace-pre-wrap">
+                    {getTranslatedText(selectedApproval.admin_notes_translated, selectedApproval.admin_notes, language)}
                   </p>
                 </div>
               )}
@@ -941,14 +942,14 @@ export default function ApprovalsPage() {
               {/* Workflow History */}
               {selectedApproval.history && selectedApproval.history.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-[#2C2C2C] mb-3">
+                  <h3 className="text-sm font-semibold text-[#2D363F] mb-3">
                     {t.approvalWorkflow}
                   </h3>
                   <div className="relative">
                     {selectedApproval.history.map((step, idx) => (
                       <div key={idx} className="relative flex gap-3 pb-4 last:pb-0">
                         {idx < selectedApproval.history!.length - 1 && (
-                          <div className="absolute left-4 top-8 w-0.5 h-full -translate-x-1/2 bg-[#E4E1DD]" />
+                          <div className="absolute left-4 top-8 w-0.5 h-full -translate-x-1/2 bg-[#ABC0B9]" />
                         )}
                         <div
                           className={`flex h-8 w-8 items-center justify-center rounded-full flex-shrink-0 z-10 ${
@@ -956,7 +957,7 @@ export default function ApprovalsPage() {
                               ? 'bg-green-500'
                               : step.new_status === 'rejected'
                               ? 'bg-red-500'
-                              : 'bg-[#E4E1DD]'
+                              : 'bg-[#ABC0B9]'
                           }`}
                         >
                           {step.new_status === 'approved' ? (
@@ -964,19 +965,19 @@ export default function ApprovalsPage() {
                           ) : step.new_status === 'rejected' ? (
                             <X className="h-4 w-4 text-white" />
                           ) : (
-                            <Clock className="h-4 w-4 text-[#6E6B67]" />
+                            <Clock className="h-4 w-4 text-[#4E616F]" />
                           )}
                         </div>
-                        <div className="flex-1 bg-[#F9F8F6] rounded-lg p-3 border border-[#E4E1DD]">
+                        <div className="flex-1 bg-[#FAFBFA] rounded-lg p-3 border border-[#ABC0B9]">
                           <div className="flex items-start justify-between">
-                            <p className="text-sm font-medium text-[#2C2C2C]">{step.action}</p>
-                            <p className="text-xs text-[#6E6B67]">
+                            <p className="text-sm font-medium text-[#2D363F]">{step.action}</p>
+                            <p className="text-xs text-[#4E616F]">
                               {new Date(step.created_at).toLocaleString()}
                             </p>
                           </div>
-                          <p className="text-xs text-[#6E6B67]">{step.user?.name || 'System'}</p>
+                          <p className="text-xs text-[#4E616F]">{step.user?.name || 'System'}</p>
                           {step.comment && (
-                            <p className="text-sm text-[#2C2C2C] mt-2 bg-white p-2 rounded border border-[#E4E1DD]">
+                            <p className="text-sm text-[#2D363F] mt-2 bg-white p-2 rounded border border-[#ABC0B9]">
                               {step.comment}
                             </p>
                           )}
@@ -989,18 +990,18 @@ export default function ApprovalsPage() {
 
               {/* Decision Section */}
               {selectedApproval.status === 'pending' && canApprove && (
-                <div className="rounded-lg bg-[#F9F8F6] p-4 md:p-6 border border-[#E4E1DD]">
-                  <h3 className="text-lg text-[#2C2C2C] mb-4 font-semibold">{t.addComment}</h3>
+                <div className="rounded-lg bg-[#FAFBFA] p-4 md:p-6 border border-[#ABC0B9]">
+                  <h3 className="text-lg text-[#2D363F] mb-4 font-semibold">{t.addComment}</h3>
 
                   <textarea
                     rows={4}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder={t.commentPlaceholder}
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
-                  <p className="mt-2 text-xs text-[#6E6B67] flex items-center gap-1">
-                    <span className="text-[#D1625B]">*</span>
+                  <p className="mt-2 text-xs text-[#4E616F] flex items-center gap-1">
+                    <span className="text-[#AA2F0D]">*</span>
                     {t.rejectHint}
                   </p>
 

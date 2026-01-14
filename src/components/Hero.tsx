@@ -11,7 +11,7 @@ export function Hero({ language }: HeroProps) {
       search: 'Search for forms, materials, services...',
       actions: [
         { icon: ShoppingBag, label: 'Amazon Purchase', color: '#FF9900' },
-        { icon: Package, label: 'Regular Purchase (PR/PO)', color: '#75534B' },
+        { icon: Package, label: 'Regular Purchase (PR/PO)', color: '#5C2F0E' },
         { icon: Shield, label: 'PPE Request', color: '#10B981' },
         { icon: Zap, label: 'Non-Amazon Spot Purchase', color: '#F59E0B' },
         { icon: Laptop, label: 'IT Request', color: '#3B82F6' },
@@ -23,7 +23,7 @@ export function Hero({ language }: HeroProps) {
       search: '搜索表单、物料、服务...',
       actions: [
         { icon: ShoppingBag, label: '亚马逊采购', color: '#FF9900' },
-        { icon: Package, label: '常规采购 (PR/PO)', color: '#75534B' },
+        { icon: Package, label: '常规采购 (PR/PO)', color: '#5C2F0E' },
         { icon: Shield, label: 'PPE 请求', color: '#10B981' },
         { icon: Zap, label: '非亚马逊现货采购', color: '#F59E0B' },
         { icon: Laptop, label: 'IT 请求', color: '#3B82F6' },
@@ -45,7 +45,7 @@ export function Hero({ language }: HeroProps) {
             <input
               type="text"
               placeholder={t.search}
-              className="w-full rounded-xl border border-gray-200 bg-white py-4 pl-14 pr-4 text-base shadow-sm transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 focus:shadow-md"
+              className="w-full rounded-xl border border-gray-200 bg-white py-4 pl-14 pr-4 text-base shadow-sm transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 focus:shadow-md"
             />
           </div>
         </div>

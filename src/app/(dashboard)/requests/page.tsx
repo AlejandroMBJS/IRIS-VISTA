@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { requestsApi } from '@/lib/api';
+import { getTranslatedText } from '@/lib/translations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -276,16 +277,16 @@ export default function RequestsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-4xl text-[#2C2C2C] font-semibold">
+              <h1 className="text-2xl md:text-4xl text-[#2D363F] font-semibold">
                 {t.title}
               </h1>
-              <p className="text-sm md:text-base text-[#6E6B67] mt-1">{t.subtitle}</p>
+              <p className="text-sm md:text-base text-[#4E616F] mt-1">{t.subtitle}</p>
             </div>
             <div className="flex items-center gap-2">
               <Button
@@ -297,7 +298,7 @@ export default function RequestsPage() {
                 {t.refresh}
               </Button>
               <Link href="/purchase/new">
-                <Button className="bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90">
+                <Button className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] hover:opacity-90">
                   <Plus className="h-4 w-4 mr-2" />
                   {t.newRequest}
                 </Button>
@@ -347,7 +348,7 @@ export default function RequestsPage() {
                 variant={filter === f.key ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setFilter(f.key)}
-                className={filter === f.key ? 'bg-[#75534B] hover:bg-[#5D423C]' : ''}
+                className={filter === f.key ? 'bg-[#5C2F0E] hover:bg-[#2D363F]' : ''}
               >
                 {f.label} ({f.count})
               </Button>
@@ -357,7 +358,7 @@ export default function RequestsPage() {
           {/* Requests List */}
           {isLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+              <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
             </div>
           ) : filteredRequests.length === 0 ? (
             <Card>
@@ -368,7 +369,7 @@ export default function RequestsPage() {
                   <>
                     <p className="text-sm mb-4">{t.createFirst}</p>
                     <Link href="/purchase/new">
-                      <Button className="bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90">
+                      <Button className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] hover:opacity-90">
                         <Plus className="h-4 w-4 mr-2" />
                         {t.newRequest}
                       </Button>
@@ -390,15 +391,15 @@ export default function RequestsPage() {
                     onClick={() => setSelectedRequest(request)}
                   >
                     {/* Request Header */}
-                    <div className="p-4 md:p-6 border-b border-[#E4E1DD] bg-white">
+                    <div className="p-4 md:p-6 border-b border-[#ABC0B9] bg-white">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-semibold text-[#2C2C2C]">
+                          <span className="text-lg font-semibold text-[#2D363F]">
                             {getDisplayNumber(request)}
                           </span>
                           {getStatusBadge(request.status)}
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-[#6E6B67]">
+                        <div className="flex items-center gap-4 text-sm text-[#4E616F]">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
                             {new Date(request.created_at).toLocaleDateString()}
@@ -409,18 +410,18 @@ export default function RequestsPage() {
 
                     {/* Products List */}
                     <div className="p-4 md:p-6 space-y-3">
-                      <p className="text-sm font-medium text-[#6E6B67]">
+                      <p className="text-sm font-medium text-[#4E616F]">
                         {t.products} ({items.length}):
                       </p>
 
                       {items.map((item, idx) => (
                         <div
                           key={idx}
-                          className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]"
+                          className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]"
                         >
                           {/* Product Image */}
                           {item.product_image_url ? (
-                            <div className="w-16 h-16 rounded bg-white border border-[#E4E1DD] overflow-hidden flex-shrink-0">
+                            <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                               <Image
                                 src={item.product_image_url}
                                 alt={item.product_title || 'Product'}
@@ -431,20 +432,20 @@ export default function RequestsPage() {
                               />
                             </div>
                           ) : (
-                            <div className="w-16 h-16 rounded bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
-                              <Package className="h-6 w-6 text-[#6E6B67]" />
+                            <div className="w-16 h-16 rounded bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                              <Package className="h-6 w-6 text-[#4E616F]" />
                             </div>
                           )}
 
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-[#2C2C2C] truncate">
+                            <p className="font-medium text-[#2D363F] truncate">
                               {item.product_title}
                             </p>
-                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#6E6B67]">
+                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#4E616F]">
                               <span>{t.quantity}: {item.quantity}</span>
                               {item.estimated_price && (
-                                <span className="font-medium text-[#75534B]">
+                                <span className="font-medium text-[#5C2F0E]">
                                   {item.currency || 'MXN'} ${formatPrice((item.estimated_price || 0) * item.quantity)}
                                 </span>
                               )}
@@ -474,9 +475,9 @@ export default function RequestsPage() {
 
                       {/* Justification */}
                       {request.justification && (
-                        <div className="mt-3 p-3 bg-white rounded-lg border border-[#E4E1DD]">
-                          <p className="text-xs font-medium text-[#6E6B67] uppercase mb-1">{t.justification}</p>
-                          <p className="text-sm text-[#2C2C2C] line-clamp-2">{request.justification}</p>
+                        <div className="mt-3 p-3 bg-white rounded-lg border border-[#ABC0B9]">
+                          <p className="text-xs font-medium text-[#4E616F] uppercase mb-1">{t.justification}</p>
+                          <p className="text-sm text-[#2D363F] line-clamp-2">{getTranslatedText(request.justification_translated, request.justification, language)}</p>
                         </div>
                       )}
 
@@ -487,7 +488,7 @@ export default function RequestsPage() {
                             <XCircle className="h-4 w-4" />
                             {t.rejectionReason}
                           </div>
-                          <p className="text-sm text-red-700">{request.rejection_reason}</p>
+                          <p className="text-sm text-red-700">{getTranslatedText(request.rejection_reason_translated, request.rejection_reason, language)}</p>
                         </div>
                       )}
 
@@ -509,18 +510,18 @@ export default function RequestsPage() {
                             </p>
                           )}
                           {request.purchase_notes && (
-                            <p className="text-sm text-green-700 mt-1">{request.purchase_notes}</p>
+                            <p className="text-sm text-green-700 mt-1">{getTranslatedText(request.purchase_notes_translated, request.purchase_notes, language)}</p>
                           )}
                         </div>
                       )}
                     </div>
 
                     {/* Request Footer */}
-                    <div className="px-4 md:px-6 py-4 bg-[#F9F8F6] border-t border-[#E4E1DD]">
+                    <div className="px-4 md:px-6 py-4 bg-[#FAFBFA] border-t border-[#ABC0B9]">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div>
-                          <p className="text-sm text-[#6E6B67]">{t.total}</p>
-                          <p className="text-xl font-bold text-[#75534B]">
+                          <p className="text-sm text-[#4E616F]">{t.total}</p>
+                          <p className="text-xl font-bold text-[#5C2F0E]">
                             {request.currency} ${formatPrice(total)}
                           </p>
                         </div>
@@ -539,7 +540,7 @@ export default function RequestsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-3xl rounded-xl bg-white shadow-2xl max-h-[90vh] flex flex-col">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-[#75534B] to-[#5D423C] p-6 rounded-t-xl flex items-center justify-between flex-shrink-0">
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-6 rounded-t-xl flex items-center justify-between flex-shrink-0">
               <div>
                 <h2 className="text-2xl text-white font-semibold mb-1">
                   {getDisplayNumber(selectedRequest)}
@@ -563,14 +564,14 @@ export default function RequestsPage() {
             <div className="p-6 space-y-4 overflow-y-auto flex-1">
               {/* Items List */}
               <div>
-                <p className="text-sm font-semibold text-[#2C2C2C] mb-3">
+                <p className="text-sm font-semibold text-[#2D363F] mb-3">
                   {t.products} ({getProductItems(selectedRequest).length})
                 </p>
                 <div className="space-y-3">
                   {getProductItems(selectedRequest).map((item, idx) => (
-                    <div key={idx} className="flex gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]">
+                    <div key={idx} className="flex gap-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]">
                       {item.product_image_url ? (
-                        <div className="w-20 h-20 rounded-lg bg-white border border-[#E4E1DD] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        <div className="w-20 h-20 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
                           <Image
                             src={item.product_image_url}
                             alt={item.product_title || 'Product'}
@@ -581,18 +582,18 @@ export default function RequestsPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-20 h-20 rounded-lg bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
-                          <Package className="h-8 w-8 text-[#6E6B67]" />
+                        <div className="w-20 h-20 rounded-lg bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                          <Package className="h-8 w-8 text-[#4E616F]" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-[#2C2C2C] line-clamp-2">
+                        <h4 className="font-medium text-[#2D363F] line-clamp-2">
                           {item.product_title || 'Product'}
                         </h4>
                         <div className="flex items-center gap-4 mt-2">
-                          <span className="text-sm text-[#6E6B67]">{t.quantity}: {item.quantity}</span>
+                          <span className="text-sm text-[#4E616F]">{t.quantity}: {item.quantity}</span>
                           {item.estimated_price && (
-                            <span className="text-sm font-semibold text-[#75534B]">
+                            <span className="text-sm font-semibold text-[#5C2F0E]">
                               {item.currency || 'MXN'} ${formatPrice(item.estimated_price)}
                             </span>
                           )}
@@ -607,7 +608,7 @@ export default function RequestsPage() {
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-[#3A6EA5] hover:underline mt-2 inline-flex items-center gap-1"
+                            className="text-xs text-[#5C2F0E] hover:underline mt-2 inline-flex items-center gap-1"
                           >
                             <ExternalLink className="h-3 w-3" />
                             Ver producto
@@ -616,7 +617,7 @@ export default function RequestsPage() {
                       </div>
                       <div className="flex-shrink-0 text-right">
                         {item.estimated_price && (
-                          <p className="font-bold text-[#2C2C2C]">
+                          <p className="font-bold text-[#2D363F]">
                             ${formatPrice(item.estimated_price * item.quantity)}
                           </p>
                         )}
@@ -627,18 +628,18 @@ export default function RequestsPage() {
               </div>
 
               {/* Total */}
-              <div className="pt-4 border-t border-[#E4E1DD] flex justify-between items-center">
-                <span className="text-lg font-semibold text-[#2C2C2C]">{t.total}:</span>
-                <span className="text-2xl font-bold text-[#75534B]">
+              <div className="pt-4 border-t border-[#ABC0B9] flex justify-between items-center">
+                <span className="text-lg font-semibold text-[#2D363F]">{t.total}:</span>
+                <span className="text-2xl font-bold text-[#5C2F0E]">
                   {selectedRequest.currency} ${formatPrice(calculateTotal(selectedRequest))}
                 </span>
               </div>
 
               {/* Justification */}
               {selectedRequest.justification && (
-                <div className="p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]">
-                  <p className="text-xs font-medium text-[#6E6B67] uppercase mb-1">{t.justification}</p>
-                  <p className="text-sm text-[#2C2C2C]">{selectedRequest.justification}</p>
+                <div className="p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]">
+                  <p className="text-xs font-medium text-[#4E616F] uppercase mb-1">{t.justification}</p>
+                  <p className="text-sm text-[#2D363F]">{getTranslatedText(selectedRequest.justification_translated, selectedRequest.justification, language)}</p>
                 </div>
               )}
 
@@ -646,18 +647,18 @@ export default function RequestsPage() {
               {selectedRequest.rejection_reason && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-sm font-medium text-red-800">{t.rejectionReason}:</p>
-                  <p className="text-sm text-red-700">{selectedRequest.rejection_reason}</p>
+                  <p className="text-sm text-red-700">{getTranslatedText(selectedRequest.rejection_reason_translated, selectedRequest.rejection_reason, language)}</p>
                 </div>
               )}
 
               {/* Admin Notes */}
               {selectedRequest.admin_notes && (
-                <div className="p-3 bg-[#75534B]/5 border border-[#75534B]/20 rounded-lg">
+                <div className="p-3 bg-[#5C2F0E]/5 border border-[#5C2F0E]/20 rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
-                    <MessageSquare className="h-4 w-4 text-[#75534B]" />
-                    <p className="text-sm font-medium text-[#75534B]">{t.adminNotes}:</p>
+                    <MessageSquare className="h-4 w-4 text-[#5C2F0E]" />
+                    <p className="text-sm font-medium text-[#5C2F0E]">{t.adminNotes}:</p>
                   </div>
-                  <p className="text-sm text-[#6E6B67]">{selectedRequest.admin_notes}</p>
+                  <p className="text-sm text-[#4E616F]">{getTranslatedText(selectedRequest.admin_notes_translated, selectedRequest.admin_notes, language)}</p>
                 </div>
               )}
 
@@ -683,7 +684,7 @@ export default function RequestsPage() {
                     )}
                     {selectedRequest.purchase_notes && (
                       <p className="text-sm text-green-700 pt-2 border-t border-green-200">
-                        {selectedRequest.purchase_notes}
+                        {getTranslatedText(selectedRequest.purchase_notes_translated, selectedRequest.purchase_notes, language)}
                       </p>
                     )}
                   </div>
@@ -692,27 +693,27 @@ export default function RequestsPage() {
 
               {/* History Timeline */}
               {selectedRequest.history && selectedRequest.history.length > 0 && (
-                <div className="pt-4 border-t border-[#E4E1DD]">
-                  <p className="text-sm font-semibold text-[#2C2C2C] mb-3">{t.history}</p>
+                <div className="pt-4 border-t border-[#ABC0B9]">
+                  <p className="text-sm font-semibold text-[#2D363F] mb-3">{t.history}</p>
                   <div className="space-y-3">
                     {selectedRequest.history.map((historyItem, idx) => (
                       <div key={historyItem.id || idx} className="flex gap-3 items-start">
                         <div className="flex-shrink-0 mt-0.5">
                           {getActionIcon(historyItem.action)}
                         </div>
-                        <div className="flex-1 bg-[#F9F8F6] rounded-lg p-3">
+                        <div className="flex-1 bg-[#FAFBFA] rounded-lg p-3">
                           <div className="flex items-center justify-between">
-                            <span className="font-medium text-sm text-[#2C2C2C]">
+                            <span className="font-medium text-sm text-[#2D363F]">
                               {t.historyActions[historyItem.action as keyof typeof t.historyActions] || historyItem.action}
                             </span>
-                            <span className="text-xs text-[#9B9792]">
+                            <span className="text-xs text-[#80959A]">
                               {new Date(historyItem.created_at).toLocaleString()}
                             </span>
                           </div>
                           {historyItem.comment && (
-                            <p className="text-sm text-[#6E6B67] mt-1">{historyItem.comment}</p>
+                            <p className="text-sm text-[#4E616F] mt-1">{historyItem.comment}</p>
                           )}
-                          <div className="flex items-center gap-1 text-xs text-[#9B9792] mt-1">
+                          <div className="flex items-center gap-1 text-xs text-[#80959A] mt-1">
                             <User className="h-3 w-3" />
                             {historyItem.user?.name || `User #${historyItem.user_id}`}
                           </div>
@@ -725,7 +726,7 @@ export default function RequestsPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-[#E4E1DD] flex justify-end flex-shrink-0">
+            <div className="p-4 border-t border-[#ABC0B9] flex justify-end flex-shrink-0">
               <Button
                 variant="outline"
                 onClick={() => setSelectedRequest(null)}

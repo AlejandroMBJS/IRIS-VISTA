@@ -64,16 +64,16 @@ export function GeneralSection({ config, onChange, language }: Props) {
   const t = text[language];
 
   return (
-    <div className="rounded-xl border border-[#E4E1DD] bg-white shadow-sm">
+    <div className="rounded-xl border border-[#ABC0B9] bg-white shadow-sm">
       {/* Header */}
-      <div className="border-b border-[#E4E1DD] px-6 py-4">
+      <div className="border-b border-[#ABC0B9] px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#75534B]/10">
-            <Settings className="h-5 w-5 text-[#75534B]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
+            <Settings className="h-5 w-5 text-[#5C2F0E]" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.title}</h2>
-            <p className="text-sm text-[#6E6B67]">{t.subtitle}</p>
+            <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>
+            <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@ export function GeneralSection({ config, onChange, language }: Props) {
       <div className="p-6 space-y-6">
         {/* Module Name */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-[#2C2C2C]">
+          <label className="mb-2 block text-sm font-medium text-[#2D363F]">
             {t.moduleName}
           </label>
           <input
@@ -90,13 +90,13 @@ export function GeneralSection({ config, onChange, language }: Props) {
             value={config.module_name}
             onChange={(e) => onChange({ module_name: e.target.value })}
             placeholder={t.moduleNamePlaceholder}
-            className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+            className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
           />
         </div>
 
         {/* Module Description */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-[#2C2C2C]">
+          <label className="mb-2 block text-sm font-medium text-[#2D363F]">
             {t.moduleDescription}
           </label>
           <textarea
@@ -104,7 +104,7 @@ export function GeneralSection({ config, onChange, language }: Props) {
             onChange={(e) => onChange({ module_description: e.target.value })}
             placeholder={t.moduleDescriptionPlaceholder}
             rows={3}
-            className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 resize-none"
+            className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 resize-none"
           />
         </div>
 
@@ -119,12 +119,12 @@ export function GeneralSection({ config, onChange, language }: Props) {
                 onChange={(e) => onChange({ module_active: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="h-6 w-11 rounded-full bg-[#E4E1DD] peer-checked:bg-[#4BAF7E] transition-colors" />
+              <div className="h-6 w-11 rounded-full bg-[#ABC0B9] peer-checked:bg-[#5C2F0E] transition-colors" />
               <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
             </div>
             <div className="flex-1">
-              <span className="block text-sm font-medium text-[#2C2C2C]">{t.moduleActive}</span>
-              <span className="block text-sm text-[#6E6B67]">{t.moduleActiveDesc}</span>
+              <span className="block text-sm font-medium text-[#2D363F]">{t.moduleActive}</span>
+              <span className="block text-sm text-[#4E616F]">{t.moduleActiveDesc}</span>
             </div>
           </label>
 
@@ -137,12 +137,12 @@ export function GeneralSection({ config, onChange, language }: Props) {
                 onChange={(e) => onChange({ allow_urgent: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="h-6 w-11 rounded-full bg-[#E4E1DD] peer-checked:bg-[#4BAF7E] transition-colors" />
+              <div className="h-6 w-11 rounded-full bg-[#ABC0B9] peer-checked:bg-[#5C2F0E] transition-colors" />
               <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
             </div>
             <div className="flex-1">
-              <span className="block text-sm font-medium text-[#2C2C2C]">{t.allowUrgent}</span>
-              <span className="block text-sm text-[#6E6B67]">{t.allowUrgentDesc}</span>
+              <span className="block text-sm font-medium text-[#2D363F]">{t.allowUrgent}</span>
+              <span className="block text-sm text-[#4E616F]">{t.allowUrgentDesc}</span>
             </div>
           </label>
 
@@ -155,12 +155,12 @@ export function GeneralSection({ config, onChange, language }: Props) {
                 onChange={(e) => onChange({ require_justification: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="h-6 w-11 rounded-full bg-[#E4E1DD] peer-checked:bg-[#4BAF7E] transition-colors" />
+              <div className="h-6 w-11 rounded-full bg-[#ABC0B9] peer-checked:bg-[#5C2F0E] transition-colors" />
               <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
             </div>
             <div className="flex-1">
-              <span className="block text-sm font-medium text-[#2C2C2C]">{t.requireJustification}</span>
-              <span className="block text-sm text-[#6E6B67]">{t.requireJustificationDesc}</span>
+              <span className="block text-sm font-medium text-[#2D363F]">{t.requireJustification}</span>
+              <span className="block text-sm text-[#4E616F]">{t.requireJustificationDesc}</span>
             </div>
           </label>
 
@@ -173,12 +173,12 @@ export function GeneralSection({ config, onChange, language }: Props) {
                 onChange={(e) => onChange({ show_internal_catalog: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="h-6 w-11 rounded-full bg-[#E4E1DD] peer-checked:bg-[#4BAF7E] transition-colors" />
+              <div className="h-6 w-11 rounded-full bg-[#ABC0B9] peer-checked:bg-[#5C2F0E] transition-colors" />
               <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
             </div>
             <div className="flex-1">
-              <span className="block text-sm font-medium text-[#2C2C2C]">{t.showInternalCatalog}</span>
-              <span className="block text-sm text-[#6E6B67]">{t.showInternalCatalogDesc}</span>
+              <span className="block text-sm font-medium text-[#2D363F]">{t.showInternalCatalog}</span>
+              <span className="block text-sm text-[#4E616F]">{t.showInternalCatalogDesc}</span>
             </div>
           </label>
         </div>

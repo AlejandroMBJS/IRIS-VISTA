@@ -30,6 +30,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { adminApi, amazonConfigApi, type AmazonConfig } from '@/lib/api';
+import { getTranslatedText } from '@/lib/translations';
 import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -509,16 +510,16 @@ export default function ApprovedOrdersPage() {
   const cancelledCount = orders.filter(o => o.status === 'cancelled').length;
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-4xl text-[#2C2C2C] font-semibold">
+              <h1 className="text-2xl md:text-4xl text-[#2D363F] font-semibold">
                 {t.title}
               </h1>
-              <p className="text-sm md:text-base text-[#6E6B67] mt-1">{t.subtitle}</p>
+              <p className="text-sm md:text-base text-[#4E616F] mt-1">{t.subtitle}</p>
             </div>
             <div className="flex items-center gap-2">
               {isAmazonEnabled ? (
@@ -591,7 +592,7 @@ export default function ApprovedOrdersPage() {
                   variant={filter === f.key ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setFilter(f.key)}
-                  className={filter === f.key ? 'bg-[#75534B] hover:bg-[#5D423C]' : ''}
+                  className={filter === f.key ? 'bg-[#5C2F0E] hover:bg-[#2D363F]' : ''}
                 >
                   {f.label}
                 </Button>
@@ -602,7 +603,7 @@ export default function ApprovedOrdersPage() {
           {/* Orders List */}
           {isLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+              <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
             </div>
           ) : orders.length === 0 ? (
             <Card>
@@ -621,15 +622,15 @@ export default function ApprovedOrdersPage() {
                 return (
                   <Card key={order.id} className="overflow-hidden">
                     {/* Order Header */}
-                    <div className="p-4 md:p-6 border-b border-[#E4E1DD] bg-white">
+                    <div className="p-4 md:p-6 border-b border-[#ABC0B9] bg-white">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-semibold text-[#2C2C2C]">
+                          <span className="text-lg font-semibold text-[#2D363F]">
                             {getDisplayNumber(order)}
                           </span>
                           {getOrderStatusBadge(order)}
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-[#6E6B67]">
+                        <div className="flex items-center gap-4 text-sm text-[#4E616F]">
                           <span className="flex items-center gap-1">
                             <User className="h-4 w-4" />
                             {order.requester?.name}
@@ -644,18 +645,18 @@ export default function ApprovedOrdersPage() {
 
                     {/* Products List */}
                     <div className="p-4 md:p-6 space-y-3">
-                      <p className="text-sm font-medium text-[#6E6B67]">
+                      <p className="text-sm font-medium text-[#4E616F]">
                         {t.products} ({items.length}):
                       </p>
 
                       {items.map((item, idx) => (
                         <div
                           key={idx}
-                          className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#F9F8F6] rounded-lg border border-[#E4E1DD]"
+                          className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]"
                         >
                           {/* Product Image */}
                           {item.product_image_url ? (
-                            <div className="w-16 h-16 rounded bg-white border border-[#E4E1DD] overflow-hidden flex-shrink-0">
+                            <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
                               <Image
                                 src={item.product_image_url}
                                 alt={item.product_title}
@@ -666,22 +667,22 @@ export default function ApprovedOrdersPage() {
                               />
                             </div>
                           ) : (
-                            <div className="w-16 h-16 rounded bg-[#E4E1DD] flex items-center justify-center flex-shrink-0">
-                              <Package className="h-6 w-6 text-[#6E6B67]" />
+                            <div className="w-16 h-16 rounded bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                              <Package className="h-6 w-6 text-[#4E616F]" />
                             </div>
                           )}
 
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start gap-2">
-                              <p className="font-medium text-[#2C2C2C] truncate">
+                              <p className="font-medium text-[#2D363F] truncate">
                                 {item.product_title}
                               </p>
                               {getItemStatusBadge(item)}
                             </div>
-                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#6E6B67]">
+                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-[#4E616F]">
                               <span>{t.quantity}: {item.quantity}</span>
-                              <span className="font-medium text-[#75534B]">
+                              <span className="font-medium text-[#5C2F0E]">
                                 {item.currency}${((item.estimated_price || 0) * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                               </span>
                               {item.is_amazon_url && (
@@ -744,10 +745,10 @@ export default function ApprovedOrdersPage() {
                       ))}
 
                       {/* Admin Notes Section */}
-                      <div className="mt-4 p-3 bg-white rounded-lg border border-[#E4E1DD]">
+                      <div className="mt-4 p-3 bg-white rounded-lg border border-[#ABC0B9]">
                         <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2 text-sm font-medium text-[#2C2C2C]">
-                            <MessageSquare className="h-4 w-4 text-[#75534B]" />
+                          <div className="flex items-center gap-2 text-sm font-medium text-[#2D363F]">
+                            <MessageSquare className="h-4 w-4 text-[#5C2F0E]" />
                             {t.adminNotes}
                           </div>
                           {editingNotesId !== order.id && (
@@ -773,7 +774,7 @@ export default function ApprovedOrdersPage() {
                               }))}
                               placeholder={t.adminNotesPlaceholder}
                               rows={3}
-                              className="w-full rounded-lg border border-[#E4E1DD] bg-white px-3 py-2 text-sm text-[#2C2C2C] placeholder:text-[#9B9792] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                              className="w-full rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] placeholder:text-[#80959A] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                             />
                             <div className="flex justify-end gap-2">
                               <Button
@@ -787,7 +788,7 @@ export default function ApprovedOrdersPage() {
                                 size="sm"
                                 onClick={() => handleSaveAdminNotes(order.id)}
                                 disabled={savingNotesId === order.id}
-                                className="bg-[#75534B] hover:bg-[#5D423C]"
+                                className="bg-[#5C2F0E] hover:bg-[#2D363F]"
                               >
                                 {savingNotesId === order.id ? (
                                   <Loader2 className="h-3 w-3 animate-spin mr-1" />
@@ -799,8 +800,8 @@ export default function ApprovedOrdersPage() {
                             </div>
                           </div>
                         ) : (
-                          <p className="text-sm text-[#6E6B67]">
-                            {order.admin_notes || t.adminNotesPlaceholder}
+                          <p className="text-sm text-[#4E616F]">
+                            {order.admin_notes ? getTranslatedText(order.admin_notes_translated, order.admin_notes, language) : t.adminNotesPlaceholder}
                           </p>
                         )}
                       </div>
@@ -818,28 +819,28 @@ export default function ApprovedOrdersPage() {
                             </p>
                           )}
                           {order.purchase_notes && (
-                            <p className="text-sm text-green-700 mt-1">{order.purchase_notes}</p>
+                            <p className="text-sm text-green-700 mt-1">{getTranslatedText(order.purchase_notes_translated, order.purchase_notes, language)}</p>
                           )}
                         </div>
                       )}
                     </div>
 
                     {/* Order Footer */}
-                    <div className="px-4 md:px-6 py-4 bg-[#F9F8F6] border-t border-[#E4E1DD]">
+                    <div className="px-4 md:px-6 py-4 bg-[#FAFBFA] border-t border-[#ABC0B9]">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         {/* Total and Progress */}
                         <div className="flex items-center gap-6">
                           <div>
-                            <p className="text-sm text-[#6E6B67]">{t.total}</p>
-                            <p className="text-xl font-bold text-[#75534B]">
+                            <p className="text-sm text-[#4E616F]">{t.total}</p>
+                            <p className="text-xl font-bold text-[#5C2F0E]">
                               {order.currency}${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </p>
                           </div>
                           {order.status !== 'purchased' && order.status !== 'delivered' && order.status !== 'cancelled' && (
                             <div>
-                              <p className="text-sm text-[#6E6B67]">{t.progress}</p>
+                              <p className="text-sm text-[#4E616F]">{t.progress}</p>
                               <div className="flex items-center gap-2">
-                                <div className="w-24 h-2 bg-[#E4E1DD] rounded-full overflow-hidden">
+                                <div className="w-24 h-2 bg-[#ABC0B9] rounded-full overflow-hidden">
                                   <div
                                     className="h-full bg-blue-500 rounded-full transition-all"
                                     style={{ width: `${(progress.inCart / progress.total) * 100}%` }}
@@ -938,9 +939,9 @@ export default function ApprovedOrdersPage() {
       {showPurchaseModal && selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="p-6 border-b border-[#E4E1DD]">
+            <div className="p-6 border-b border-[#ABC0B9]">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-[#2C2C2C]">
+                <h2 className="text-xl font-semibold text-[#2D363F]">
                   {t.confirmPurchase}
                 </h2>
                 <button
@@ -960,9 +961,9 @@ export default function ApprovedOrdersPage() {
 
             <div className="p-6 space-y-4">
               {/* Order Summary */}
-              <div className="bg-[#F9F8F6] rounded-lg p-4 border border-[#E4E1DD]">
-                <p className="text-sm text-[#6E6B67]">{getDisplayNumber(selectedOrder)}</p>
-                <p className="font-medium text-[#2C2C2C]">{selectedOrder.requester?.name}</p>
+              <div className="bg-[#FAFBFA] rounded-lg p-4 border border-[#ABC0B9]">
+                <p className="text-sm text-[#4E616F]">{getDisplayNumber(selectedOrder)}</p>
+                <p className="font-medium text-[#2D363F]">{selectedOrder.requester?.name}</p>
                 <div className="mt-2 space-y-1">
                   {getProductItems(selectedOrder).map((item, idx) => (
                     <div key={idx} className="flex justify-between text-sm">
@@ -973,9 +974,9 @@ export default function ApprovedOrdersPage() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-2 pt-2 border-t border-[#E4E1DD] flex justify-between">
+                <div className="mt-2 pt-2 border-t border-[#ABC0B9] flex justify-between">
                   <span className="font-medium">{t.total}</span>
-                  <span className="font-bold text-[#75534B]">
+                  <span className="font-bold text-[#5C2F0E]">
                     {selectedOrder.currency}${calculateTotal(selectedOrder).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
@@ -983,7 +984,7 @@ export default function ApprovedOrdersPage() {
 
               {/* Order Number */}
               <div>
-                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                <label className="block text-sm font-medium text-[#2D363F] mb-1">
                   {t.orderNumberPlaceholder} <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -1002,7 +1003,7 @@ export default function ApprovedOrdersPage() {
 
               {/* Purchase Notes */}
               <div>
-                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                <label className="block text-sm font-medium text-[#2D363F] mb-1">
                   {t.purchaseNotesPlaceholder}
                 </label>
                 <textarea
@@ -1010,18 +1011,18 @@ export default function ApprovedOrdersPage() {
                   onChange={(e) => setPurchaseNotes(e.target.value)}
                   placeholder={t.purchaseNotesPlaceholder}
                   rows={3}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
 
               {/* Notify Checkbox */}
               <label className="flex items-center gap-2">
                 <input type="checkbox" defaultChecked className="rounded border-gray-300" />
-                <span className="text-sm text-[#6E6B67]">{t.notifyRequester}</span>
+                <span className="text-sm text-[#4E616F]">{t.notifyRequester}</span>
               </label>
             </div>
 
-            <div className="p-6 border-t border-[#E4E1DD] flex justify-end gap-3">
+            <div className="p-6 border-t border-[#ABC0B9] flex justify-end gap-3">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -1055,9 +1056,9 @@ export default function ApprovedOrdersPage() {
       {showDeliveredModal && selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="p-6 border-b border-[#E4E1DD]">
+            <div className="p-6 border-b border-[#ABC0B9]">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-[#2C2C2C]">
+                <h2 className="text-xl font-semibold text-[#2D363F]">
                   {t.confirmDelivery}
                 </h2>
                 <button
@@ -1075,11 +1076,11 @@ export default function ApprovedOrdersPage() {
 
             <div className="p-6 space-y-4">
               {/* Order Summary */}
-              <div className="bg-[#F9F8F6] rounded-lg p-4 border border-[#E4E1DD]">
-                <p className="text-sm text-[#6E6B67]">{getDisplayNumber(selectedOrder)}</p>
-                <p className="font-medium text-[#2C2C2C]">{selectedOrder.requester?.name}</p>
+              <div className="bg-[#FAFBFA] rounded-lg p-4 border border-[#ABC0B9]">
+                <p className="text-sm text-[#4E616F]">{getDisplayNumber(selectedOrder)}</p>
+                <p className="font-medium text-[#2D363F]">{selectedOrder.requester?.name}</p>
                 {selectedOrder.order_number && (
-                  <p className="text-sm text-[#6E6B67] mt-1">
+                  <p className="text-sm text-[#4E616F] mt-1">
                     Order #: {selectedOrder.order_number}
                   </p>
                 )}
@@ -1087,7 +1088,7 @@ export default function ApprovedOrdersPage() {
 
               {/* Delivery Notes */}
               <div>
-                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                <label className="block text-sm font-medium text-[#2D363F] mb-1">
                   {t.deliveryNotes}
                 </label>
                 <textarea
@@ -1095,12 +1096,12 @@ export default function ApprovedOrdersPage() {
                   onChange={(e) => setStatusChangeNotes(e.target.value)}
                   placeholder={t.deliveryNotes}
                   rows={3}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
             </div>
 
-            <div className="p-6 border-t border-[#E4E1DD] flex justify-end gap-3">
+            <div className="p-6 border-t border-[#ABC0B9] flex justify-end gap-3">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -1132,9 +1133,9 @@ export default function ApprovedOrdersPage() {
       {showCancelModal && selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="p-6 border-b border-[#E4E1DD]">
+            <div className="p-6 border-b border-[#ABC0B9]">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-[#2C2C2C]">
+                <h2 className="text-xl font-semibold text-[#2D363F]">
                   {t.confirmCancellation}
                 </h2>
                 <button
@@ -1153,11 +1154,11 @@ export default function ApprovedOrdersPage() {
 
             <div className="p-6 space-y-4">
               {/* Order Summary */}
-              <div className="bg-[#F9F8F6] rounded-lg p-4 border border-[#E4E1DD]">
-                <p className="text-sm text-[#6E6B67]">{getDisplayNumber(selectedOrder)}</p>
-                <p className="font-medium text-[#2C2C2C]">{selectedOrder.requester?.name}</p>
+              <div className="bg-[#FAFBFA] rounded-lg p-4 border border-[#ABC0B9]">
+                <p className="text-sm text-[#4E616F]">{getDisplayNumber(selectedOrder)}</p>
+                <p className="font-medium text-[#2D363F]">{selectedOrder.requester?.name}</p>
                 {selectedOrder.order_number && (
-                  <p className="text-sm text-[#6E6B67] mt-1">
+                  <p className="text-sm text-[#4E616F] mt-1">
                     Order #: {selectedOrder.order_number}
                   </p>
                 )}
@@ -1165,7 +1166,7 @@ export default function ApprovedOrdersPage() {
 
               {/* Cancellation Reason */}
               <div>
-                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                <label className="block text-sm font-medium text-[#2D363F] mb-1">
                   {t.cancellationReason} <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -1176,7 +1177,7 @@ export default function ApprovedOrdersPage() {
                   }}
                   placeholder={t.cancellationReason}
                   rows={3}
-                  className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 ${cancelNotesError ? 'border-red-500' : 'border-[#E4E1DD]'}`}
+                  className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 ${cancelNotesError ? 'border-red-500' : 'border-[#ABC0B9]'}`}
                 />
                 {cancelNotesError && (
                   <p className="mt-1 text-sm text-red-500">{cancelNotesError}</p>
@@ -1184,7 +1185,7 @@ export default function ApprovedOrdersPage() {
               </div>
             </div>
 
-            <div className="p-6 border-t border-[#E4E1DD] flex justify-end gap-3">
+            <div className="p-6 border-t border-[#ABC0B9] flex justify-end gap-3">
               <Button
                 variant="outline"
                 onClick={() => {

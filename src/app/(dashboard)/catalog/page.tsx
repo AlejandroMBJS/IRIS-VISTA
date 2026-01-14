@@ -335,36 +335,36 @@ export default function CatalogPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
-          <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+          <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
             {t.title}
           </h1>
-          <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
+          <p className="text-base text-[#4E616F]">{t.subtitle}</p>
         </div>
       </section>
 
       {/* Filters & Search */}
-      <section className="px-4 md:px-8 py-6 bg-white border-b border-[#E4E1DD]">
+      <section className="px-4 md:px-8 py-6 bg-white border-b border-[#ABC0B9]">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6E6B67]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4E616F]" />
               <input
                 type="text"
                 placeholder={t.search}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-[#E4E1DD] bg-white py-2.5 pl-12 pr-4 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-full rounded-lg border border-[#ABC0B9] bg-white py-2.5 pl-12 pr-4 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
             </div>
 
@@ -372,7 +372,7 @@ export default function CatalogPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-lg border border-[#E4E1DD] bg-white px-4 py-2.5 text-sm text-[#2C2C2C] font-medium transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="rounded-lg border border-[#ABC0B9] bg-white px-4 py-2.5 text-sm text-[#2D363F] font-medium transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             >
               {Object.entries(t.sortOptions).map(([key, label]) => (
                 <option key={key} value={key}>
@@ -385,7 +385,7 @@ export default function CatalogPage() {
             {cartItems.length > 0 && (
               <button
                 onClick={handleSubmit}
-                className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
+                className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-5 py-3 text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95"
               >
                 <ShoppingCart className="h-5 w-5" />
                 {t.submitRequest} ({cartItems.length})
@@ -401,8 +401,8 @@ export default function CatalogPage() {
                 onClick={() => setSelectedCategory(category)}
                 className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                   selectedCategory === category
-                    ? 'bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white shadow-sm'
-                    : 'bg-white text-[#75534B] border border-[#E4E1DD] hover:bg-[#F9F8F6]'
+                    ? 'bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white shadow-sm'
+                    : 'bg-white text-[#5C2F0E] border border-[#ABC0B9] hover:bg-[#FAFBFA]'
                 }`}
               >
                 {t.categories[category as keyof typeof t.categories] || category}
@@ -415,7 +415,7 @@ export default function CatalogPage() {
       {/* Products Grid */}
       <section className="px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
-          <p className="mb-6 text-sm text-[#6E6B67]">
+          <p className="mb-6 text-sm text-[#4E616F]">
             {filteredProducts.length} {t.productsCount}
           </p>
 
@@ -423,28 +423,28 @@ export default function CatalogPage() {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="rounded-lg bg-white border border-[#E4E1DD] p-5 shadow-sm hover:shadow-md transition-all"
+                className="rounded-lg bg-white border border-[#ABC0B9] p-5 shadow-sm hover:shadow-md transition-all"
               >
                 <div className="text-5xl mb-4">{product.image_emoji || '📦'}</div>
 
-                <h3 className="mb-1 text-base font-semibold text-[#2C2C2C]">
+                <h3 className="mb-1 text-base font-semibold text-[#2D363F]">
                   {getProductName(product)}
                 </h3>
 
                 <div className="mb-3 space-y-1">
-                  <p className="text-xs text-[#6E6B67]">
+                  <p className="text-xs text-[#4E616F]">
                     <span className="font-medium">{t.model}:</span> {product.model}
                   </p>
-                  <p className="text-xs text-[#6E6B67]">
+                  <p className="text-xs text-[#4E616F]">
                     <span className="font-medium">{t.specifications}:</span> {getProductSpec(product)}
                   </p>
-                  <p className="text-xs text-[#6E6B67]">
+                  <p className="text-xs text-[#4E616F]">
                     <span className="font-medium">{t.supplier}:</span> {product.supplier}
                   </p>
                 </div>
 
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-lg font-semibold text-[#2C2C2C]">
+                  <span className="text-lg font-semibold text-[#2D363F]">
                     {product.currency}${formatPrice(product.price)}
                   </span>
                   {getStockBadge(product)}
@@ -453,7 +453,7 @@ export default function CatalogPage() {
                 <button
                   onClick={() => handleAddToCart(product)}
                   disabled={product.stock === 0}
-                  className="w-full rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t.addToCart}
                 </button>
@@ -468,7 +468,7 @@ export default function CatalogPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-2xl rounded-xl bg-white shadow-2xl">
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#75534B] to-[#5D423C] p-6 rounded-t-xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-6 rounded-t-xl flex items-center justify-between">
               <h2 className="text-2xl text-white font-semibold">
                 {requestType === 'issue' ? t.materialIssueRequest : t.purchaseRequisition}
               </h2>
@@ -481,7 +481,7 @@ export default function CatalogPage() {
             <div className="p-6 space-y-5">
               {requestType === 'issue' && (
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.issueReason} <span className="text-[#EF4444]">*</span>
                   </label>
                   <textarea
@@ -489,14 +489,14 @@ export default function CatalogPage() {
                     value={formData.issueReason}
                     onChange={(e) => setFormData({ ...formData, issueReason: e.target.value })}
                     placeholder={t.issueReasonPlaceholder}
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   ></textarea>
                 </div>
               )}
 
               {requestType === 'pr' && (
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                  <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                     {t.purpose} <span className="text-[#EF4444]">*</span>
                   </label>
                   <textarea
@@ -504,13 +504,13 @@ export default function CatalogPage() {
                     value={formData.purpose}
                     onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
                     placeholder={t.purposePlaceholder}
-                    className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                    className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   ></textarea>
                 </div>
               )}
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#2C2C2C]">
+                <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
                   {t.costCenter} <span className="text-[#EF4444]">*</span>
                 </label>
                 <input
@@ -518,23 +518,23 @@ export default function CatalogPage() {
                   value={formData.costCenter}
                   onChange={(e) => setFormData({ ...formData, costCenter: e.target.value })}
                   placeholder={t.costCenterPlaceholder}
-                  className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                  className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                 />
               </div>
 
               {/* Items Summary */}
-              <div className="rounded-lg bg-[#F9F8F6] p-4 border border-[#E4E1DD]">
-                <p className="text-sm font-semibold text-[#2C2C2C] mb-2">
+              <div className="rounded-lg bg-[#FAFBFA] p-4 border border-[#ABC0B9]">
+                <p className="text-sm font-semibold text-[#2D363F] mb-2">
                   {t.itemsInCart}: {cartItems.length}
                 </p>
                 <div className="space-y-1">
                   {cartItems.slice(0, 3).map((item, idx) => (
-                    <p key={idx} className="text-xs text-[#6E6B67]">
+                    <p key={idx} className="text-xs text-[#4E616F]">
                       • {getProductName(item.product)} ({item.product.model}) x{item.quantity}
                     </p>
                   ))}
                   {cartItems.length > 3 && (
-                    <p className="text-xs text-[#6E6B67]">
+                    <p className="text-xs text-[#4E616F]">
                       ... and {cartItems.length - 3} more items
                     </p>
                   )}
@@ -543,17 +543,17 @@ export default function CatalogPage() {
             </div>
 
             {/* Footer */}
-            <div className="border-t border-[#E4E1DD] p-6 flex items-center justify-between">
+            <div className="border-t border-[#ABC0B9] p-6 flex items-center justify-between">
               <button
                 onClick={() => setShowSubmitModal(false)}
-                className="px-6 py-3 text-[#6E6B67] font-medium transition-colors hover:text-[#2C2C2C]"
+                className="px-6 py-3 text-[#4E616F] font-medium transition-colors hover:text-[#2D363F]"
               >
                 {t.cancel}
               </button>
               <button
                 onClick={submitRequest}
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white font-medium shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 {t.submit}

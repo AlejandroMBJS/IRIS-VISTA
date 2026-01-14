@@ -111,11 +111,11 @@ export function Categories({ language }: CategoriesProps) {
               key={index}
               className="group flex items-start gap-4 rounded-xl bg-white p-6 text-left shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
             >
-              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#75534B]/10">
-                <Icon className="h-6 w-6 text-[#75534B]" />
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
+                <Icon className="h-6 w-6 text-[#5C2F0E]" />
               </div>
               <div className="flex-1">
-                <h3 className="mb-1 text-gray-900 group-hover:text-[#75534B]">
+                <h3 className="mb-1 text-gray-900 group-hover:text-[#5C2F0E]">
                   {category.title}
                 </h3>
                 <p className="text-sm text-gray-500">{category.description}</p>

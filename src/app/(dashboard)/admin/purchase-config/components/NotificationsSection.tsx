@@ -86,7 +86,7 @@ export function NotificationsSection({ config, onChange, language }: Props) {
           onChange={(e) => onItemChange(e.target.checked)}
           className="sr-only peer"
         />
-        <div className="h-5 w-5 rounded border-2 border-[#E4E1DD] bg-white peer-checked:border-[#4BAF7E] peer-checked:bg-[#4BAF7E] transition-colors flex items-center justify-center">
+        <div className="h-5 w-5 rounded border-2 border-[#ABC0B9] bg-white peer-checked:border-[#5C2F0E] peer-checked:bg-[#5C2F0E] transition-colors flex items-center justify-center">
           <svg
             className="h-3 w-3 text-white opacity-0 peer-checked:opacity-100"
             fill="none"
@@ -107,21 +107,21 @@ export function NotificationsSection({ config, onChange, language }: Props) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <span className="text-sm text-[#2C2C2C]">{label}</span>
+      <span className="text-sm text-[#2D363F]">{label}</span>
     </label>
   );
 
   return (
-    <div className="rounded-xl border border-[#E4E1DD] bg-white shadow-sm">
+    <div className="rounded-xl border border-[#ABC0B9] bg-white shadow-sm">
       {/* Header */}
-      <div className="border-b border-[#E4E1DD] px-6 py-4">
+      <div className="border-b border-[#ABC0B9] px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#E08A4B]/10">
-            <Bell className="h-5 w-5 text-[#E08A4B]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#E95F20]/10">
+            <Bell className="h-5 w-5 text-[#E95F20]" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.title}</h2>
-            <p className="text-sm text-[#6E6B67]">{t.subtitle}</p>
+            <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>
+            <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ export function NotificationsSection({ config, onChange, language }: Props) {
       <div className="p-6 space-y-6">
         {/* Requester Notifications */}
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-[#2C2C2C]">{t.requesterSection}</h3>
+          <h3 className="mb-3 text-sm font-semibold text-[#2D363F]">{t.requesterSection}</h3>
           <div className="ml-2 space-y-1">
             <CheckboxItem
               checked={config.notify_requester_approved}
@@ -157,7 +157,7 @@ export function NotificationsSection({ config, onChange, language }: Props) {
 
         {/* Approver Notifications */}
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-[#2C2C2C]">{t.approverSection}</h3>
+          <h3 className="mb-3 text-sm font-semibold text-[#2D363F]">{t.approverSection}</h3>
           <div className="ml-2 space-y-1">
             <CheckboxItem
               checked={config.notify_approver_new_request}
@@ -174,7 +174,7 @@ export function NotificationsSection({ config, onChange, language }: Props) {
 
         {/* Admin Notifications */}
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-[#2C2C2C]">{t.adminSection}</h3>
+          <h3 className="mb-3 text-sm font-semibold text-[#2D363F]">{t.adminSection}</h3>
           <div className="ml-2 space-y-1">
             <CheckboxItem
               checked={config.notify_admin_new_approved}
@@ -185,33 +185,33 @@ export function NotificationsSection({ config, onChange, language }: Props) {
         </div>
 
         {/* Reminders */}
-        <div className="border-t border-[#E4E1DD] pt-6">
-          <h3 className="mb-4 text-sm font-semibold text-[#2C2C2C]">{t.remindersSection}</h3>
+        <div className="border-t border-[#ABC0B9] pt-6">
+          <h3 className="mb-4 text-sm font-semibold text-[#2D363F]">{t.remindersSection}</h3>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="text-sm text-[#2C2C2C] min-w-[280px]">{t.reminderPending}</span>
+              <span className="text-sm text-[#2D363F] min-w-[280px]">{t.reminderPending}</span>
               <input
                 type="number"
                 min={1}
                 max={168}
                 value={config.reminder_pending_hours}
                 onChange={(e) => onChange({ reminder_pending_hours: parseInt(e.target.value) || 24 })}
-                className="w-20 rounded-lg border border-[#E4E1DD] bg-white px-3 py-2 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-20 rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
-              <span className="text-sm text-[#6E6B67]">{t.hours}</span>
+              <span className="text-sm text-[#4E616F]">{t.hours}</span>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm text-[#2C2C2C] min-w-[280px]">{t.reminderUnpurchased}</span>
+              <span className="text-sm text-[#2D363F] min-w-[280px]">{t.reminderUnpurchased}</span>
               <input
                 type="number"
                 min={1}
                 max={168}
                 value={config.reminder_unpurchased_hours}
                 onChange={(e) => onChange({ reminder_unpurchased_hours: parseInt(e.target.value) || 48 })}
-                className="w-20 rounded-lg border border-[#E4E1DD] bg-white px-3 py-2 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-20 rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
-              <span className="text-sm text-[#6E6B67]">{t.hours}</span>
+              <span className="text-sm text-[#4E616F]">{t.hours}</span>
             </div>
           </div>
         </div>

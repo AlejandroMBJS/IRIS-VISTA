@@ -229,7 +229,7 @@ export function EmailSection({ language }: EmailSectionProps) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-6 w-6 animate-spin text-[#75534B]" />
+        <Loader2 className="h-6 w-6 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
@@ -237,8 +237,8 @@ export function EmailSection({ language }: EmailSectionProps) {
   if (!config) {
     return (
       <div className="text-center py-12">
-        <AlertCircle className="mx-auto h-12 w-12 text-[#D1625B]" />
-        <p className="mt-4 text-[#6E6B67]">Failed to load email configuration</p>
+        <AlertCircle className="mx-auto h-12 w-12 text-[#AA2F0D]" />
+        <p className="mt-4 text-[#4E616F]">Failed to load email configuration</p>
       </div>
     );
   }
@@ -246,14 +246,14 @@ export function EmailSection({ language }: EmailSectionProps) {
   return (
     <div className="space-y-6">
       {/* Header Card */}
-      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#E4E1DD]">
+      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#ABC0B9]">
         <div className="flex items-center gap-3 mb-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#75534B]/10">
-            <Mail className="h-5 w-5 text-[#75534B]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
+            <Mail className="h-5 w-5 text-[#5C2F0E]" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.title}</h2>
-            <p className="text-sm text-[#6E6B67]">{t.subtitle}</p>
+            <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>
+            <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
           </div>
         </div>
 
@@ -261,8 +261,8 @@ export function EmailSection({ language }: EmailSectionProps) {
           <div
             className={`mt-4 flex items-center gap-2 rounded-lg px-4 py-3 ${
               message.type === 'success'
-                ? 'bg-[#4BAF7E]/10 text-[#4BAF7E]'
-                : 'bg-[#D1625B]/10 text-[#D1625B]'
+                ? 'bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                : 'bg-[#AA2F0D]/10 text-[#AA2F0D]'
             }`}
           >
             {message.type === 'success' ? (
@@ -276,36 +276,36 @@ export function EmailSection({ language }: EmailSectionProps) {
       </div>
 
       {/* Provider Settings */}
-      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#E4E1DD]">
-        <h3 className="text-sm font-semibold text-[#2C2C2C] mb-4 flex items-center gap-2">
-          <Key className="h-4 w-4 text-[#75534B]" />
+      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#ABC0B9]">
+        <h3 className="text-sm font-semibold text-[#2D363F] mb-4 flex items-center gap-2">
+          <Key className="h-4 w-4 text-[#5C2F0E]" />
           {t.connection}
         </h3>
 
         <div className="space-y-4">
           {/* Provider */}
           <div>
-            <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+            <label className="block text-sm font-medium text-[#2D363F] mb-1">
               {t.provider}
             </label>
-            <div className="px-4 py-2.5 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] text-sm text-[#6E6B67]">
+            <div className="px-4 py-2.5 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] text-sm text-[#4E616F]">
               Resend
             </div>
           </div>
 
           {/* API Key Status */}
           <div>
-            <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+            <label className="block text-sm font-medium text-[#2D363F] mb-1">
               {t.apiKey}
             </label>
             <div className="flex items-center gap-2 mb-2">
               {config.api_key_set ? (
-                <span className="flex items-center gap-1 text-sm text-[#4BAF7E]">
+                <span className="flex items-center gap-1 text-sm text-[#5C2F0E]">
                   <CheckCircle className="h-4 w-4" />
                   {t.apiKeySet}
                 </span>
               ) : (
-                <span className="flex items-center gap-1 text-sm text-[#D1625B]">
+                <span className="flex items-center gap-1 text-sm text-[#AA2F0D]">
                   <XCircle className="h-4 w-4" />
                   {t.apiKeyNotSet}
                 </span>
@@ -317,12 +317,12 @@ export function EmailSection({ language }: EmailSectionProps) {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder={t.apiKeyPlaceholder}
-                className="w-full rounded-lg border border-[#E4E1DD] px-4 py-2.5 pr-10 text-sm text-[#2C2C2C] placeholder:text-[#9E9B97] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-full rounded-lg border border-[#ABC0B9] px-4 py-2.5 pr-10 text-sm text-[#2D363F] placeholder:text-[#9E9B97] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
               <button
                 type="button"
                 onClick={() => setShowApiKey(!showApiKey)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6E6B67] hover:text-[#2C2C2C]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4E616F] hover:text-[#2D363F]"
               >
                 {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -331,7 +331,7 @@ export function EmailSection({ language }: EmailSectionProps) {
 
           {/* From Email */}
           <div>
-            <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+            <label className="block text-sm font-medium text-[#2D363F] mb-1">
               {t.fromEmail}
             </label>
             <input
@@ -339,13 +339,13 @@ export function EmailSection({ language }: EmailSectionProps) {
               value={config.from_email || ''}
               onChange={(e) => handleChange({ from_email: e.target.value })}
               placeholder={t.fromEmailPlaceholder}
-              className="w-full rounded-lg border border-[#E4E1DD] px-4 py-2.5 text-sm text-[#2C2C2C] placeholder:text-[#9E9B97] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="w-full rounded-lg border border-[#ABC0B9] px-4 py-2.5 text-sm text-[#2D363F] placeholder:text-[#9E9B97] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             />
           </div>
 
           {/* From Name */}
           <div>
-            <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+            <label className="block text-sm font-medium text-[#2D363F] mb-1">
               {t.fromName}
             </label>
             <input
@@ -353,13 +353,13 @@ export function EmailSection({ language }: EmailSectionProps) {
               value={config.from_name || ''}
               onChange={(e) => handleChange({ from_name: e.target.value })}
               placeholder={t.fromNamePlaceholder}
-              className="w-full rounded-lg border border-[#E4E1DD] px-4 py-2.5 text-sm text-[#2C2C2C] placeholder:text-[#9E9B97] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="w-full rounded-lg border border-[#ABC0B9] px-4 py-2.5 text-sm text-[#2D363F] placeholder:text-[#9E9B97] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             />
           </div>
 
           {/* Reply To */}
           <div>
-            <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+            <label className="block text-sm font-medium text-[#2D363F] mb-1">
               {t.replyTo}
             </label>
             <input
@@ -367,30 +367,30 @@ export function EmailSection({ language }: EmailSectionProps) {
               value={config.reply_to_email || ''}
               onChange={(e) => handleChange({ reply_to_email: e.target.value })}
               placeholder={t.replyToPlaceholder}
-              className="w-full rounded-lg border border-[#E4E1DD] px-4 py-2.5 text-sm text-[#2C2C2C] placeholder:text-[#9E9B97] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="w-full rounded-lg border border-[#ABC0B9] px-4 py-2.5 text-sm text-[#2D363F] placeholder:text-[#9E9B97] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             />
           </div>
         </div>
       </div>
 
       {/* Email Triggers */}
-      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#E4E1DD]">
-        <h3 className="text-sm font-semibold text-[#2C2C2C] mb-1 flex items-center gap-2">
-          <Send className="h-4 w-4 text-[#75534B]" />
+      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#ABC0B9]">
+        <h3 className="text-sm font-semibold text-[#2D363F] mb-1 flex items-center gap-2">
+          <Send className="h-4 w-4 text-[#5C2F0E]" />
           {t.triggers}
         </h3>
-        <p className="text-xs text-[#6E6B67] mb-4">{t.triggersDesc}</p>
+        <p className="text-xs text-[#4E616F] mb-4">{t.triggersDesc}</p>
 
         {/* Master Enable Toggle */}
-        <div className="mb-4 p-3 rounded-lg bg-[#F9F8F6]">
+        <div className="mb-4 p-3 rounded-lg bg-[#FAFBFA]">
           <label className="flex items-center justify-between cursor-pointer">
             <div>
-              <span className="text-sm font-medium text-[#2C2C2C]">{t.enabled}</span>
-              <p className="text-xs text-[#6E6B67]">{t.enabledDesc}</p>
+              <span className="text-sm font-medium text-[#2D363F]">{t.enabled}</span>
+              <p className="text-xs text-[#4E616F]">{t.enabledDesc}</p>
             </div>
             <div
               className={`relative h-6 w-11 rounded-full transition-colors ${
-                config.enabled ? 'bg-[#4BAF7E]' : 'bg-[#E4E1DD]'
+                config.enabled ? 'bg-[#5C2F0E]' : 'bg-[#ABC0B9]'
               }`}
               onClick={() => handleChange({ enabled: !config.enabled })}
             >
@@ -418,10 +418,10 @@ export function EmailSection({ language }: EmailSectionProps) {
               key={trigger.key}
               className="flex items-center justify-between cursor-pointer py-2"
             >
-              <span className="text-sm text-[#2C2C2C]">{trigger.label}</span>
+              <span className="text-sm text-[#2D363F]">{trigger.label}</span>
               <div
                 className={`relative h-5 w-9 rounded-full transition-colors ${
-                  config[trigger.key as keyof EmailConfig] ? 'bg-[#75534B]' : 'bg-[#E4E1DD]'
+                  config[trigger.key as keyof EmailConfig] ? 'bg-[#5C2F0E]' : 'bg-[#ABC0B9]'
                 }`}
                 onClick={() =>
                   handleChange({
@@ -441,21 +441,21 @@ export function EmailSection({ language }: EmailSectionProps) {
       </div>
 
       {/* Test Connection */}
-      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#E4E1DD]">
-        <h3 className="text-sm font-semibold text-[#2C2C2C] mb-4">{t.testConnection}</h3>
+      <div className="rounded-xl bg-white p-6 shadow-sm border border-[#ABC0B9]">
+        <h3 className="text-sm font-semibold text-[#2D363F] mb-4">{t.testConnection}</h3>
 
         {/* Last test status */}
         {config.last_test_at && (
           <div className="mb-4 text-sm">
-            <span className="text-[#6E6B67]">{t.lastTest}: </span>
-            <span className={config.last_test_success ? 'text-[#4BAF7E]' : 'text-[#D1625B]'}>
+            <span className="text-[#4E616F]">{t.lastTest}: </span>
+            <span className={config.last_test_success ? 'text-[#5C2F0E]' : 'text-[#AA2F0D]'}>
               {config.last_test_success ? 'Success' : 'Failed'}
             </span>
             <span className="text-[#9E9B97] ml-2">
               ({new Date(config.last_test_at).toLocaleString()})
             </span>
             {config.last_test_error && (
-              <p className="mt-1 text-xs text-[#D1625B]">{config.last_test_error}</p>
+              <p className="mt-1 text-xs text-[#AA2F0D]">{config.last_test_error}</p>
             )}
           </div>
         )}
@@ -466,12 +466,12 @@ export function EmailSection({ language }: EmailSectionProps) {
             value={testEmail}
             onChange={(e) => setTestEmail(e.target.value)}
             placeholder={t.testEmailPlaceholder}
-            className="flex-1 rounded-lg border border-[#E4E1DD] px-4 py-2.5 text-sm text-[#2C2C2C] placeholder:text-[#9E9B97] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+            className="flex-1 rounded-lg border border-[#ABC0B9] px-4 py-2.5 text-sm text-[#2D363F] placeholder:text-[#9E9B97] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
           />
           <button
             onClick={handleTest}
             disabled={isTesting || !testEmail || !config.api_key_set}
-            className="flex items-center gap-2 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] px-4 py-2.5 text-sm font-medium text-[#75534B] transition-all hover:bg-[#75534B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] px-4 py-2.5 text-sm font-medium text-[#5C2F0E] transition-all hover:bg-[#5C2F0E] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isTesting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -488,7 +488,7 @@ export function EmailSection({ language }: EmailSectionProps) {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSaving ? (
             <Loader2 className="h-4 w-4 animate-spin" />

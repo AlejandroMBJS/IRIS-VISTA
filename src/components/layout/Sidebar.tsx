@@ -162,7 +162,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-[73px] bottom-0 border-r border-[#E4E1DD] bg-white overflow-y-auto hidden md:block md:w-16 lg:w-64 transition-all duration-200">
+    <aside className="fixed left-0 top-[73px] bottom-0 border-r border-[#ABC0B9] bg-white overflow-y-auto hidden md:block md:w-16 lg:w-64 transition-all duration-200">
       <nav className="flex flex-col gap-1 p-2 lg:p-4">
         {filteredMenuItems.map((item) => {
           const Icon = item.icon;
@@ -176,8 +176,8 @@ export function Sidebar() {
               href={item.href}
               className={`relative flex items-center gap-3 rounded-xl px-3 py-3 lg:px-4 text-sm transition-all duration-200 ${
                 active
-                  ? 'bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white shadow-md'
-                  : 'text-[#75534B] hover:bg-[#F9F8F6] active:scale-95'
+                  ? 'bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white shadow-md'
+                  : 'text-[#5C2F0E] hover:bg-[#ABC0B9]/10 active:scale-95'
               }`}
               style={{ fontWeight: 500 }}
               title={label}
@@ -189,7 +189,7 @@ export function Sidebar() {
                   className={`flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold ${
                     active
                       ? 'bg-white/20 text-white'
-                      : 'bg-[#D1625B] text-white'
+                      : 'bg-[#AA2F0D] text-white'
                   } hidden lg:flex`}
                 >
                   {badgeCount > 99 ? '99+' : badgeCount}
@@ -199,7 +199,7 @@ export function Sidebar() {
               {badgeCount > 0 && (
                 <span
                   className={`absolute top-1 right-1 w-2 h-2 rounded-full lg:hidden ${
-                    active ? 'bg-white/80' : 'bg-[#D1625B]'
+                    active ? 'bg-white/80' : 'bg-[#AA2F0D]'
                   }`}
                 />
               )}

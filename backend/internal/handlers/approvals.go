@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,7 @@ import (
 	"vista-backend/internal/models"
 	"vista-backend/internal/services/amazon"
 	"vista-backend/internal/services/notifications"
+	"vista-backend/internal/services/translation"
 	"vista-backend/pkg/crypto"
 	"vista-backend/pkg/response"
 )
@@ -20,6 +22,7 @@ type ApprovalHandler struct {
 	amazonSvc       *amazon.AutomationService
 	encryptionSvc   *crypto.EncryptionService
 	notificationSvc *notifications.NotificationService
+	asyncTranslator *translation.AsyncTranslator
 }
 
 func NewApprovalHandler(db *gorm.DB, amazonSvc *amazon.AutomationService, encryptionSvc *crypto.EncryptionService) *ApprovalHandler {
@@ -28,7 +31,26 @@ func NewApprovalHandler(db *gorm.DB, amazonSvc *amazon.AutomationService, encryp
 		amazonSvc:       amazonSvc,
 		encryptionSvc:   encryptionSvc,
 		notificationSvc: notifications.NewNotificationService(db),
+		asyncTranslator: translation.NewAsyncTranslator(db),
 	}
+}
+
+// getUserLanguage extracts user's preferred language from request headers
+func (h *ApprovalHandler) getUserLanguage(c *gin.Context) string {
+	if lang := c.GetHeader("X-User-Language"); lang != "" {
+		lang = strings.ToLower(lang)
+		if lang == "en" || lang == "zh" || lang == "es" {
+			return lang
+		}
+	}
+	acceptLang := c.GetHeader("Accept-Language")
+	if strings.HasPrefix(strings.ToLower(acceptLang), "zh") {
+		return "zh"
+	}
+	if strings.HasPrefix(strings.ToLower(acceptLang), "es") {
+		return "es"
+	}
+	return "en"
 }
 
 type ApprovalAction struct {
@@ -323,6 +345,21 @@ func (h *ApprovalHandler) RejectRequest(c *gin.Context) {
 	request.RejectedAt = &now
 	request.RejectionReason = input.Comment
 
+	// Translate rejection reason
+	userLang := h.getUserLanguage(c)
+	translationResult, _ := h.asyncTranslator.TranslateField(
+		input.Comment,
+		userLang,
+		func(t *translation.TranslatedText) error {
+			return h.db.Model(&models.PurchaseRequest{}).
+				Where("id = ?", request.ID).
+				Update("rejection_reason_translated", translation.ToJSON(t)).Error
+		},
+	)
+	if translationResult != nil {
+		request.RejectionReasonTranslated = translationResult.JSON
+	}
+
 	err = h.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&request).Error; err != nil {
 			return err
@@ -397,6 +434,21 @@ func (h *ApprovalHandler) RequestInfo(c *gin.Context) {
 	request.Status = models.StatusInfoRequested
 	request.InfoRequestedAt = &now
 	request.InfoRequestNote = input.Comment
+
+	// Translate info request note
+	userLang := h.getUserLanguage(c)
+	translationResult, _ := h.asyncTranslator.TranslateField(
+		input.Comment,
+		userLang,
+		func(t *translation.TranslatedText) error {
+			return h.db.Model(&models.PurchaseRequest{}).
+				Where("id = ?", request.ID).
+				Update("info_request_note_translated", translation.ToJSON(t)).Error
+		},
+	)
+	if translationResult != nil {
+		request.InfoRequestNoteTranslated = translationResult.JSON
+	}
 
 	err = h.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&request).Error; err != nil {

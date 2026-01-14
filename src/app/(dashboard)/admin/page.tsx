@@ -86,7 +86,7 @@ export default function AdminPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
@@ -96,13 +96,13 @@ export default function AdminPage() {
       icon: Users,
       label: t.totalUsers,
       value: stats?.total_users || 0,
-      color: 'from-[#3A6EA5] to-[#2D5A8A]',
+      color: 'from-[#5C2F0E] to-[#2D363F]',
     },
     {
       icon: Users,
       label: t.activeUsers,
       value: stats?.active_users || 0,
-      color: 'from-[#4BAF7E] to-[#3D9066]',
+      color: 'from-[#5C2F0E] to-[#3D9066]',
     },
     {
       icon: Package,
@@ -114,7 +114,7 @@ export default function AdminPage() {
       icon: ClipboardList,
       label: t.totalRequests,
       value: stats?.total_requests || 0,
-      color: 'from-[#E08A4B] to-[#C77A3F]',
+      color: 'from-[#E95F20] to-[#C77A3F]',
     },
     {
       icon: CheckSquare,
@@ -130,26 +130,26 @@ export default function AdminPage() {
       title: t.userManagement,
       description: t.userManagementDesc,
       href: '/admin/users',
-      color: 'bg-[#3A6EA5]',
+      color: 'bg-[#5C2F0E]',
     },
     {
       icon: ShoppingCart,
       title: t.purchaseConfig,
       description: t.purchaseConfigDesc,
       href: '/admin/purchase-config',
-      color: 'bg-[#E08A4B]',
+      color: 'bg-[#E95F20]',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="border-b border-[#E4E1DD] bg-white px-4 md:px-8 py-6 md:py-8">
+      <section className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
-          <h1 className="mb-2 text-4xl text-[#2C2C2C]" style={{ fontWeight: 600 }}>
+          <h1 className="mb-2 text-4xl text-[#2D363F]" style={{ fontWeight: 600 }}>
             {t.title}
           </h1>
-          <p className="text-base text-[#6E6B67]">{t.subtitle}</p>
+          <p className="text-base text-[#4E616F]">{t.subtitle}</p>
         </div>
       </section>
 
@@ -177,7 +177,7 @@ export default function AdminPage() {
           </div>
 
           {/* Management Links */}
-          <h2 className="text-xl font-semibold text-[#2C2C2C] mb-4">{t.management}</h2>
+          <h2 className="text-xl font-semibold text-[#2D363F] mb-4">{t.management}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {managementLinks.map((link, idx) => {
               const Icon = link.icon;
@@ -185,7 +185,7 @@ export default function AdminPage() {
                 <Link
                   key={idx}
                   href={link.href}
-                  className="group rounded-xl bg-white border border-[#E4E1DD] p-6 shadow-sm hover:shadow-md transition-all"
+                  className="group rounded-xl bg-white border border-[#ABC0B9] p-6 shadow-sm hover:shadow-md transition-all"
                 >
                   <div className="flex items-start gap-4">
                     <div
@@ -194,12 +194,12 @@ export default function AdminPage() {
                       <Icon className="h-6 w-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-[#2C2C2C] group-hover:text-[#75534B] transition-colors">
+                      <h3 className="font-semibold text-[#2D363F] group-hover:text-[#5C2F0E] transition-colors">
                         {link.title}
                       </h3>
-                      <p className="text-sm text-[#6E6B67] mt-1">{link.description}</p>
+                      <p className="text-sm text-[#4E616F] mt-1">{link.description}</p>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-[#E4E1DD] group-hover:text-[#75534B] transition-colors" />
+                    <ArrowRight className="h-5 w-5 text-[#ABC0B9] group-hover:text-[#5C2F0E] transition-colors" />
                   </div>
                 </Link>
               );

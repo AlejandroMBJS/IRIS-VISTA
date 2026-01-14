@@ -103,7 +103,7 @@ export function RecentActivity({ language }: RecentActivityProps) {
     <section>
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-gray-900">{t.title}</h2>
-        <button className="text-sm text-[#75534B] hover:underline">
+        <button className="text-sm text-[#5C2F0E] hover:underline">
           {t.viewAll}
         </button>
       </div>
@@ -129,7 +129,7 @@ export function RecentActivity({ language }: RecentActivityProps) {
                   className="border-b border-gray-100 transition-colors hover:bg-gray-50"
                 >
                   <td className="px-6 py-4">
-                    <button className="text-left text-sm text-gray-900 hover:text-[#75534B]">
+                    <button className="text-left text-sm text-gray-900 hover:text-[#5C2F0E]">
                       {request.title}
                     </button>
                   </td>

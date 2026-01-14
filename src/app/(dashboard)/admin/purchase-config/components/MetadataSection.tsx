@@ -130,16 +130,16 @@ export function MetadataSection({ config, onChange, language }: Props) {
   const blockedDomainsText = config.blocked_domains?.join('\n') || '';
 
   return (
-    <div className="rounded-xl border border-[#E4E1DD] bg-white shadow-sm">
+    <div className="rounded-xl border border-[#ABC0B9] bg-white shadow-sm">
       {/* Header */}
-      <div className="border-b border-[#E4E1DD] px-6 py-4">
+      <div className="border-b border-[#ABC0B9] px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#3A6EA5]/10">
-            <Link2 className="h-5 w-5 text-[#3A6EA5]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
+            <Link2 className="h-5 w-5 text-[#5C2F0E]" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.title}</h2>
-            <p className="text-sm text-[#6E6B67]">{t.subtitle}</p>
+            <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>
+            <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@ export function MetadataSection({ config, onChange, language }: Props) {
         {/* Timeout and Cache Duration */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-2 block text-sm font-medium text-[#2C2C2C]">
+            <label className="mb-2 block text-sm font-medium text-[#2D363F]">
               {t.timeout}
             </label>
             <div className="flex items-center gap-2">
@@ -159,14 +159,14 @@ export function MetadataSection({ config, onChange, language }: Props) {
                 max={60}
                 value={config.extraction_timeout_seconds}
                 onChange={(e) => onChange({ extraction_timeout_seconds: parseInt(e.target.value) || 10 })}
-                className="w-24 rounded-lg border border-[#E4E1DD] bg-white px-4 py-2 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-24 rounded-lg border border-[#ABC0B9] bg-white px-4 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
-              <span className="text-sm text-[#6E6B67]">{t.timeoutSuffix}</span>
+              <span className="text-sm text-[#4E616F]">{t.timeoutSuffix}</span>
             </div>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-[#2C2C2C]">
+            <label className="mb-2 block text-sm font-medium text-[#2D363F]">
               {t.cacheDuration}
             </label>
             <div className="flex items-center gap-2">
@@ -176,9 +176,9 @@ export function MetadataSection({ config, onChange, language }: Props) {
                 max={168}
                 value={config.cache_duration_hours}
                 onChange={(e) => onChange({ cache_duration_hours: parseInt(e.target.value) || 24 })}
-                className="w-24 rounded-lg border border-[#E4E1DD] bg-white px-4 py-2 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-24 rounded-lg border border-[#ABC0B9] bg-white px-4 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
-              <span className="text-sm text-[#6E6B67]">{t.cacheDurationSuffix}</span>
+              <span className="text-sm text-[#4E616F]">{t.cacheDurationSuffix}</span>
             </div>
           </div>
         </div>
@@ -193,12 +193,12 @@ export function MetadataSection({ config, onChange, language }: Props) {
                 onChange={(e) => onChange({ allow_manual_edit: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="h-6 w-11 rounded-full bg-[#E4E1DD] peer-checked:bg-[#4BAF7E] transition-colors" />
+              <div className="h-6 w-11 rounded-full bg-[#ABC0B9] peer-checked:bg-[#5C2F0E] transition-colors" />
               <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
             </div>
             <div className="flex-1">
-              <span className="block text-sm font-medium text-[#2C2C2C]">{t.allowManualEdit}</span>
-              <span className="block text-sm text-[#6E6B67]">{t.allowManualEditDesc}</span>
+              <span className="block text-sm font-medium text-[#2D363F]">{t.allowManualEdit}</span>
+              <span className="block text-sm text-[#4E616F]">{t.allowManualEditDesc}</span>
             </div>
           </label>
 
@@ -210,19 +210,19 @@ export function MetadataSection({ config, onChange, language }: Props) {
                 onChange={(e) => onChange({ cache_enabled: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="h-6 w-11 rounded-full bg-[#E4E1DD] peer-checked:bg-[#4BAF7E] transition-colors" />
+              <div className="h-6 w-11 rounded-full bg-[#ABC0B9] peer-checked:bg-[#5C2F0E] transition-colors" />
               <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
             </div>
             <div className="flex-1">
-              <span className="block text-sm font-medium text-[#2C2C2C]">{t.cacheEnabled}</span>
-              <span className="block text-sm text-[#6E6B67]">{t.cacheEnabledDesc}</span>
+              <span className="block text-sm font-medium text-[#2D363F]">{t.cacheEnabled}</span>
+              <span className="block text-sm text-[#4E616F]">{t.cacheEnabledDesc}</span>
             </div>
           </label>
         </div>
 
         {/* Custom User Agent */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-[#2C2C2C]">
+          <label className="mb-2 block text-sm font-medium text-[#2D363F]">
             {t.customUserAgent}
           </label>
           <input
@@ -230,7 +230,7 @@ export function MetadataSection({ config, onChange, language }: Props) {
             value={config.custom_user_agent}
             onChange={(e) => onChange({ custom_user_agent: e.target.value })}
             placeholder={t.customUserAgentPlaceholder}
-            className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+            className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
           />
         </div>
 
@@ -238,10 +238,10 @@ export function MetadataSection({ config, onChange, language }: Props) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <div className="mb-2 flex items-center gap-2">
-              <label className="text-sm font-medium text-[#2C2C2C]">{t.allowedDomains}</label>
+              <label className="text-sm font-medium text-[#2D363F]">{t.allowedDomains}</label>
               <div className="group relative">
-                <HelpCircle className="h-4 w-4 text-[#6E6B67] cursor-help" />
-                <div className="absolute left-0 top-6 z-10 hidden w-64 rounded-lg bg-[#2C2C2C] p-3 text-xs text-white shadow-lg group-hover:block">
+                <HelpCircle className="h-4 w-4 text-[#4E616F] cursor-help" />
+                <div className="absolute left-0 top-6 z-10 hidden w-64 rounded-lg bg-[#2D363F] p-3 text-xs text-white shadow-lg group-hover:block">
                   {t.allowedDomainsHelp}
                 </div>
               </div>
@@ -253,12 +253,12 @@ export function MetadataSection({ config, onChange, language }: Props) {
               })}
               placeholder={t.allowedDomainsPlaceholder}
               rows={5}
-              className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] font-mono transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 resize-none"
+              className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] font-mono transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 resize-none"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-[#2C2C2C]">
+            <label className="mb-2 block text-sm font-medium text-[#2D363F]">
               {t.blockedDomains}
             </label>
             <textarea
@@ -268,26 +268,26 @@ export function MetadataSection({ config, onChange, language }: Props) {
               })}
               placeholder={t.blockedDomainsPlaceholder}
               rows={5}
-              className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] font-mono transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 resize-none"
+              className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] font-mono transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 resize-none"
             />
           </div>
         </div>
 
         {/* Test Extraction */}
-        <div className="border-t border-[#E4E1DD] pt-6">
-          <h3 className="mb-4 text-sm font-semibold text-[#2C2C2C]">{t.testExtraction}</h3>
+        <div className="border-t border-[#ABC0B9] pt-6">
+          <h3 className="mb-4 text-sm font-semibold text-[#2D363F]">{t.testExtraction}</h3>
           <div className="flex gap-2">
             <input
               type="url"
               value={testUrl}
               onChange={(e) => setTestUrl(e.target.value)}
               placeholder={t.testUrlPlaceholder}
-              className="flex-1 rounded-lg border border-[#E4E1DD] bg-white px-4 py-2 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="flex-1 rounded-lg border border-[#ABC0B9] bg-white px-4 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             />
             <button
               onClick={handleTest}
               disabled={isTesting || !testUrl}
-              className="flex items-center gap-2 rounded-lg bg-[#3A6EA5] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#3A6EA5]/90 disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-[#5C2F0E] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#5C2F0E]/90 disabled:opacity-50"
             >
               {isTesting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -300,8 +300,8 @@ export function MetadataSection({ config, onChange, language }: Props) {
 
           {/* Test Result */}
           {testResult && (
-            <div className="mt-4 rounded-lg border border-[#4BAF7E]/30 bg-[#4BAF7E]/5 p-4">
-              <div className="flex items-center gap-2 text-[#4BAF7E] mb-3">
+            <div className="mt-4 rounded-lg border border-[#5C2F0E]/30 bg-[#5C2F0E]/5 p-4">
+              <div className="flex items-center gap-2 text-[#5C2F0E] mb-3">
                 <Check className="h-4 w-4" />
                 <span className="text-sm font-medium">{t.testSuccess}</span>
               </div>
@@ -310,14 +310,14 @@ export function MetadataSection({ config, onChange, language }: Props) {
                   <img
                     src={testResult.image_url}
                     alt=""
-                    className="h-20 w-20 rounded-lg object-cover border border-[#E4E1DD]"
+                    className="h-20 w-20 rounded-lg object-cover border border-[#ABC0B9]"
                   />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#2C2C2C] truncate">{testResult.title}</p>
-                  <p className="text-xs text-[#6E6B67] mt-1 line-clamp-2">{testResult.description}</p>
+                  <p className="text-sm font-medium text-[#2D363F] truncate">{testResult.title}</p>
+                  <p className="text-xs text-[#4E616F] mt-1 line-clamp-2">{testResult.description}</p>
                   {testResult.price && (
-                    <p className="text-sm font-semibold text-[#4BAF7E] mt-2">
+                    <p className="text-sm font-semibold text-[#5C2F0E] mt-2">
                       {testResult.currency} ${formatPrice(testResult.price)}
                     </p>
                   )}
@@ -327,12 +327,12 @@ export function MetadataSection({ config, onChange, language }: Props) {
           )}
 
           {testError && (
-            <div className="mt-4 rounded-lg border border-[#D1625B]/30 bg-[#D1625B]/5 p-4">
-              <div className="flex items-center gap-2 text-[#D1625B]">
+            <div className="mt-4 rounded-lg border border-[#AA2F0D]/30 bg-[#AA2F0D]/5 p-4">
+              <div className="flex items-center gap-2 text-[#AA2F0D]">
                 <AlertCircle className="h-4 w-4" />
                 <span className="text-sm font-medium">{t.testFailed}</span>
               </div>
-              <p className="mt-2 text-xs text-[#6E6B67]">{testError}</p>
+              <p className="mt-2 text-xs text-[#4E616F]">{testError}</p>
             </div>
           )}
         </div>

@@ -235,14 +235,14 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E4E1DD] shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#ABC0B9] shadow-sm">
       <div className="flex items-center justify-between px-3 sm:px-6 py-3">
         {/* Logo */}
         <Link
           href="/"
           className="flex items-center gap-2 sm:gap-3 transition-transform duration-200 hover:scale-105 active:scale-100"
         >
-          <div className="relative flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#75534B] to-[#5D423C] shadow-md transition-shadow duration-300 hover:shadow-lg">
+          <div className="relative flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] shadow-md transition-shadow duration-300 hover:shadow-lg">
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
             <span className="relative text-lg sm:text-xl text-white" style={{ fontWeight: 700 }}>
               IRIS
@@ -250,12 +250,12 @@ export function Header() {
           </div>
           <div className="text-left hidden sm:block">
             <div
-              className="text-xl text-[#2C2C2C]"
+              className="text-xl text-[#2D363F]"
               style={{ fontWeight: 600, letterSpacing: '-0.02em' }}
             >
               VISTA
             </div>
-            <div className="text-xs text-[#75534B]" style={{ fontWeight: 400 }}>
+            <div className="text-xs text-[#5C2F0E]" style={{ fontWeight: 400 }}>
               Supply Chain & Procurement
             </div>
           </div>
@@ -264,11 +264,11 @@ export function Header() {
         {/* Global Search - Hidden on mobile */}
         <div className="hidden md:flex flex-1 max-w-2xl mx-8">
           <div className="relative w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#6E6B67]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4E616F]" />
             <input
               type="text"
               placeholder={t.search}
-              className="w-full rounded-xl border border-[#E4E1DD] bg-[#F9F8F6] py-2.5 pl-12 pr-4 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="w-full rounded-xl border border-[#ABC0B9] bg-[#FAFBFA] py-2.5 pl-12 pr-4 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             />
           </div>
         </div>
@@ -278,11 +278,11 @@ export function Header() {
           {/* Cart */}
           <Link
             href="/cart"
-            className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#75534B] transition-all duration-200 hover:bg-[#F9F8F6] active:scale-95"
+            className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#5C2F0E] transition-all duration-200 hover:bg-[#FAFBFA] active:scale-95"
           >
             <ShoppingCart className="h-5 w-5" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#75534B] text-xs text-white shadow-md">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#5C2F0E] text-xs text-white shadow-md">
                 {itemCount > 9 ? '9+' : itemCount}
               </span>
             )}
@@ -292,24 +292,24 @@ export function Header() {
           <div className="relative" ref={notificationRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#75534B] transition-all duration-200 hover:bg-[#F9F8F6] active:scale-95"
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#5C2F0E] transition-all duration-200 hover:bg-[#FAFBFA] active:scale-95"
             >
               <Bell className="h-5 w-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#D1625B] text-xs text-white shadow-md">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#AA2F0D] text-xs text-white shadow-md">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 sm:right-0 top-12 w-[calc(100vw-1.5rem)] sm:w-80 max-w-80 rounded-xl bg-white shadow-lg border border-[#E4E1DD] overflow-hidden z-50">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-[#E4E1DD] bg-[#F9F8F6]">
-                  <span className="text-sm font-semibold text-[#2C2C2C]">{t.notifications}</span>
+              <div className="absolute right-0 sm:right-0 top-12 w-[calc(100vw-1.5rem)] sm:w-80 max-w-80 rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-[#ABC0B9] bg-[#FAFBFA]">
+                  <span className="text-sm font-semibold text-[#2D363F]">{t.notifications}</span>
                   {unreadCount > 0 && (
                     <button
                       onClick={handleMarkAllAsRead}
-                      className="flex items-center gap-1 text-xs text-[#75534B] hover:text-[#5D423C] transition-colors"
+                      className="flex items-center gap-1 text-xs text-[#5C2F0E] hover:text-[#2D363F] transition-colors"
                     >
                       <CheckCheck className="h-3.5 w-3.5" />
                       {language === 'zh' ? '全部已读' : language === 'es' ? 'Marcar todo' : 'Mark all read'}
@@ -318,16 +318,16 @@ export function Header() {
                 </div>
                 <div className="max-h-80 overflow-y-auto">
                   {notifications.length === 0 ? (
-                    <div className="px-4 py-8 text-center text-sm text-[#6E6B67]">
+                    <div className="px-4 py-8 text-center text-sm text-[#4E616F]">
                       {language === 'zh' ? '没有通知' : language === 'es' ? 'Sin notificaciones' : 'No notifications'}
                     </div>
                   ) : (
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className={`px-4 py-3 border-b border-[#E4E1DD] last:border-b-0 cursor-pointer transition-colors ${
-                          notification.is_read ? 'bg-white' : 'bg-[#75534B]/5'
-                        } hover:bg-[#F9F8F6]`}
+                        className={`px-4 py-3 border-b border-[#ABC0B9] last:border-b-0 cursor-pointer transition-colors ${
+                          notification.is_read ? 'bg-white' : 'bg-[#5C2F0E]/5'
+                        } hover:bg-[#FAFBFA]`}
                         onClick={() => {
                           if (!notification.is_read) {
                             handleMarkAsRead(notification.id);
@@ -340,13 +340,13 @@ export function Header() {
                       >
                         <div className="flex items-start gap-3">
                           <div className={`mt-1 h-2 w-2 rounded-full flex-shrink-0 ${
-                            notification.is_read ? 'bg-transparent' : 'bg-[#D1625B]'
+                            notification.is_read ? 'bg-transparent' : 'bg-[#AA2F0D]'
                           }`} />
                           <div className="flex-1 min-w-0">
-                            <p className={`text-sm truncate ${notification.is_read ? 'text-[#6E6B67]' : 'text-[#2C2C2C] font-medium'}`}>
+                            <p className={`text-sm truncate ${notification.is_read ? 'text-[#4E616F]' : 'text-[#2D363F] font-medium'}`}>
                               {notification.title}
                             </p>
-                            <p className="text-xs text-[#6E6B67] mt-0.5 line-clamp-2">
+                            <p className="text-xs text-[#4E616F] mt-0.5 line-clamp-2">
                               {notification.message}
                             </p>
                             <p className="text-xs text-[#9E9B97] mt-1">
@@ -359,7 +359,7 @@ export function Header() {
                                 e.stopPropagation();
                                 handleMarkAsRead(notification.id);
                               }}
-                              className="p-1 text-[#75534B] hover:bg-[#75534B]/10 rounded transition-colors"
+                              className="p-1 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded transition-colors"
                               title={language === 'zh' ? '标记为已读' : language === 'es' ? 'Marcar leído' : 'Mark as read'}
                             >
                               <Check className="h-4 w-4" />
@@ -378,7 +378,7 @@ export function Header() {
           <div className="relative hidden sm:block">
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 rounded-xl border border-[#E4E1DD] px-3 py-2 text-sm text-[#75534B] transition-all duration-200 hover:border-[#75534B] hover:bg-[#F9F8F6] active:scale-95"
+              className="flex items-center gap-2 rounded-xl border border-[#ABC0B9] px-3 py-2 text-sm text-[#5C2F0E] transition-all duration-200 hover:border-[#5C2F0E] hover:bg-[#FAFBFA] active:scale-95"
             >
               <Globe className="h-4 w-4" />
               <span style={{ fontWeight: 500 }}>{languageLabels[language]}</span>
@@ -386,7 +386,7 @@ export function Header() {
             </button>
 
             {showLangMenu && (
-              <div className="absolute right-0 top-12 w-48 rounded-xl bg-white shadow-lg border border-[#E4E1DD] overflow-hidden z-50">
+              <div className="absolute right-0 top-12 w-48 rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
                 {Object.entries(t.languages).map(([key, label]) => (
                   <button
                     key={key}
@@ -396,8 +396,8 @@ export function Header() {
                     }}
                     className={`w-full px-4 py-3 text-left text-sm transition-colors ${
                       language === key
-                        ? 'bg-[#75534B]/10 text-[#75534B]'
-                        : 'text-[#2C2C2C] hover:bg-[#F9F8F6]'
+                        ? 'bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                        : 'text-[#2D363F] hover:bg-[#FAFBFA]'
                     }`}
                     style={{ fontWeight: language === key ? 600 : 400 }}
                   >
@@ -412,30 +412,30 @@ export function Header() {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#75534B] to-[#5D423C] text-sm text-white shadow-md transition-all duration-200 hover:shadow-lg active:scale-95"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] text-sm text-white shadow-md transition-all duration-200 hover:shadow-lg active:scale-95"
             >
               <span style={{ fontWeight: 600 }}>{getUserInitials()}</span>
             </button>
 
             {showUserMenu && (
-              <div className="absolute right-0 top-12 w-56 rounded-xl bg-white shadow-lg border border-[#E4E1DD] overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-[#E4E1DD]">
-                  <p className="text-sm font-semibold text-[#2C2C2C]">{user?.name}</p>
-                  <p className="text-xs text-[#6E6B67]">{user?.email}</p>
-                  <p className="text-xs text-[#75534B] capitalize mt-1">
+              <div className="absolute right-0 top-12 w-56 rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
+                <div className="px-4 py-3 border-b border-[#ABC0B9]">
+                  <p className="text-sm font-semibold text-[#2D363F]">{user?.name}</p>
+                  <p className="text-xs text-[#4E616F]">{user?.email}</p>
+                  <p className="text-xs text-[#5C2F0E] capitalize mt-1">
                     {user?.role.replace('_', ' ')}
                   </p>
                 </div>
                 <button
                   onClick={openPasswordModal}
-                  className="w-full px-4 py-3 text-left text-sm text-[#2C2C2C] hover:bg-[#F9F8F6] transition-colors flex items-center gap-2 border-b border-[#E4E1DD]"
+                  className="w-full px-4 py-3 text-left text-sm text-[#2D363F] hover:bg-[#FAFBFA] transition-colors flex items-center gap-2 border-b border-[#ABC0B9]"
                 >
                   <Key className="h-4 w-4" />
                   {t.changePassword}
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="w-full px-4 py-3 text-left text-sm text-[#D1625B] hover:bg-red-50 transition-colors flex items-center gap-2"
+                  className="w-full px-4 py-3 text-left text-sm text-[#AA2F0D] hover:bg-red-50 transition-colors flex items-center gap-2"
                 >
                   <LogOut className="h-4 w-4" />
                   {t.logout}
@@ -451,16 +451,16 @@ export function Header() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#E4E1DD]">
-              <h2 className="text-lg font-semibold text-[#2C2C2C] flex items-center gap-2">
-                <Key className="h-5 w-5 text-[#75534B]" />
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#ABC0B9]">
+              <h2 className="text-lg font-semibold text-[#2D363F] flex items-center gap-2">
+                <Key className="h-5 w-5 text-[#5C2F0E]" />
                 {t.passwordModalTitle}
               </h2>
               <button
                 onClick={() => setShowPasswordModal(false)}
-                className="p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors"
+                className="p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors"
               >
-                <X className="h-5 w-5 text-[#6E6B67]" />
+                <X className="h-5 w-5 text-[#4E616F]" />
               </button>
             </div>
 
@@ -469,13 +469,13 @@ export function Header() {
               {passwordSuccess ? (
                 <div className="flex flex-col items-center py-8">
                   <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-                  <p className="text-lg font-medium text-[#2C2C2C]">{t.passwordChanged}</p>
+                  <p className="text-lg font-medium text-[#2D363F]">{t.passwordChanged}</p>
                 </div>
               ) : (
                 <>
                   {/* Current Password */}
                   <div>
-                    <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                    <label className="block text-sm font-medium text-[#2D363F] mb-1">
                       {t.currentPassword}
                     </label>
                     <div className="relative">
@@ -483,7 +483,7 @@ export function Header() {
                         type={showCurrentPwd ? 'text' : 'password'}
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
-                        className="w-full px-4 py-2.5 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 focus:border-[#75534B] pr-10"
+                        className="w-full px-4 py-2.5 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 focus:border-[#5C2F0E] pr-10"
                       />
                       <button
                         type="button"
@@ -497,7 +497,7 @@ export function Header() {
 
                   {/* New Password */}
                   <div>
-                    <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                    <label className="block text-sm font-medium text-[#2D363F] mb-1">
                       {t.newPassword}
                     </label>
                     <div className="relative">
@@ -505,7 +505,7 @@ export function Header() {
                         type={showNewPwd ? 'text' : 'password'}
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full px-4 py-2.5 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 focus:border-[#75534B] pr-10"
+                        className="w-full px-4 py-2.5 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 focus:border-[#5C2F0E] pr-10"
                       />
                       <button
                         type="button"
@@ -515,19 +515,19 @@ export function Header() {
                         {showNewPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
-                    <p className="text-xs text-[#6E6B67] mt-1">{t.passwordMinLength}</p>
+                    <p className="text-xs text-[#4E616F] mt-1">{t.passwordMinLength}</p>
                   </div>
 
                   {/* Confirm Password */}
                   <div>
-                    <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                    <label className="block text-sm font-medium text-[#2D363F] mb-1">
                       {t.confirmPassword}
                     </label>
                     <input
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]/20 focus:border-[#75534B]"
+                      className="w-full px-4 py-2.5 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 focus:border-[#5C2F0E]"
                     />
                   </div>
 
@@ -544,18 +544,18 @@ export function Header() {
 
             {/* Modal Footer */}
             {!passwordSuccess && (
-              <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#E4E1DD] bg-[#F9F8F6]">
+              <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#ABC0B9] bg-[#FAFBFA]">
                 <button
                   onClick={() => setShowPasswordModal(false)}
                   disabled={isChangingPassword}
-                  className="px-4 py-2 rounded-lg border border-[#E4E1DD] bg-white text-[#2C2C2C] font-medium hover:bg-[#F9F8F6] transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg border border-[#ABC0B9] bg-white text-[#2D363F] font-medium hover:bg-[#FAFBFA] transition-colors disabled:opacity-50"
                 >
                   {t.cancel}
                 </button>
                 <button
                   onClick={handleChangePassword}
                   disabled={isChangingPassword || !currentPassword || !newPassword || !confirmPassword}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] text-white font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white font-medium hover:shadow-lg transition-all disabled:opacity-50"
                 >
                   {isChangingPassword ? (
                     <>

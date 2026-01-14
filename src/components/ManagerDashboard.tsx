@@ -90,8 +90,8 @@ export function ManagerDashboard({ language }: ManagerDashboardProps) {
         {/* Monthly Spend */}
         <div className="rounded-xl bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#75534B]/10">
-              <DollarSign className="h-5 w-5 text-[#75534B]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
+              <DollarSign className="h-5 w-5 text-[#5C2F0E]" />
             </div>
             <h3 className="text-gray-900">{t.monthlySpend.title}</h3>
           </div>

@@ -176,28 +176,28 @@ export default function RegisterPage() {
       <div className="w-full max-w-md p-8">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#75534B] to-[#5D423C] shadow-lg mb-4">
+          <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] shadow-lg mb-4">
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
             <span className="relative text-2xl text-white" style={{ fontWeight: 700 }}>
               IRIS
             </span>
           </div>
-          <h1 className="text-2xl text-[#2C2C2C]" style={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
+          <h1 className="text-2xl text-[#2D363F]" style={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
             VISTA
           </h1>
-          <p className="text-sm text-[#75534B]">Supply Chain & Procurement</p>
+          <p className="text-sm text-[#5C2F0E]">Supply Chain & Procurement</p>
         </div>
 
         {/* Success Card */}
-        <div className="rounded-2xl bg-white p-8 shadow-lg border border-[#E4E1DD]">
+        <div className="rounded-2xl bg-white p-8 shadow-lg border border-[#ABC0B9]">
           <div className="text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mb-4">
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
-            <h2 className="text-xl text-[#2C2C2C] mb-2" style={{ fontWeight: 600 }}>
+            <h2 className="text-xl text-[#2D363F] mb-2" style={{ fontWeight: 600 }}>
               {t.successTitle}
             </h2>
-            <p className="text-sm text-[#6E6B67] mb-4">
+            <p className="text-sm text-[#4E616F] mb-4">
               {t.successMessage}
             </p>
             <div className="flex items-center justify-center gap-2 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6">
@@ -208,7 +208,7 @@ export default function RegisterPage() {
             </div>
             <Link
               href="/login"
-              className="inline-flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-3 text-sm font-medium text-white shadow-md transition-all hover:shadow-lg active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-4 py-3 text-sm font-medium text-white shadow-md transition-all hover:shadow-lg active:scale-[0.98]"
             >
               <LogIn className="h-4 w-4" />
               {t.backToLogin}
@@ -226,7 +226,7 @@ export default function RegisterPage() {
         <div className="relative">
           <button
             onClick={() => setShowLangMenu(!showLangMenu)}
-            className="flex items-center gap-2 rounded-xl border border-[#E4E1DD] bg-white px-3 py-2 text-sm text-[#75534B] transition-all duration-200 hover:border-[#75534B] hover:bg-[#F9F8F6] active:scale-95"
+            className="flex items-center gap-2 rounded-xl border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#5C2F0E] transition-all duration-200 hover:border-[#5C2F0E] hover:bg-[#FAFBFA] active:scale-95"
           >
             <Globe className="h-4 w-4" />
             <span style={{ fontWeight: 500 }}>{languageLabels[language]}</span>
@@ -234,7 +234,7 @@ export default function RegisterPage() {
           </button>
 
           {showLangMenu && (
-            <div className="absolute right-0 top-12 w-48 rounded-xl bg-white shadow-lg border border-[#E4E1DD] overflow-hidden z-50">
+            <div className="absolute right-0 top-12 w-48 rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
               {Object.entries(t.languages).map(([key, label]) => (
                 <button
                   key={key}
@@ -244,8 +244,8 @@ export default function RegisterPage() {
                   }}
                   className={`w-full px-4 py-3 text-left text-sm transition-colors ${
                     language === key
-                      ? 'bg-[#75534B]/10 text-[#75534B]'
-                      : 'text-[#2C2C2C] hover:bg-[#F9F8F6]'
+                      ? 'bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                      : 'text-[#2D363F] hover:bg-[#FAFBFA]'
                   }`}
                   style={{ fontWeight: language === key ? 600 : 400 }}
                 >
@@ -259,24 +259,24 @@ export default function RegisterPage() {
 
       {/* Logo */}
       <div className="flex flex-col items-center mb-6">
-        <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#75534B] to-[#5D423C] shadow-lg mb-3">
+        <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] shadow-lg mb-3">
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
           <span className="relative text-xl text-white" style={{ fontWeight: 700 }}>
             IRIS
           </span>
         </div>
-        <h1 className="text-xl text-[#2C2C2C]" style={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
+        <h1 className="text-xl text-[#2D363F]" style={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
           VISTA
         </h1>
       </div>
 
       {/* Registration Form */}
-      <div className="rounded-2xl bg-white p-8 shadow-lg border border-[#E4E1DD]">
+      <div className="rounded-2xl bg-white p-8 shadow-lg border border-[#ABC0B9]">
         <div className="text-center mb-6">
-          <h2 className="text-xl text-[#2C2C2C] mb-1" style={{ fontWeight: 600 }}>
+          <h2 className="text-xl text-[#2D363F] mb-1" style={{ fontWeight: 600 }}>
             {t.createAccount}
           </h2>
-          <p className="text-sm text-[#6E6B67]">{t.registerToContinue}</p>
+          <p className="text-sm text-[#4E616F]">{t.registerToContinue}</p>
         </div>
 
         {error && (
@@ -289,7 +289,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="employeeNumber"
-              className="block text-sm font-medium text-[#2C2C2C] mb-1.5"
+              className="block text-sm font-medium text-[#2D363F] mb-1.5"
             >
               {t.employeeNumber}
             </label>
@@ -301,10 +301,10 @@ export default function RegisterPage() {
               placeholder={t.employeeNumberPlaceholder}
               required
               maxLength={50}
-              className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:outline-none focus:ring-2 ${
+              className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:outline-none focus:ring-2 ${
                 fieldError === 'employee_number'
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                  : 'border-[#E4E1DD] focus:border-[#75534B] focus:ring-[#75534B]/20'
+                  : 'border-[#ABC0B9] focus:border-[#5C2F0E] focus:ring-[#5C2F0E]/20'
               }`}
             />
           </div>
@@ -312,7 +312,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-[#2C2C2C] mb-1.5"
+              className="block text-sm font-medium text-[#2D363F] mb-1.5"
             >
               {t.fullName}
             </label>
@@ -325,14 +325,14 @@ export default function RegisterPage() {
               required
               minLength={2}
               maxLength={255}
-              className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             />
           </div>
 
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-[#2C2C2C] mb-1.5"
+              className="block text-sm font-medium text-[#2D363F] mb-1.5"
             >
               {t.email}
             </label>
@@ -343,10 +343,10 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.emailPlaceholder}
               required
-              className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:outline-none focus:ring-2 ${
+              className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:outline-none focus:ring-2 ${
                 fieldError === 'email'
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                  : 'border-[#E4E1DD] focus:border-[#75534B] focus:ring-[#75534B]/20'
+                  : 'border-[#ABC0B9] focus:border-[#5C2F0E] focus:ring-[#5C2F0E]/20'
               }`}
             />
           </div>
@@ -354,7 +354,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-[#2C2C2C] mb-1.5"
+              className="block text-sm font-medium text-[#2D363F] mb-1.5"
             >
               {t.password}
             </label>
@@ -368,12 +368,12 @@ export default function RegisterPage() {
                 required
                 minLength={8}
                 autoComplete="new-password"
-                className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 pr-12 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 pr-12 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6E6B67] hover:text-[#2C2C2C] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4E616F] hover:text-[#2D363F] transition-colors"
               >
                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -383,7 +383,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-[#2C2C2C] mb-1.5"
+              className="block text-sm font-medium text-[#2D363F] mb-1.5"
             >
               {t.confirmPassword}
             </label>
@@ -395,14 +395,14 @@ export default function RegisterPage() {
               placeholder={t.confirmPasswordPlaceholder}
               required
               autoComplete="new-password"
-              className="w-full rounded-lg border border-[#E4E1DD] bg-white px-4 py-3 text-sm text-[#2C2C2C] transition-all placeholder:text-[#6E6B67] focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+              className="w-full rounded-lg border border-[#ABC0B9] bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
             />
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-lg bg-gradient-to-r from-[#75534B] to-[#5D423C] px-4 py-3 text-sm font-medium text-white shadow-md transition-all hover:shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full rounded-lg bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] px-4 py-3 text-sm font-medium text-white shadow-md transition-all hover:shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
@@ -416,12 +416,12 @@ export default function RegisterPage() {
         </form>
 
         {/* Login Link */}
-        <div className="mt-6 pt-4 border-t border-[#E4E1DD] text-center">
-          <p className="text-sm text-[#6E6B67]">
+        <div className="mt-6 pt-4 border-t border-[#ABC0B9] text-center">
+          <p className="text-sm text-[#4E616F]">
             {t.haveAccount}{' '}
             <Link
               href="/login"
-              className="text-[#75534B] font-medium hover:underline inline-flex items-center gap-1"
+              className="text-[#5C2F0E] font-medium hover:underline inline-flex items-center gap-1"
             >
               <LogIn className="h-3.5 w-3.5" />
               {t.signIn}

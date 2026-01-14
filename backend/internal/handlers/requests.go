@@ -3,30 +3,57 @@ package handlers
 import (
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"vista-backend/internal/middleware"
 	"vista-backend/internal/models"
 	"vista-backend/internal/services/amazon"
 	"vista-backend/internal/services/metadata"
 	"vista-backend/internal/services/notifications"
+	"vista-backend/internal/services/translation"
 	"vista-backend/pkg/response"
 )
 
 type RequestHandler struct {
-	db                *gorm.DB
-	metadataService   *metadata.Service
-	notificationSvc   *notifications.NotificationService
+	db              *gorm.DB
+	metadataService *metadata.Service
+	notificationSvc *notifications.NotificationService
+	asyncTranslator *translation.AsyncTranslator
 }
 
 func NewRequestHandler(db *gorm.DB) *RequestHandler {
 	return &RequestHandler{
-		db:                db,
-		metadataService:   metadata.NewService(),
-		notificationSvc:   notifications.NewNotificationService(db),
+		db:              db,
+		metadataService: metadata.NewService(),
+		notificationSvc: notifications.NewNotificationService(db),
+		asyncTranslator: translation.NewAsyncTranslator(db),
 	}
+}
+
+// getUserLanguage extracts user's preferred language from request headers
+func (h *RequestHandler) getUserLanguage(c *gin.Context) string {
+	// First check custom header (set by frontend)
+	if lang := c.GetHeader("X-User-Language"); lang != "" {
+		lang = strings.ToLower(lang)
+		if lang == "en" || lang == "zh" || lang == "es" {
+			return lang
+		}
+	}
+
+	// Fallback to Accept-Language header
+	acceptLang := c.GetHeader("Accept-Language")
+	if strings.HasPrefix(strings.ToLower(acceptLang), "zh") {
+		return "zh"
+	}
+	if strings.HasPrefix(strings.ToLower(acceptLang), "es") {
+		return "es"
+	}
+
+	return "en"
 }
 
 // CreateRequestItemInput represents a single product item in a multi-product request
@@ -146,6 +173,15 @@ type RequestResponse struct {
 	// Admin notes (visible to admin, purchase_admin, gm, and requester)
 	AdminNotes string `json:"admin_notes,omitempty"`
 
+	// Translated fields
+	JustificationTranslated     datatypes.JSON `json:"justification_translated,omitempty"`
+	RejectionReasonTranslated   datatypes.JSON `json:"rejection_reason_translated,omitempty"`
+	InfoRequestNoteTranslated   datatypes.JSON `json:"info_request_note_translated,omitempty"`
+	PurchaseNotesTranslated     datatypes.JSON `json:"purchase_notes_translated,omitempty"`
+	DeliveryNotesTranslated     datatypes.JSON `json:"delivery_notes_translated,omitempty"`
+	CancellationNotesTranslated datatypes.JSON `json:"cancellation_notes_translated,omitempty"`
+	AdminNotesTranslated        datatypes.JSON `json:"admin_notes_translated,omitempty"`
+
 	// History
 	History []RequestHistoryResponse `json:"history,omitempty"`
 
@@ -155,14 +191,15 @@ type RequestResponse struct {
 }
 
 type RequestHistoryResponse struct {
-	ID        uint          `json:"id"`
-	UserID    uint          `json:"user_id"`
-	User      *UserResponse `json:"user,omitempty"`
-	Action    string        `json:"action"`
-	Comment   string        `json:"comment"`
-	OldStatus string        `json:"old_status"`
-	NewStatus string        `json:"new_status"`
-	CreatedAt time.Time     `json:"created_at"`
+	ID                uint           `json:"id"`
+	UserID            uint           `json:"user_id"`
+	User              *UserResponse  `json:"user,omitempty"`
+	Action            string         `json:"action"`
+	Comment           string         `json:"comment"`
+	CommentTranslated datatypes.JSON `json:"comment_translated,omitempty"`
+	OldStatus         string         `json:"old_status"`
+	NewStatus         string         `json:"new_status"`
+	CreatedAt         time.Time      `json:"created_at"`
 }
 
 func requestToResponse(r models.PurchaseRequest) RequestResponse {
@@ -210,8 +247,16 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 		CancelledAt:        r.CancelledAt,
 		CancellationNotes:  r.CancellationNotes,
 		AdminNotes:         r.AdminNotes,
-		CreatedAt:          r.CreatedAt,
-		UpdatedAt:          r.UpdatedAt,
+		// Translated fields
+		JustificationTranslated:     r.JustificationTranslated,
+		RejectionReasonTranslated:   r.RejectionReasonTranslated,
+		InfoRequestNoteTranslated:   r.InfoRequestNoteTranslated,
+		PurchaseNotesTranslated:     r.PurchaseNotesTranslated,
+		DeliveryNotesTranslated:     r.DeliveryNotesTranslated,
+		CancellationNotesTranslated: r.CancellationNotesTranslated,
+		AdminNotesTranslated:        r.AdminNotesTranslated,
+		CreatedAt:                   r.CreatedAt,
+		UpdatedAt:                   r.UpdatedAt,
 	}
 
 	// Add items if multi-product request
@@ -294,13 +339,14 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 
 	for _, h := range r.History {
 		historyResp := RequestHistoryResponse{
-			ID:        h.ID,
-			UserID:    h.UserID,
-			Action:    string(h.Action),
-			Comment:   h.Comment,
-			OldStatus: string(h.OldStatus),
-			NewStatus: string(h.NewStatus),
-			CreatedAt: h.CreatedAt,
+			ID:                h.ID,
+			UserID:            h.UserID,
+			Action:            string(h.Action),
+			Comment:           h.Comment,
+			CommentTranslated: h.CommentTranslated,
+			OldStatus:         string(h.OldStatus),
+			NewStatus:         string(h.NewStatus),
+			CreatedAt:         h.CreatedAt,
 		}
 		if h.User.ID != 0 {
 			historyResp.User = &UserResponse{
@@ -379,6 +425,24 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 		Urgency:       urgency,
 		RequesterID:   userID,
 		Status:        models.StatusPending,
+	}
+
+	// Translate justification (sync for user's language, async for others)
+	userLang := h.getUserLanguage(c)
+	if input.Justification != "" {
+		translationResult, _ := h.asyncTranslator.TranslateField(
+			input.Justification,
+			userLang,
+			func(t *translation.TranslatedText) error {
+				// Background callback to save complete translations
+				return h.db.Model(&models.PurchaseRequest{}).
+					Where("id = ?", request.ID).
+					Update("justification_translated", translation.ToJSON(t)).Error
+			},
+		)
+		if translationResult != nil {
+			request.JustificationTranslated = translationResult.JSON
+		}
 	}
 
 	// Check if this is a multi-product request

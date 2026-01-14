@@ -15,8 +15,8 @@ module.exports = {
         primary: {
           DEFAULT: "rgb(var(--primary) / <alpha-value>)",
           foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
-          dark: '#5D423C',
-          light: '#8B6A62',
+          dark: '#2D363F',
+          light: '#80959A',
         },
         secondary: {
           DEFAULT: "rgb(var(--secondary) / <alpha-value>)",
@@ -33,12 +33,12 @@ module.exports = {
         accent: {
           DEFAULT: "rgb(var(--accent) / <alpha-value>)",
           foreground: "rgb(var(--accent-foreground) / <alpha-value>)",
-          blue: '#3A6EA5',
-          teal: '#3F8F8F',
-          orange: '#E08A4B',
-          green: '#4BAF7E',
-          yellow: '#E1A948',
-          red: '#D1625B',
+          blue: '#4E616F',
+          teal: '#80959A',
+          orange: '#E95F20',
+          green: '#ABC0B9',
+          yellow: '#F38756',
+          red: '#AA2F0D',
         },
         popover: {
           DEFAULT: "rgb(var(--popover) / <alpha-value>)",
@@ -50,8 +50,8 @@ module.exports = {
         },
         surface: '#FFFFFF',
         text: {
-          DEFAULT: '#2C2C2C',
-          secondary: '#6E6B67',
+          DEFAULT: '#2D363F',
+          secondary: '#4E616F',
         },
       },
       borderRadius: {

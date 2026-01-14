@@ -79,11 +79,11 @@ export function Recommended({ language }: RecommendedProps) {
               key={index}
               className="group flex items-center gap-4 rounded-xl bg-white p-5 text-left shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
             >
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#75534B]/10">
-                <Icon className="h-5 w-5 text-[#75534B]" />
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
+                <Icon className="h-5 w-5 text-[#5C2F0E]" />
               </div>
               <div className="flex-1">
-                <h3 className="mb-1 text-gray-900 group-hover:text-[#75534B]">
+                <h3 className="mb-1 text-gray-900 group-hover:text-[#5C2F0E]">
                   {item.name}
                 </h3>
                 <div className="flex items-center gap-3 text-xs text-gray-500">

@@ -124,7 +124,7 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
           disabled={disabled}
           className="sr-only peer"
         />
-        <div className="h-5 w-5 rounded border-2 border-[#E4E1DD] bg-white peer-checked:border-[#4BAF7E] peer-checked:bg-[#4BAF7E] peer-disabled:bg-[#F9F8F6] transition-colors flex items-center justify-center">
+        <div className="h-5 w-5 rounded border-2 border-[#ABC0B9] bg-white peer-checked:border-[#5C2F0E] peer-checked:bg-[#5C2F0E] peer-disabled:bg-[#FAFBFA] transition-colors flex items-center justify-center">
         </div>
         <svg
           className={`absolute inset-0 h-5 w-5 text-white transition-opacity ${checked ? 'opacity-100' : 'opacity-0'}`}
@@ -136,21 +136,21 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <span className="text-sm text-[#2C2C2C]">{label}</span>
+      <span className="text-sm text-[#2D363F]">{label}</span>
     </label>
   );
 
   return (
-    <div className="rounded-xl border border-[#E4E1DD] bg-white shadow-sm">
+    <div className="rounded-xl border border-[#ABC0B9] bg-white shadow-sm">
       {/* Header */}
-      <div className="border-b border-[#E4E1DD] px-6 py-4">
+      <div className="border-b border-[#ABC0B9] px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#9B59B6]/10">
             <FormInput className="h-5 w-5 text-[#9B59B6]" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.title}</h2>
-            <p className="text-sm text-[#6E6B67]">{t.subtitle}</p>
+            <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>
+            <p className="text-sm text-[#4E616F]">{t.subtitle}</p>
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
       <div className="p-6 space-y-6">
         {/* Required Fields */}
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-[#2C2C2C]">{t.requiredFields}</h3>
+          <h3 className="mb-3 text-sm font-semibold text-[#2D363F]">{t.requiredFields}</h3>
           <div className="ml-2 space-y-1">
             <CheckboxItem
               checked={true}
@@ -197,27 +197,27 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
         </div>
 
         {/* Custom Fields */}
-        <div className="border-t border-[#E4E1DD] pt-6">
-          <h3 className="mb-4 text-sm font-semibold text-[#2C2C2C]">{t.customFields}</h3>
+        <div className="border-t border-[#ABC0B9] pt-6">
+          <h3 className="mb-4 text-sm font-semibold text-[#2D363F]">{t.customFields}</h3>
 
           {(config.custom_fields || []).length > 0 && (
-            <div className="mb-4 overflow-hidden rounded-lg border border-[#E4E1DD]">
+            <div className="mb-4 overflow-hidden rounded-lg border border-[#ABC0B9]">
               <table className="w-full">
-                <thead className="bg-[#F9F8F6]">
+                <thead className="bg-[#FAFBFA]">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#6E6B67] uppercase">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F] uppercase">
                       {t.fieldName}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#6E6B67] uppercase">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F] uppercase">
                       {t.fieldType}
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold text-[#6E6B67] uppercase">
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-[#4E616F] uppercase">
                       {t.required}
                     </th>
                     <th className="px-4 py-3 w-12"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E4E1DD]">
+                <tbody className="divide-y divide-[#ABC0B9]">
                   {(config.custom_fields || []).map((field, index) => (
                     <tr key={index}>
                       <td className="px-4 py-3">
@@ -229,14 +229,14 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
                             name: e.target.value.toLowerCase().replace(/\s+/g, '_')
                           })}
                           placeholder={t.fieldName}
-                          className="w-full rounded-lg border border-[#E4E1DD] bg-white px-3 py-2 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                          className="w-full rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                         />
                       </td>
                       <td className="px-4 py-3">
                         <select
                           value={field.type}
                           onChange={(e) => handleFieldChange(index, { type: e.target.value as CustomField['type'] })}
-                          className="w-full rounded-lg border border-[#E4E1DD] bg-white px-3 py-2 text-sm text-[#2C2C2C] transition-all focus:border-[#75534B] focus:outline-none focus:ring-2 focus:ring-[#75534B]/20"
+                          className="w-full rounded-lg border border-[#ABC0B9] bg-white px-3 py-2 text-sm text-[#2D363F] transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                         >
                           <option value="text">{t.fieldTypes.text}</option>
                           <option value="number">{t.fieldTypes.number}</option>
@@ -249,13 +249,13 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
                           type="checkbox"
                           checked={field.required}
                           onChange={(e) => handleFieldChange(index, { required: e.target.checked })}
-                          className="h-4 w-4 rounded border-[#E4E1DD] text-[#4BAF7E] focus:ring-[#4BAF7E]"
+                          className="h-4 w-4 rounded border-[#ABC0B9] text-[#5C2F0E] focus:ring-[#5C2F0E]"
                         />
                       </td>
                       <td className="px-4 py-3">
                         <button
                           onClick={() => handleRemoveField(index)}
-                          className="rounded-lg p-2 text-[#D1625B] hover:bg-[#D1625B]/10 transition-colors"
+                          className="rounded-lg p-2 text-[#AA2F0D] hover:bg-[#AA2F0D]/10 transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -269,7 +269,7 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
 
           <button
             onClick={handleAddField}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[#E4E1DD] px-4 py-3 text-sm font-medium text-[#6E6B67] transition-all hover:border-[#75534B] hover:text-[#75534B]"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[#ABC0B9] px-4 py-3 text-sm font-medium text-[#4E616F] transition-all hover:border-[#5C2F0E] hover:text-[#5C2F0E]"
           >
             <Plus className="h-4 w-4" />
             {t.addField}

@@ -285,7 +285,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-6 w-6 animate-spin text-[#6E6B67]" />
+        <Loader2 className="h-6 w-6 animate-spin text-[#4E616F]" />
       </div>
     );
   }
@@ -293,23 +293,23 @@ export function AmazonSection({ language }: AmazonSectionProps) {
   return (
     <div className="space-y-6">
       {/* Enable Toggle Card */}
-      <div className="rounded-xl border border-[#E4E1DD] bg-white p-6">
+      <div className="rounded-xl border border-[#ABC0B9] bg-white p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF9900] to-[#FF6600]">
               <ShoppingCart className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.title}</h2>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.subtitle}</p>
+              <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>
+              <p className="text-sm text-[#4E616F] mt-1">{t.subtitle}</p>
             </div>
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-between p-4 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD]">
+        <div className="mt-6 flex items-center justify-between p-4 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9]">
           <div>
-            <p className="font-medium text-[#2C2C2C]">{t.enableIntegration}</p>
-            <p className="text-sm text-[#6E6B67] mt-0.5 max-w-lg">{t.enableDescription}</p>
+            <p className="font-medium text-[#2D363F]">{t.enableIntegration}</p>
+            <p className="text-sm text-[#4E616F] mt-0.5 max-w-lg">{t.enableDescription}</p>
           </div>
           <button
             onClick={handleToggle}
@@ -330,8 +330,8 @@ export function AmazonSection({ language }: AmazonSectionProps) {
           <div
             className={`mt-4 flex items-center gap-2 rounded-lg px-4 py-3 ${
               message.type === 'success'
-                ? 'bg-[#4BAF7E]/10 text-[#4BAF7E]'
-                : 'bg-[#D1625B]/10 text-[#D1625B]'
+                ? 'bg-[#5C2F0E]/10 text-[#5C2F0E]'
+                : 'bg-[#AA2F0D]/10 text-[#AA2F0D]'
             }`}
           >
             {message.type === 'success' ? (
@@ -349,7 +349,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="w-full bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90"
+              className="w-full bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] hover:opacity-90"
             >
               {isSaving ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -363,20 +363,20 @@ export function AmazonSection({ language }: AmazonSectionProps) {
       </div>
 
       {!isActive ? (
-        <div className="rounded-xl border border-[#E4E1DD] bg-white p-8 text-center">
+        <div className="rounded-xl border border-[#ABC0B9] bg-white p-8 text-center">
           <Power className="h-12 w-12 mx-auto text-gray-300" />
-          <p className="mt-4 text-[#6E6B67]">{t.disabledMessage}</p>
+          <p className="mt-4 text-[#4E616F]">{t.disabledMessage}</p>
         </div>
       ) : (
         <>
           {/* Connection Status */}
-          <div className="rounded-xl border border-[#E4E1DD] bg-white p-6">
-            <h3 className="flex items-center gap-2 text-base font-semibold text-[#2C2C2C] mb-4">
+          <div className="rounded-xl border border-[#ABC0B9] bg-white p-6">
+            <h3 className="flex items-center gap-2 text-base font-semibold text-[#2D363F] mb-4">
               <Link2 className="h-5 w-5" />
               {t.connectionStatus}
             </h3>
 
-            <div className="p-4 rounded-lg bg-[#F9F8F6] border border-[#E4E1DD] space-y-4">
+            <div className="p-4 rounded-lg bg-[#FAFBFA] border border-[#ABC0B9] space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {getStatusBadge()}
@@ -397,21 +397,21 @@ export function AmazonSection({ language }: AmazonSectionProps) {
               </div>
 
               {config?.has_password && (
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#E4E1DD]">
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#ABC0B9]">
                   <div>
-                    <p className="text-xs text-[#6E6B67]">{t.email}</p>
-                    <p className="text-sm font-medium text-[#2C2C2C]">{config.email}</p>
+                    <p className="text-xs text-[#4E616F]">{t.email}</p>
+                    <p className="text-sm font-medium text-[#2D363F]">{config.email}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-[#6E6B67]">{t.lastTested}</p>
-                    <p className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
+                    <p className="text-xs text-[#4E616F]">{t.lastTested}</p>
+                    <p className="text-sm font-medium text-[#2D363F] flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {formatLastTested(config.last_test_at)}
                     </p>
                   </div>
                   {config.test_message && (
                     <div className="col-span-2">
-                      <p className="text-xs text-[#6E6B67]">Status</p>
+                      <p className="text-xs text-[#4E616F]">Status</p>
                       <p className={`text-sm ${config.test_status === 'success' ? 'text-green-600' : 'text-red-600'}`}>
                         {config.test_message}
                       </p>
@@ -421,25 +421,25 @@ export function AmazonSection({ language }: AmazonSectionProps) {
               )}
 
               {!config?.has_password && (
-                <p className="text-sm text-[#6E6B67]">{t.notConfigured}</p>
+                <p className="text-sm text-[#4E616F]">{t.notConfigured}</p>
               )}
             </div>
           </div>
 
           {/* Credentials */}
-          <div className="rounded-xl border border-[#E4E1DD] bg-white p-6">
-            <h3 className="flex items-center gap-2 text-base font-semibold text-[#2C2C2C] mb-2">
+          <div className="rounded-xl border border-[#ABC0B9] bg-white p-6">
+            <h3 className="flex items-center gap-2 text-base font-semibold text-[#2D363F] mb-2">
               <Shield className="h-5 w-5" />
               {t.credentials}
             </h3>
-            <p className="text-sm text-[#6E6B67] mb-4 flex items-center gap-1">
+            <p className="text-sm text-[#4E616F] mb-4 flex items-center gap-1">
               <AlertTriangle className="h-4 w-4 text-yellow-500" />
               {t.credentialsWarning}
             </p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                <label className="block text-sm font-medium text-[#2D363F] mb-1">
                   {t.email}
                 </label>
                 <Input
@@ -451,7 +451,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                <label className="block text-sm font-medium text-[#2D363F] mb-1">
                   {t.password}
                 </label>
                 <div className="relative">
@@ -471,20 +471,20 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                   </button>
                 </div>
                 {config?.has_password && (
-                  <p className="text-xs text-[#6E6B67] mt-1">
+                  <p className="text-xs text-[#4E616F] mt-1">
                     {language === 'zh' ? '留空以保留现有密码' : language === 'es' ? 'Dejar en blanco para mantener la contrasena actual' : 'Leave blank to keep existing password'}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#2C2C2C] mb-1">
+                <label className="block text-sm font-medium text-[#2D363F] mb-1">
                   {t.marketplace}
                 </label>
                 <select
                   value={marketplace}
                   onChange={(e) => setMarketplace(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#E4E1DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#75534B]"
+                  className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]"
                 >
                   <option value="www.amazon.com.mx">Amazon Mexico (amazon.com.mx)</option>
                   <option value="www.amazon.com">Amazon US (amazon.com)</option>
@@ -495,7 +495,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
               <Button
                 onClick={handleSave}
                 disabled={isSaving || !hasChanges}
-                className="w-full bg-gradient-to-r from-[#75534B] to-[#5D423C] hover:opacity-90"
+                className="w-full bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] hover:opacity-90"
               >
                 {isSaving ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />

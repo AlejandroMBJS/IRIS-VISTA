@@ -31,14 +31,14 @@ const Bar = ({ value, maxValue, color, label }: { value: number; maxValue: numbe
   return (
     <div className="flex items-end gap-1 flex-1">
       <div className="flex-1 flex flex-col items-center">
-        <span className="text-xs font-semibold text-[#2C2C2C] mb-1">{value}</span>
-        <div className="w-full bg-[#E4E1DD] rounded-t-sm relative" style={{ height: '120px' }}>
+        <span className="text-xs font-semibold text-[#2D363F] mb-1">{value}</span>
+        <div className="w-full bg-[#ABC0B9] rounded-t-sm relative" style={{ height: '120px' }}>
           <div
             className={`absolute bottom-0 left-0 right-0 ${color} rounded-t-sm transition-all duration-500`}
             style={{ height: `${percentage}%` }}
           />
         </div>
-        <span className="text-xs text-[#6E6B67] mt-2 text-center">{label}</span>
+        <span className="text-xs text-[#4E616F] mt-2 text-center">{label}</span>
       </div>
     </div>
   );
@@ -86,8 +86,8 @@ const DonutChart = ({ segments }: { segments: { value: number; color: string; la
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-2xl font-bold text-[#2C2C2C]">{total}</p>
-          <p className="text-xs text-[#6E6B67]">Total</p>
+          <p className="text-2xl font-bold text-[#2D363F]">{total}</p>
+          <p className="text-xs text-[#4E616F]">Total</p>
         </div>
       </div>
     </div>
@@ -267,16 +267,16 @@ export default function AnalyticsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F9F8F6] flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#75534B]" />
+      <div className="min-h-screen bg-[#FAFBFA] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#5C2F0E]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-[#FAFBFA]">
       {/* Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#75534B] via-[#8A6056] to-[#5D423C] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#5C2F0E] via-[#4E616F] to-[#2D363F] px-4 md:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -299,18 +299,18 @@ export default function AnalyticsPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {/* Total Requests */}
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                   <FileText className="h-5 w-5 text-white" />
                 </div>
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.total || 0}</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.totalRequests}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.total || 0}</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.totalRequests}</p>
             </div>
 
             {/* Approval Rate */}
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                   <TrendingUp className="h-5 w-5 text-white" />
@@ -329,12 +329,12 @@ export default function AnalyticsPage() {
                   </span>
                 )}
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{approvalRate}%</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.approvalRate}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{approvalRate}%</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.approvalRate}</p>
             </div>
 
             {/* Pending */}
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                   <Clock className="h-5 w-5 text-white" />
@@ -345,19 +345,19 @@ export default function AnalyticsPage() {
                   </span>
                 )}
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.pending || 0}</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.pending}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.pending || 0}</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.pending}</p>
             </div>
 
             {/* Purchased */}
-            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#E4E1DD] shadow-md">
+            <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-sm">
                   <ShoppingCart className="h-5 w-5 text-white" />
                 </div>
               </div>
-              <p className="text-3xl font-bold text-[#2C2C2C]">{approvalStats?.purchased || 0}</p>
-              <p className="text-sm text-[#6E6B67] mt-1">{t.purchased}</p>
+              <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.purchased || 0}</p>
+              <p className="text-sm text-[#4E616F] mt-1">{t.purchased}</p>
             </div>
           </div>
         </div>
@@ -370,8 +370,8 @@ export default function AnalyticsPage() {
             {/* Left Column - Charts */}
             <div className="lg:col-span-2 space-y-6">
               {/* Status Breakdown */}
-              <div className="bg-white rounded-2xl border border-[#E4E1DD] shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-[#2C2C2C] mb-6">{t.requestsByStatus}</h2>
+              <div className="bg-white rounded-2xl border border-[#ABC0B9] shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-[#2D363F] mb-6">{t.requestsByStatus}</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Donut Chart */}
@@ -379,8 +379,8 @@ export default function AnalyticsPage() {
                     {approvalStats && approvalStats.total > 0 ? (
                       <DonutChart segments={statusSegments} />
                     ) : (
-                      <div className="w-48 h-48 mx-auto flex items-center justify-center bg-[#F9F8F6] rounded-full">
-                        <p className="text-sm text-[#6E6B67]">{t.noData}</p>
+                      <div className="w-48 h-48 mx-auto flex items-center justify-center bg-[#FAFBFA] rounded-full">
+                        <p className="text-sm text-[#4E616F]">{t.noData}</p>
                       </div>
                     )}
                   </div>
@@ -394,11 +394,11 @@ export default function AnalyticsPage() {
                             className="w-4 h-4 rounded"
                             style={{ backgroundColor: segment.color }}
                           />
-                          <span className="text-sm text-[#6E6B67]">{segment.label}</span>
+                          <span className="text-sm text-[#4E616F]">{segment.label}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-[#2C2C2C]">{segment.value}</span>
-                          <span className="text-xs text-[#9B9792]">
+                          <span className="text-sm font-semibold text-[#2D363F]">{segment.value}</span>
+                          <span className="text-xs text-[#80959A]">
                             ({approvalStats && approvalStats.total > 0
                               ? Math.round((segment.value / approvalStats.total) * 100)
                               : 0}%)
@@ -411,18 +411,18 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Monthly Trend */}
-              <div className="bg-white rounded-2xl border border-[#E4E1DD] shadow-sm p-6">
+              <div className="bg-white rounded-2xl border border-[#ABC0B9] shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-semibold text-[#2C2C2C]">{t.monthlyTrend}</h2>
-                  <div className="flex gap-1 bg-[#F9F8F6] rounded-lg p-1">
+                  <h2 className="text-lg font-semibold text-[#2D363F]">{t.monthlyTrend}</h2>
+                  <div className="flex gap-1 bg-[#FAFBFA] rounded-lg p-1">
                     {(['week', 'month', 'year'] as const).map((range) => (
                       <button
                         key={range}
                         onClick={() => setTimeRange(range)}
                         className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                           timeRange === range
-                            ? 'bg-white text-[#75534B] shadow-sm'
-                            : 'text-[#6E6B67] hover:text-[#2C2C2C]'
+                            ? 'bg-white text-[#5C2F0E] shadow-sm'
+                            : 'text-[#4E616F] hover:text-[#2D363F]'
                         }`}
                       >
                         {t[range]}
@@ -438,7 +438,7 @@ export default function AnalyticsPage() {
                       key={i}
                       value={value}
                       maxValue={maxMonthlyValue}
-                      color={i === currentMonth ? 'bg-[#75534B]' : 'bg-[#75534B]/40'}
+                      color={i === currentMonth ? 'bg-[#5C2F0E]' : 'bg-[#5C2F0E]/40'}
                       label={months[i]}
                     />
                   ))}
@@ -449,48 +449,48 @@ export default function AnalyticsPage() {
             {/* Right Column - Stats & Activity */}
             <div className="space-y-6">
               {/* Quick Stats */}
-              <div className="bg-white rounded-2xl border border-[#E4E1DD] shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.overview}</h2>
+              <div className="bg-white rounded-2xl border border-[#ABC0B9] shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-[#2D363F] mb-4">{t.overview}</h2>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-[#F9F8F6] rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-[#FAFBFA] rounded-xl">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
                         <CheckCircle className="h-5 w-5 text-green-600" />
                       </div>
-                      <span className="text-sm text-[#6E6B67]">{t.approved}</span>
+                      <span className="text-sm text-[#4E616F]">{t.approved}</span>
                     </div>
-                    <span className="text-lg font-bold text-[#2C2C2C]">{approvalStats?.approved || 0}</span>
+                    <span className="text-lg font-bold text-[#2D363F]">{approvalStats?.approved || 0}</span>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 bg-[#F9F8F6] rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-[#FAFBFA] rounded-xl">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
                         <XCircle className="h-5 w-5 text-red-600" />
                       </div>
-                      <span className="text-sm text-[#6E6B67]">{t.rejected}</span>
+                      <span className="text-sm text-[#4E616F]">{t.rejected}</span>
                     </div>
-                    <span className="text-lg font-bold text-[#2C2C2C]">{approvalStats?.rejected || 0}</span>
+                    <span className="text-lg font-bold text-[#2D363F]">{approvalStats?.rejected || 0}</span>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 bg-[#F9F8F6] rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-[#FAFBFA] rounded-xl">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
                         <AlertCircle className="h-5 w-5 text-purple-600" />
                       </div>
-                      <span className="text-sm text-[#6E6B67]">{t.infoRequired}</span>
+                      <span className="text-sm text-[#4E616F]">{t.infoRequired}</span>
                     </div>
-                    <span className="text-lg font-bold text-[#2C2C2C]">{approvalStats?.info_required || 0}</span>
+                    <span className="text-lg font-bold text-[#2D363F]">{approvalStats?.info_required || 0}</span>
                   </div>
 
                   {(approvalStats?.amazon_in_cart || 0) > 0 && (
-                    <div className="flex items-center justify-between p-3 bg-[#F9F8F6] rounded-xl">
+                    <div className="flex items-center justify-between p-3 bg-[#FAFBFA] rounded-xl">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
                           <ShoppingCart className="h-5 w-5 text-orange-600" />
                         </div>
-                        <span className="text-sm text-[#6E6B67]">{t.amazonInCart}</span>
+                        <span className="text-sm text-[#4E616F]">{t.amazonInCart}</span>
                       </div>
-                      <span className="text-lg font-bold text-[#2C2C2C]">{approvalStats?.amazon_in_cart}</span>
+                      <span className="text-lg font-bold text-[#2D363F]">{approvalStats?.amazon_in_cart}</span>
                     </div>
                   )}
                 </div>
@@ -498,7 +498,7 @@ export default function AnalyticsPage() {
 
               {/* Admin Stats (if available) */}
               {dashboardStats && (
-                <div className="bg-gradient-to-br from-[#75534B] to-[#5D423C] rounded-2xl p-6 text-white relative overflow-hidden">
+                <div className="bg-gradient-to-br from-[#5C2F0E] to-[#2D363F] rounded-2xl p-6 text-white relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="relative">
                     <h2 className="text-lg font-semibold mb-4">System Stats</h2>
@@ -530,12 +530,12 @@ export default function AnalyticsPage() {
               )}
 
               {/* Recent Activity */}
-              <div className="bg-white rounded-2xl border border-[#E4E1DD] shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-[#2C2C2C] mb-4">{t.recentActivity}</h2>
+              <div className="bg-white rounded-2xl border border-[#ABC0B9] shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-[#2D363F] mb-4">{t.recentActivity}</h2>
                 {recentRequests.length > 0 ? (
                   <div className="space-y-3">
                     {recentRequests.slice(0, 5).map((request) => (
-                      <div key={request.id} className="flex items-center gap-3 p-2 hover:bg-[#F9F8F6] rounded-lg transition-colors">
+                      <div key={request.id} className="flex items-center gap-3 p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors">
                         <div className={`w-2 h-2 rounded-full ${
                           request.status === 'approved' ? 'bg-blue-500' :
                           request.status === 'purchased' ? 'bg-green-500' :
@@ -544,10 +544,10 @@ export default function AnalyticsPage() {
                           'bg-purple-500'
                         }`} />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-[#2C2C2C] truncate">
+                          <p className="text-sm font-medium text-[#2D363F] truncate">
                             {request.po_number || request.request_number}
                           </p>
-                          <p className="text-xs text-[#6E6B67]">
+                          <p className="text-xs text-[#4E616F]">
                             {new Date(request.created_at).toLocaleDateString()}
                           </p>
                         </div>
@@ -569,8 +569,8 @@ export default function AnalyticsPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <Calendar className="h-10 w-10 text-[#E4E1DD] mx-auto mb-2" />
-                    <p className="text-sm text-[#6E6B67]">{t.noData}</p>
+                    <Calendar className="h-10 w-10 text-[#ABC0B9] mx-auto mb-2" />
+                    <p className="text-sm text-[#4E616F]">{t.noData}</p>
                   </div>
                 )}
               </div>

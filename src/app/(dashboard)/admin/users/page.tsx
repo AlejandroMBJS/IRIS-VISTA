@@ -559,15 +559,15 @@ export default function UsersPage() {
   const getStatusBadge = (status: User['status']) => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-[#5C2F0E]/10 text-[#5C2F0E] border-0">{t.approved}</Badge>;
+        return <Badge className="bg-[#5C2F0E] text-white border-0">{t.approved}</Badge>;
       case 'pending':
-        return <Badge className="bg-[#F38756]/30 text-[#E95F20] border-0">{t.pending}</Badge>;
+        return <Badge className="bg-[#E95F20] text-white border-0">{t.pending}</Badge>;
       case 'rejected':
-        return <Badge className="bg-[#AA2F0D]/10 text-[#AA2F0D] border-0">{t.rejected}</Badge>;
+        return <Badge className="bg-[#AA2F0D] text-white border-0">{t.rejected}</Badge>;
       case 'disabled':
-        return <Badge className="bg-[#4E616F]/10 text-[#4E616F] border-0">{t.disabled}</Badge>;
+        return <Badge className="bg-[#4E616F] text-white border-0">{t.disabled}</Badge>;
       default:
-        return <Badge className="bg-[#4E616F]/10 text-[#4E616F] border-0">{status}</Badge>;
+        return <Badge className="bg-[#4E616F] text-white border-0">{status}</Badge>;
     }
   };
 

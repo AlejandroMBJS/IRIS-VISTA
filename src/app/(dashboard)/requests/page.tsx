@@ -233,12 +233,12 @@ export default function RequestsPage() {
 
   const getStatusBadge = (status: string) => {
     const config: Record<string, { bg: string; icon: React.ReactNode }> = {
-      pending: { bg: 'bg-[#F38756]/30 text-[#5C2F0E]', icon: <Clock className="h-3 w-3 mr-1" /> },
-      approved: { bg: 'bg-[#ABC0B9]/30 text-[#2D363F]', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
-      rejected: { bg: 'bg-[#AA2F0D]/20 text-[#AA2F0D]', icon: <XCircle className="h-3 w-3 mr-1" /> },
-      purchased: { bg: 'bg-[#ABC0B9]/30 text-[#2D363F]', icon: <ShoppingCart className="h-3 w-3 mr-1" /> },
-      info_requested: { bg: 'bg-orange-100 text-orange-800', icon: <AlertCircle className="h-3 w-3 mr-1" /> },
-      cancelled: { bg: 'bg-[#ABC0B9]/20 text-[#2D363F]', icon: <XCircle className="h-3 w-3 mr-1" /> },
+      pending: { bg: 'bg-[#E95F20] text-white', icon: <Clock className="h-3 w-3 mr-1" /> },
+      approved: { bg: 'bg-[#5C2F0E] text-white', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
+      rejected: { bg: 'bg-[#AA2F0D] text-white', icon: <XCircle className="h-3 w-3 mr-1" /> },
+      purchased: { bg: 'bg-[#4E616F] text-white', icon: <ShoppingCart className="h-3 w-3 mr-1" /> },
+      info_requested: { bg: 'bg-[#F38756] text-white', icon: <AlertCircle className="h-3 w-3 mr-1" /> },
+      cancelled: { bg: 'bg-[#ABC0B9] text-white', icon: <XCircle className="h-3 w-3 mr-1" /> },
     };
     const c = config[status] || config.pending;
     return (

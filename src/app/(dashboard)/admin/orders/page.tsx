@@ -432,7 +432,7 @@ export default function ApprovedOrdersPage() {
   const getItemStatusBadge = (item: PurchaseRequestItem) => {
     if (item.added_to_cart) {
       return (
-        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F] text-xs">
+        <Badge className="bg-[#4E616F] text-white text-xs">
           <ShoppingCart className="h-3 w-3 mr-1" />
           {t.inCart}
         </Badge>
@@ -440,14 +440,14 @@ export default function ApprovedOrdersPage() {
     }
     if (item.cart_error) {
       return (
-        <Badge className="bg-[#AA2F0D]/20 text-[#AA2F0D] text-xs">
+        <Badge className="bg-[#AA2F0D] text-white text-xs">
           <AlertCircle className="h-3 w-3 mr-1" />
           Error
         </Badge>
       );
     }
     return (
-      <Badge className="bg-[#F38756]/30 text-[#5C2F0E] text-xs">
+      <Badge className="bg-[#E95F20] text-white text-xs">
         <Clock className="h-3 w-3 mr-1" />
         {t.pending}
       </Badge>
@@ -457,7 +457,7 @@ export default function ApprovedOrdersPage() {
   const getOrderStatusBadge = (order: PurchaseRequest) => {
     if (order.status === 'delivered') {
       return (
-        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F]">
+        <Badge className="bg-[#5C2F0E] text-white">
           <Truck className="h-3 w-3 mr-1" />
           {t.delivered}
         </Badge>
@@ -465,7 +465,7 @@ export default function ApprovedOrdersPage() {
     }
     if (order.status === 'cancelled') {
       return (
-        <Badge className="bg-[#AA2F0D]/20 text-[#AA2F0D]">
+        <Badge className="bg-[#AA2F0D] text-white">
           <XCircle className="h-3 w-3 mr-1" />
           {t.cancelled}
         </Badge>
@@ -473,7 +473,7 @@ export default function ApprovedOrdersPage() {
     }
     if (order.status === 'purchased') {
       return (
-        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F]">
+        <Badge className="bg-[#4E616F] text-white">
           <CheckCircle className="h-3 w-3 mr-1" />
           {t.purchased}
         </Badge>
@@ -483,7 +483,7 @@ export default function ApprovedOrdersPage() {
     const progress = getCartProgress(items);
     if (progress.inCart === progress.total && progress.total > 0) {
       return (
-        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F]">
+        <Badge className="bg-[#4E616F] text-white">
           <ShoppingCart className="h-3 w-3 mr-1" />
           {t.inCart}
         </Badge>
@@ -491,14 +491,14 @@ export default function ApprovedOrdersPage() {
     }
     if (progress.inCart > 0) {
       return (
-        <Badge className="bg-[#F38756]/30 text-[#5C2F0E]">
+        <Badge className="bg-[#F38756] text-white">
           <Clock className="h-3 w-3 mr-1" />
           {progress.inCart}/{progress.total} {t.itemsInCart}
         </Badge>
       );
     }
     return (
-      <Badge className="bg-[#ABC0B9]/20 text-[#2D363F]">
+      <Badge className="bg-[#E95F20] text-white">
         <Package className="h-3 w-3 mr-1" />
         {t.pending}
       </Badge>

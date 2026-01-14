@@ -258,7 +258,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
 
     if (config.test_status === 'success') {
       return (
-        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F] flex items-center gap-1">
+        <Badge className="bg-[#5C2F0E] text-white flex items-center gap-1">
           <CheckCircle className="h-3 w-3" />
           {t.connected}
         </Badge>
@@ -267,7 +267,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
 
     if (config.test_status === 'failed') {
       return (
-        <Badge className="bg-[#AA2F0D]/20 text-[#AA2F0D] flex items-center gap-1">
+        <Badge className="bg-[#AA2F0D] text-white flex items-center gap-1">
           <XCircle className="h-3 w-3" />
           {t.testFailed}
         </Badge>
@@ -275,7 +275,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
     }
 
     return (
-      <Badge className="bg-[#F38756]/30 text-[#5C2F0E] flex items-center gap-1">
+      <Badge className="bg-[#E95F20] text-white flex items-center gap-1">
         <AlertTriangle className="h-3 w-3" />
         {language === 'zh' ? '未测试' : language === 'es' ? 'No probado' : 'Not tested'}
       </Badge>

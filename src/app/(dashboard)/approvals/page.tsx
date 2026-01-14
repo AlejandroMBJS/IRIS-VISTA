@@ -312,13 +312,13 @@ export default function ApprovalsPage() {
 
   const getStatusBadge = (status: string) => {
     const statusMap: { [key: string]: { bg: string; text: string; icon: React.ReactNode } } = {
-      pending: { bg: '#F38756', text: '#E95F20', icon: <Clock className="h-3 w-3" /> },
-      approved: { bg: '#ABC0B9', text: '#5C2F0E', icon: <CheckCircle className="h-3 w-3" /> },
-      rejected: { bg: '#AA2F0D', text: '#AA2F0D', icon: <X className="h-3 w-3" /> },
-      info_requested: { bg: '#ABC0B9', text: '#4E616F', icon: <MessageSquare className="h-3 w-3" /> },
-      purchased: { bg: '#ABC0B9', text: '#5C2F0E', icon: <CheckCircle className="h-3 w-3" /> },
-      delivered: { bg: '#ABC0B9', text: '#5C2F0E', icon: <Package className="h-3 w-3" /> },
-      cancelled: { bg: '#ABC0B9', text: '#4E616F', icon: <X className="h-3 w-3" /> },
+      pending: { bg: '#E95F20', text: '#FFFFFF', icon: <Clock className="h-3 w-3" /> },
+      approved: { bg: '#5C2F0E', text: '#FFFFFF', icon: <CheckCircle className="h-3 w-3" /> },
+      rejected: { bg: '#AA2F0D', text: '#FFFFFF', icon: <X className="h-3 w-3" /> },
+      info_requested: { bg: '#F38756', text: '#FFFFFF', icon: <MessageSquare className="h-3 w-3" /> },
+      purchased: { bg: '#4E616F', text: '#FFFFFF', icon: <CheckCircle className="h-3 w-3" /> },
+      delivered: { bg: '#5C2F0E', text: '#FFFFFF', icon: <Package className="h-3 w-3" /> },
+      cancelled: { bg: '#ABC0B9', text: '#FFFFFF', icon: <X className="h-3 w-3" /> },
     };
     const s = statusMap[status] || statusMap.pending;
     return (

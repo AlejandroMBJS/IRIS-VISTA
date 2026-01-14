@@ -87,15 +87,15 @@ export function RecentActivity({ language }: RecentActivityProps) {
   const getStatusVariant = (status: string) => {
     switch (status) {
       case 'approved':
-        return 'bg-[#ABC0B9]/30 text-[#5C2F0E] hover:bg-[#ABC0B9]/30';
+        return 'bg-[#5C2F0E] text-white hover:bg-[#5C2F0E]/90';
       case 'pending':
-        return 'bg-[#F38756]/30 text-[#E95F20] hover:bg-[#F38756]/30';
+        return 'bg-[#E95F20] text-white hover:bg-[#E95F20]/90';
       case 'received':
-        return 'bg-[#ABC0B9]/30 text-[#4E616F] hover:bg-[#ABC0B9]/30';
+        return 'bg-[#4E616F] text-white hover:bg-[#4E616F]/90';
       case 'rejected':
-        return 'bg-[#AA2F0D]/20 text-[#AA2F0D] hover:bg-[#AA2F0D]/20';
+        return 'bg-[#AA2F0D] text-white hover:bg-[#AA2F0D]/90';
       default:
-        return 'bg-[#ABC0B9]/20 text-[#2D363F] hover:bg-[#ABC0B9]/20';
+        return 'bg-[#ABC0B9] text-white hover:bg-[#ABC0B9]/90';
     }
   };
 

@@ -563,11 +563,11 @@ export default function AnalyticsPage() {
                           </p>
                         </div>
                         <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                          request.status === 'approved' ? 'bg-[#ABC0B9]/30 text-[#4E616F]' :
-                          request.status === 'purchased' ? 'bg-[#ABC0B9]/30 text-[#5C2F0E]' :
-                          request.status === 'rejected' ? 'bg-[#AA2F0D]/20 text-[#AA2F0D]' :
-                          request.status === 'pending' ? 'bg-[#F38756]/30 text-[#E95F20]' :
-                          'bg-purple-100 text-purple-700'
+                          request.status === 'approved' ? 'bg-[#5C2F0E] text-white' :
+                          request.status === 'purchased' ? 'bg-[#4E616F] text-white' :
+                          request.status === 'rejected' ? 'bg-[#AA2F0D] text-white' :
+                          request.status === 'pending' ? 'bg-[#E95F20] text-white' :
+                          'bg-[#F38756] text-white'
                         }`}>
                           {request.status === 'approved' ? t.approved :
                            request.status === 'purchased' ? t.purchased :

@@ -289,10 +289,10 @@ export default function HomePage() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
-      pending: { bg: 'bg-[#F38756]/30', text: 'text-[#5C2F0E]', icon: <Clock className="h-3 w-3" /> },
-      approved: { bg: 'bg-[#ABC0B9]/30', text: 'text-[#2D363F]', icon: <CheckCircle className="h-3 w-3" /> },
-      rejected: { bg: 'bg-[#AA2F0D]/20', text: 'text-[#AA2F0D]', icon: <XCircle className="h-3 w-3" /> },
-      purchased: { bg: 'bg-[#ABC0B9]/30', text: 'text-[#2D363F]', icon: <ShoppingCart className="h-3 w-3" /> },
+      pending: { bg: 'bg-[#E95F20]', text: 'text-white', icon: <Clock className="h-3 w-3" /> },
+      approved: { bg: 'bg-[#5C2F0E]', text: 'text-white', icon: <CheckCircle className="h-3 w-3" /> },
+      rejected: { bg: 'bg-[#AA2F0D]', text: 'text-white', icon: <XCircle className="h-3 w-3" /> },
+      purchased: { bg: 'bg-[#4E616F]', text: 'text-white', icon: <ShoppingCart className="h-3 w-3" /> },
     };
     const style = styles[status] || styles.pending;
     return (
@@ -365,7 +365,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <UserCheck className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">Pending</span>
+                  <span className="text-xs font-medium text-white bg-[#E95F20] px-2 py-1 rounded-full">Pending</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{dashboardStats?.pending_users || 0}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.pendingUsers}</p>
@@ -536,7 +536,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <Clock className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">Pending</span>
+                  <span className="text-xs font-medium text-white bg-[#E95F20] px-2 py-1 rounded-full">Pending</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{pendingOrders.length}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.pendingOrders}</p>
@@ -733,7 +733,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <Clock className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">Pending</span>
+                  <span className="text-xs font-medium text-white bg-[#E95F20] px-2 py-1 rounded-full">Pending</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.pending || 0}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.awaitingReview}</p>
@@ -932,7 +932,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                   <Clock className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">{t.waitingBadge}</span>
+                <span className="text-xs font-medium text-white bg-[#E95F20] px-2 py-1 rounded-full">{t.waitingBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2D363F]">{myRequests.filter(r => r.status === 'pending').length}</p>
               <p className="text-sm text-[#4E616F] mt-1">{t.pending}</p>

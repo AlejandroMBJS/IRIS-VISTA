@@ -537,11 +537,11 @@ export default function InventoryPage() {
   const getStockStatusBadge = (status: string) => {
     switch (status) {
       case 'in_stock':
-        return <span className="px-2 py-1 text-xs rounded-full bg-[#ABC0B9]/30 text-[#2D363F]">{t.inStock}</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-[#5C2F0E] text-white">{t.inStock}</span>;
       case 'limited':
-        return <span className="px-2 py-1 text-xs rounded-full bg-[#F38756]/30 text-[#5C2F0E]">{t.limited}</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-[#E95F20] text-white">{t.limited}</span>;
       case 'out_of_stock':
-        return <span className="px-2 py-1 text-xs rounded-full bg-[#AA2F0D]/20 text-[#AA2F0D]">{t.outOfStock}</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-[#AA2F0D] text-white">{t.outOfStock}</span>;
       default:
         return null;
     }

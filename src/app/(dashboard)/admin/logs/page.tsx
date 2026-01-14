@@ -326,17 +326,17 @@ export default function ActivityLogsPage() {
 
   const getTypeBadgeColor = (type: string, success: boolean) => {
     if (!success || type === 'login_failed') {
-      return 'bg-[#AA2F0D]/20 text-[#AA2F0D]';
+      return 'bg-[#AA2F0D] text-white';
     }
     switch (type) {
       case 'login':
-        return 'bg-[#ABC0B9]/30 text-[#5C2F0E]';
+        return 'bg-[#5C2F0E] text-white';
       case 'logout':
-        return 'bg-[#ABC0B9]/20 text-[#2D363F]';
+        return 'bg-[#4E616F] text-white';
       case 'registration':
-        return 'bg-[#ABC0B9]/30 text-[#4E616F]';
+        return 'bg-[#ABC0B9] text-white';
       default:
-        return 'bg-[#ABC0B9]/20 text-[#2D363F]';
+        return 'bg-[#4E616F] text-white';
     }
   };
 

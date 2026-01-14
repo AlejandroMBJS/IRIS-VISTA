@@ -221,21 +221,21 @@ export default function CatalogPage() {
   const getStockBadge = (product: Product) => {
     if (product.stock === 0 || product.stock_status === 'out_of_stock') {
       return (
-        <Badge className="bg-[#ABC0B9] text-[#4E616F] hover:bg-[#ABC0B9] border-0 font-medium flex items-center gap-1">
+        <Badge className="bg-[#4E616F] text-white hover:bg-[#4E616F]/90 border-0 font-medium flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {t.outOfStock}
         </Badge>
       );
     } else if (product.stock < 100 || product.stock_status === 'limited') {
       return (
-        <Badge className="bg-[#F38756] text-[#E95F20] hover:bg-[#F38756] border-0 font-medium flex items-center gap-1">
+        <Badge className="bg-[#E95F20] text-white hover:bg-[#E95F20]/90 border-0 font-medium flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {t.limitedStock}
         </Badge>
       );
     } else {
       return (
-        <Badge className="bg-[#ABC0B9] text-[#5C2F0E] hover:bg-[#ABC0B9] border-0 font-medium flex items-center gap-1">
+        <Badge className="bg-[#5C2F0E] text-white hover:bg-[#5C2F0E]/90 border-0 font-medium flex items-center gap-1">
           <CheckCircle className="h-3 w-3" />
           {t.inStock}
         </Badge>

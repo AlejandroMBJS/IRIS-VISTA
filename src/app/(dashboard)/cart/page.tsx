@@ -400,7 +400,7 @@ export default function CartPage() {
                               </p>
                             </>
                           ) : (
-                            <p className="text-sm text-[#80959A]">-</p>
+                            <p className="text-sm text-[#4E616F]">-</p>
                           )}
                         </div>
                       </div>

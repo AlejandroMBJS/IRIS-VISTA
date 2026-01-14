@@ -111,7 +111,7 @@ export function ManagerDashboard({ language }: ManagerDashboardProps) {
             <h3 className="text-[#2D363F]">{t.pendingApprovals.title}</h3>
           </div>
           <div className="mb-2 text-3xl text-[#2D363F]">{t.pendingApprovals.count}</div>
-          <p className="text-sm text-white0">{t.pendingApprovals.description}</p>
+          <p className="text-sm text-[#4E616F]">{t.pendingApprovals.description}</p>
         </button>
 
         {/* Low Stock Alerts */}
@@ -124,7 +124,7 @@ export function ManagerDashboard({ language }: ManagerDashboardProps) {
           </div>
           <div className="mb-4">
             <div className="mb-2 text-3xl text-[#2D363F]">{t.lowStockAlerts.count}</div>
-            <p className="text-sm text-white0">{t.lowStockAlerts.description}</p>
+            <p className="text-sm text-[#4E616F]">{t.lowStockAlerts.description}</p>
           </div>
           
           <div className="space-y-3 border-t border-[#ABC0B9]/30 pt-4">
@@ -135,7 +135,7 @@ export function ManagerDashboard({ language }: ManagerDashboardProps) {
               >
                 <div className="flex-1">
                   <div className="text-sm text-[#2D363F]">{alert.item}</div>
-                  <div className="text-xs text-white0">{alert.quantity}</div>
+                  <div className="text-xs text-[#4E616F]">{alert.quantity}</div>
                 </div>
                 <div className="rounded bg-[#AA2F0D]/20 px-2 py-1 text-xs text-[#AA2F0D]">
                   {alert.threshold}

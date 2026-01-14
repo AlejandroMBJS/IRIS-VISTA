@@ -465,7 +465,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#80959A] hover:text-[#4E616F]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4E616F] hover:text-[#2D363F]"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>

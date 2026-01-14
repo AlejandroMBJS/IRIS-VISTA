@@ -138,7 +138,7 @@ export function RecentActivity({ language }: RecentActivityProps) {
                       {request.statusLabel}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-sm text-white0">
+                  <td className="px-6 py-4 text-sm text-[#4E616F]">
                     {request.date}
                   </td>
                 </tr>

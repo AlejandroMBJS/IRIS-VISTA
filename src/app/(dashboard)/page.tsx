@@ -620,7 +620,7 @@ export default function HomePage() {
                           </div>
                           <div className="text-right flex-shrink-0">
                             <p className="font-bold text-[#2D363F]">${((order.total_estimated || (order.estimated_price || 0) * order.quantity)).toLocaleString()}</p>
-                            <p className="text-xs text-[#80959A]">{order.currency || 'MXN'}</p>
+                            <p className="text-xs text-[#4E616F]">{order.currency || 'MXN'}</p>
                           </div>
                         </div>
                       </Link>
@@ -1024,7 +1024,7 @@ export default function HomePage() {
                           <p className="font-bold text-[#2D363F]">
                             ${((request.estimated_price || 0) * request.quantity).toLocaleString()}
                           </p>
-                          <p className="text-xs text-[#80959A]">{request.currency || 'MXN'}</p>
+                          <p className="text-xs text-[#4E616F]">{request.currency || 'MXN'}</p>
                         </div>
                       </div>
                     </Link>

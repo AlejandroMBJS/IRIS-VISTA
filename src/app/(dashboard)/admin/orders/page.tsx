@@ -1015,7 +1015,7 @@ export default function ApprovedOrdersPage() {
                     setOrderNumber('');
                     setOrderNumberError('');
                   }}
-                  className="text-[#80959A] hover:text-[#4E616F]"
+                  className="text-[#4E616F] hover:text-[#2D363F]"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -1130,7 +1130,7 @@ export default function ApprovedOrdersPage() {
                     setSelectedOrder(null);
                     setStatusChangeNotes('');
                   }}
-                  className="text-[#80959A] hover:text-[#4E616F]"
+                  className="text-[#4E616F] hover:text-[#2D363F]"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -1208,7 +1208,7 @@ export default function ApprovedOrdersPage() {
                     setStatusChangeNotes('');
                     setCancelNotesError('');
                   }}
-                  className="text-[#80959A] hover:text-[#4E616F]"
+                  className="text-[#4E616F] hover:text-[#2D363F]"
                 >
                   <X className="h-6 w-6" />
                 </button>

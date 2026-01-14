@@ -118,7 +118,7 @@ export function Categories({ language }: CategoriesProps) {
                 <h3 className="mb-1 text-[#2D363F] group-hover:text-[#5C2F0E]">
                   {category.title}
                 </h3>
-                <p className="text-sm text-white0">{category.description}</p>
+                <p className="text-sm text-[#4E616F]">{category.description}</p>
               </div>
             </button>
           );

@@ -985,7 +985,7 @@ export default function NewPurchaseRequestPage() {
                           <h4 className="font-medium text-[#2D363F] text-sm line-clamp-2 mb-1">
                             {product.name}
                           </h4>
-                          <p className="text-xs text-[#80959A] mb-2">
+                          <p className="text-xs text-[#4E616F] mb-2">
                             {product.sku && `SKU: ${product.sku} · `}
                             {t.stock}: {product.stock}
                           </p>
@@ -1129,7 +1129,7 @@ export default function NewPurchaseRequestPage() {
                           {product.catalogProduct.name}
                         </h4>
                         {product.catalogProduct.sku && (
-                          <p className="text-xs text-[#80959A] mb-1">SKU: {product.catalogProduct.sku}</p>
+                          <p className="text-xs text-[#4E616F] mb-1">SKU: {product.catalogProduct.sku}</p>
                         )}
                         <p className="text-base font-bold text-[#5C2F0E]">
                           {product.catalogProduct.currency || 'MXN'} ${formatPrice(product.catalogProduct.price)}
@@ -1221,7 +1221,7 @@ export default function NewPurchaseRequestPage() {
                                   className="max-w-full max-h-full object-contain"
                                 />
                               ) : (
-                                <span className="text-[#80959A] text-xs text-center px-2">{t.noImage}</span>
+                                <span className="text-[#4E616F] text-xs text-center px-2">{t.noImage}</span>
                               )}
                             </div>
                             {/* Image URL input */}
@@ -1347,10 +1347,10 @@ export default function NewPurchaseRequestPage() {
                       MXN ${formatPrice(total)}
                     </span>
                   ) : (
-                    <span className="text-[#80959A]">{t.priceNotAvailable}</span>
+                    <span className="text-[#4E616F]">{t.priceNotAvailable}</span>
                   )}
                   {!allHavePrices && total > 0 && (
-                    <p className="text-xs text-[#80959A] mt-1">+ {t.priceNotAvailable}</p>
+                    <p className="text-xs text-[#4E616F] mt-1">+ {t.priceNotAvailable}</p>
                   )}
                 </div>
               </div>
@@ -1363,7 +1363,7 @@ export default function NewPurchaseRequestPage() {
                 <div>
                   <label className="block text-sm font-medium text-[#4E616F] mb-2">
                     {t.justification}
-                    <span className="text-xs text-[#80959A] ml-2">
+                    <span className="text-xs text-[#4E616F] ml-2">
                       ({language === 'es' ? 'requerido para enviar directamente' : language === 'zh' ? '直接提交时必填' : 'required for direct submit'})
                     </span>
                   </label>
@@ -1544,7 +1544,7 @@ export default function NewPurchaseRequestPage() {
                         <h4 className="font-medium text-[#2D363F] text-sm line-clamp-2 mb-1">
                           {product.name}
                         </h4>
-                        <p className="text-xs text-[#80959A] mb-2">
+                        <p className="text-xs text-[#4E616F] mb-2">
                           {product.sku && `SKU: ${product.sku} · `}
                           {t.stock}: {product.stock}
                         </p>
@@ -1669,7 +1669,7 @@ export default function NewPurchaseRequestPage() {
                             ${formatPrice(info.price * product.quantity)}
                           </p>
                         ) : (
-                          <p className="text-xs text-[#80959A]">-</p>
+                          <p className="text-xs text-[#4E616F]">-</p>
                         )}
                       </div>
                     </div>
@@ -1686,11 +1686,11 @@ export default function NewPurchaseRequestPage() {
                       MXN ${formatPrice(total)}
                     </span>
                   ) : (
-                    <span className="text-[#80959A]">{t.priceNotAvailable}</span>
+                    <span className="text-[#4E616F]">{t.priceNotAvailable}</span>
                   )}
                 </div>
                 {!allHavePrices && total > 0 && (
-                  <p className="text-xs text-[#80959A] text-right mt-1">+ {t.priceNotAvailable}</p>
+                  <p className="text-xs text-[#4E616F] text-right mt-1">+ {t.priceNotAvailable}</p>
                 )}
               </div>
             </div>

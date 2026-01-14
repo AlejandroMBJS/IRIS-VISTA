@@ -451,7 +451,7 @@ export function EmailSection({ language }: EmailSectionProps) {
             <span className={config.last_test_success ? 'text-[#5C2F0E]' : 'text-[#AA2F0D]'}>
               {config.last_test_success ? 'Success' : 'Failed'}
             </span>
-            <span className="text-[#80959A] ml-2">
+            <span className="text-[#4E616F] ml-2">
               ({new Date(config.last_test_at).toLocaleString()})
             </span>
             {config.last_test_error && (

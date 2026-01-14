@@ -409,7 +409,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-[#2D363F]">{segment.value}</span>
-                          <span className="text-xs text-[#80959A]">
+                          <span className="text-xs text-[#4E616F]">
                             ({approvalStats && approvalStats.total > 0
                               ? Math.round((segment.value / approvalStats.total) * 100)
                               : 0}%)

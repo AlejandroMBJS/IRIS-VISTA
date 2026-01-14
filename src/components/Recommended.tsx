@@ -86,7 +86,7 @@ export function Recommended({ language }: RecommendedProps) {
                 <h3 className="mb-1 text-[#2D363F] group-hover:text-[#5C2F0E]">
                   {item.name}
                 </h3>
-                <div className="flex items-center gap-3 text-xs text-white0">
+                <div className="flex items-center gap-3 text-xs text-[#4E616F]">
                   <span>{item.category}</span>
                   <span>•</span>
                   <span>{item.usage}</span>

@@ -738,14 +738,14 @@ export default function RequestsPage() {
                             <span className="font-medium text-sm text-[#2D363F]">
                               {t.historyActions[historyItem.action as keyof typeof t.historyActions] || historyItem.action}
                             </span>
-                            <span className="text-xs text-[#80959A]">
+                            <span className="text-xs text-[#4E616F]">
                               {new Date(historyItem.created_at).toLocaleString()}
                             </span>
                           </div>
                           {historyItem.comment && (
                             <p className="text-sm text-[#4E616F] mt-1">{historyItem.comment}</p>
                           )}
-                          <div className="flex items-center gap-1 text-xs text-[#80959A] mt-1">
+                          <div className="flex items-center gap-1 text-xs text-[#4E616F] mt-1">
                             <User className="h-3 w-3" />
                             {historyItem.user?.name || `User #${historyItem.user_id}`}
                           </div>

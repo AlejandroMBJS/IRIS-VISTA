@@ -367,7 +367,7 @@ export default function ActivityLogsPage() {
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold text-[#2D363F]">{t.title}</h1>
-        <p className="text-[#80959A] mt-1 text-sm sm:text-base">{t.subtitle}</p>
+        <p className="text-[#4E616F] mt-1 text-sm sm:text-base">{t.subtitle}</p>
       </div>
 
       {/* Stats Cards */}

@@ -364,7 +364,7 @@ export function Header() {
                             <p className="text-xs text-[#4E616F] mt-0.5 line-clamp-2">
                               {notification.message}
                             </p>
-                            <p className="text-xs text-[#80959A] mt-1">
+                            <p className="text-xs text-[#4E616F] mt-1">
                               {formatRelativeTime(notification.created_at)}
                             </p>
                           </div>
@@ -528,7 +528,7 @@ export function Header() {
                       <button
                         type="button"
                         onClick={() => setShowCurrentPwd(!showCurrentPwd)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#80959A] hover:text-[#4E616F]"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4E616F] hover:text-[#2D363F]"
                       >
                         {showCurrentPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -550,7 +550,7 @@ export function Header() {
                       <button
                         type="button"
                         onClick={() => setShowNewPwd(!showNewPwd)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#80959A] hover:text-[#4E616F]"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4E616F] hover:text-[#2D363F]"
                       >
                         {showNewPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>

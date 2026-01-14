@@ -254,25 +254,27 @@ export default function PurchaseConfigPage() {
         )}
 
         {/* Tabs */}
-        <div className="mt-6 flex gap-1 overflow-x-auto">
-          {TABS.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                  isActive
-                    ? 'bg-[#5C2F0E] text-white'
-                    : 'text-[#4E616F] hover:bg-[#ABC0B9]/50'
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {t[tab.labelKey as keyof typeof t]}
-              </button>
-            );
-          })}
+        <div className="mt-6 -mx-4 md:mx-0">
+          <div className="flex gap-1 overflow-x-auto px-4 md:px-0 pb-2 scrollbar-hide">
+            {TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 rounded-lg px-3 md:px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                    isActive
+                      ? 'bg-[#5C2F0E] text-white shadow-sm'
+                      : 'text-[#4E616F] hover:bg-[#ABC0B9]/30 bg-white border border-[#ABC0B9]/50'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t[tab.labelKey as keyof typeof t]}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 

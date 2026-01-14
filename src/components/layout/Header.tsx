@@ -22,6 +22,10 @@ export function Header() {
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 
+  // Mobile search state
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const mobileSearchRef = useRef<HTMLInputElement>(null);
+
   // Password change modal state
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -275,6 +279,17 @@ export function Header() {
 
         {/* Right Side */}
         <div className="flex items-center gap-1 sm:gap-3">
+          {/* Mobile Search Button */}
+          <button
+            onClick={() => {
+              setShowMobileSearch(true);
+              setTimeout(() => mobileSearchRef.current?.focus(), 100);
+            }}
+            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl text-[#5C2F0E] transition-all duration-200 hover:bg-[#FAFBFA] active:scale-95"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+
           {/* Cart */}
           <Link
             href="/cart"
@@ -572,6 +587,40 @@ export function Header() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Mobile Search Modal */}
+      {showMobileSearch && (
+        <div className="fixed inset-0 bg-black/50 z-[100] md:hidden">
+          <div className="bg-white p-4 shadow-lg animate-slide-down">
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4E616F]" />
+                <input
+                  ref={mobileSearchRef}
+                  type="text"
+                  placeholder={t.search}
+                  className="w-full rounded-xl border border-[#ABC0B9] bg-[#FAFBFA] py-3 pl-12 pr-4 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      setShowMobileSearch(false);
+                    }
+                  }}
+                />
+              </div>
+              <button
+                onClick={() => setShowMobileSearch(false)}
+                className="p-2 text-[#4E616F] hover:text-[#2D363F] hover:bg-[#FAFBFA] rounded-lg transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+          </div>
+          <div
+            className="flex-1 h-full"
+            onClick={() => setShowMobileSearch(false)}
+          />
         </div>
       )}
     </header>

@@ -162,8 +162,8 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-[73px] bottom-0 border-r border-[#ABC0B9] bg-white overflow-y-auto hidden md:block md:w-16 lg:w-64 transition-all duration-200">
-      <nav className="flex flex-col gap-1 p-2 lg:p-4">
+    <aside className="fixed left-0 top-[73px] bottom-0 border-r border-[#ABC0B9] bg-white overflow-y-auto hidden md:block w-56 lg:w-64 transition-all duration-200">
+      <nav className="flex flex-col gap-1 p-3 lg:p-4">
         {filteredMenuItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
@@ -174,7 +174,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex items-center gap-3 rounded-xl px-3 py-3 lg:px-4 text-sm transition-all duration-200 ${
+              className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 lg:px-4 lg:py-3 text-sm transition-all duration-200 ${
                 active
                   ? 'bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] text-white shadow-md'
                   : 'text-[#5C2F0E] hover:bg-[#ABC0B9]/10 active:scale-95'
@@ -183,25 +183,17 @@ export function Sidebar() {
               title={label}
             >
               <Icon className="h-5 w-5 flex-shrink-0" />
-              <span className="flex-1 hidden lg:block">{label}</span>
+              <span className="flex-1 truncate">{label}</span>
               {badgeCount > 0 && (
                 <span
                   className={`flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold ${
                     active
                       ? 'bg-white/20 text-white'
                       : 'bg-[#AA2F0D] text-white'
-                  } hidden lg:flex`}
+                  }`}
                 >
                   {badgeCount > 99 ? '99+' : badgeCount}
                 </span>
-              )}
-              {/* Badge dot for tablet view */}
-              {badgeCount > 0 && (
-                <span
-                  className={`absolute top-1 right-1 w-2 h-2 rounded-full lg:hidden ${
-                    active ? 'bg-white/80' : 'bg-[#AA2F0D]'
-                  }`}
-                />
               )}
             </Link>
           );

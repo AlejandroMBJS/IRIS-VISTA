@@ -145,8 +145,8 @@ export function FormFieldsSection({ config, onChange, language }: Props) {
       {/* Header */}
       <div className="border-b border-[#ABC0B9] px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#9B59B6]/10">
-            <FormInput className="h-5 w-5 text-[#9B59B6]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
+            <FormInput className="h-5 w-5 text-[#5C2F0E]" />
           </div>
           <div>
             <h2 className="text-lg font-semibold text-[#2D363F]">{t.title}</h2>

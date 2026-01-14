@@ -249,7 +249,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
   const getStatusBadge = () => {
     if (!config?.has_password) {
       return (
-        <Badge className="bg-gray-100 text-gray-800 flex items-center gap-1">
+        <Badge className="bg-[#ABC0B9]/20 text-[#2D363F] flex items-center gap-1">
           <XCircle className="h-3 w-3" />
           {t.disconnected}
         </Badge>
@@ -258,7 +258,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
 
     if (config.test_status === 'success') {
       return (
-        <Badge className="bg-green-100 text-green-800 flex items-center gap-1">
+        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F] flex items-center gap-1">
           <CheckCircle className="h-3 w-3" />
           {t.connected}
         </Badge>
@@ -267,7 +267,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
 
     if (config.test_status === 'failed') {
       return (
-        <Badge className="bg-red-100 text-red-800 flex items-center gap-1">
+        <Badge className="bg-[#AA2F0D]/20 text-[#AA2F0D] flex items-center gap-1">
           <XCircle className="h-3 w-3" />
           {t.testFailed}
         </Badge>
@@ -275,7 +275,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
     }
 
     return (
-      <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1">
+      <Badge className="bg-[#F38756]/30 text-[#5C2F0E] flex items-center gap-1">
         <AlertTriangle className="h-3 w-3" />
         {language === 'zh' ? '未测试' : language === 'es' ? 'No probado' : 'Not tested'}
       </Badge>
@@ -296,7 +296,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
       <div className="rounded-xl border border-[#ABC0B9] bg-white p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF9900] to-[#FF6600]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#F38756] to-[#E95F20]">
               <ShoppingCart className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -314,7 +314,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
           <button
             onClick={handleToggle}
             className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
-              isActive ? 'bg-green-500' : 'bg-gray-300'
+              isActive ? 'bg-[#ABC0B9]/200' : 'bg-[#ABC0B9]'
             }`}
           >
             <span
@@ -364,7 +364,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
 
       {!isActive ? (
         <div className="rounded-xl border border-[#ABC0B9] bg-white p-8 text-center">
-          <Power className="h-12 w-12 mx-auto text-gray-300" />
+          <Power className="h-12 w-12 mx-auto text-[#ABC0B9]" />
           <p className="mt-4 text-[#4E616F]">{t.disabledMessage}</p>
         </div>
       ) : (
@@ -412,7 +412,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                   {config.test_message && (
                     <div className="col-span-2">
                       <p className="text-xs text-[#4E616F]">Status</p>
-                      <p className={`text-sm ${config.test_status === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                      <p className={`text-sm ${config.test_status === 'success' ? 'text-[#5C2F0E]' : 'text-[#AA2F0D]'}`}>
                         {config.test_message}
                       </p>
                     </div>
@@ -433,7 +433,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
               {t.credentials}
             </h3>
             <p className="text-sm text-[#4E616F] mb-4 flex items-center gap-1">
-              <AlertTriangle className="h-4 w-4 text-yellow-500" />
+              <AlertTriangle className="h-4 w-4 text-[#E95F20]" />
               {t.credentialsWarning}
             </p>
 
@@ -465,7 +465,7 @@ export function AmazonSection({ language }: AmazonSectionProps) {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#80959A] hover:text-[#4E616F]"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>

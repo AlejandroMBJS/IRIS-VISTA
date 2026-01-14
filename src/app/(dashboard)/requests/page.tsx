@@ -233,12 +233,12 @@ export default function RequestsPage() {
 
   const getStatusBadge = (status: string) => {
     const config: Record<string, { bg: string; icon: React.ReactNode }> = {
-      pending: { bg: 'bg-yellow-100 text-yellow-800', icon: <Clock className="h-3 w-3 mr-1" /> },
-      approved: { bg: 'bg-blue-100 text-blue-800', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
-      rejected: { bg: 'bg-red-100 text-red-800', icon: <XCircle className="h-3 w-3 mr-1" /> },
-      purchased: { bg: 'bg-green-100 text-green-800', icon: <ShoppingCart className="h-3 w-3 mr-1" /> },
+      pending: { bg: 'bg-[#F38756]/30 text-[#5C2F0E]', icon: <Clock className="h-3 w-3 mr-1" /> },
+      approved: { bg: 'bg-[#ABC0B9]/30 text-[#2D363F]', icon: <CheckCircle className="h-3 w-3 mr-1" /> },
+      rejected: { bg: 'bg-[#AA2F0D]/20 text-[#AA2F0D]', icon: <XCircle className="h-3 w-3 mr-1" /> },
+      purchased: { bg: 'bg-[#ABC0B9]/30 text-[#2D363F]', icon: <ShoppingCart className="h-3 w-3 mr-1" /> },
       info_requested: { bg: 'bg-orange-100 text-orange-800', icon: <AlertCircle className="h-3 w-3 mr-1" /> },
-      cancelled: { bg: 'bg-gray-100 text-gray-800', icon: <XCircle className="h-3 w-3 mr-1" /> },
+      cancelled: { bg: 'bg-[#ABC0B9]/20 text-[#2D363F]', icon: <XCircle className="h-3 w-3 mr-1" /> },
     };
     const c = config[status] || config.pending;
     return (
@@ -251,13 +251,13 @@ export default function RequestsPage() {
 
   const getActionIcon = (action: string) => {
     switch (action) {
-      case 'created': return <Clock className="h-4 w-4 text-blue-600" />;
-      case 'approved': return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'rejected': return <XCircle className="h-4 w-4 text-red-600" />;
+      case 'created': return <Clock className="h-4 w-4 text-[#4E616F]" />;
+      case 'approved': return <CheckCircle className="h-4 w-4 text-[#5C2F0E]" />;
+      case 'rejected': return <XCircle className="h-4 w-4 text-[#AA2F0D]" />;
       case 'returned': return <AlertCircle className="h-4 w-4 text-orange-600" />;
-      case 'cancelled': return <X className="h-4 w-4 text-gray-600" />;
-      case 'purchased': return <ShoppingCart className="h-4 w-4 text-green-600" />;
-      default: return <Clock className="h-4 w-4 text-gray-600" />;
+      case 'cancelled': return <X className="h-4 w-4 text-[#4E616F]" />;
+      case 'purchased': return <ShoppingCart className="h-4 w-4 text-[#5C2F0E]" />;
+      default: return <Clock className="h-4 w-4 text-[#4E616F]" />;
     }
   };
 
@@ -339,26 +339,26 @@ export default function RequestsPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-3.5 md:gap-4 mb-6">
             <Card className="bg-white">
               <CardContent className="p-4 text-center">
-                <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
-                <p className="text-sm text-gray-600">{t.statuses.pending}</p>
+                <p className="text-3xl font-bold text-[#E95F20]">{pendingCount}</p>
+                <p className="text-sm text-[#4E616F]">{t.statuses.pending}</p>
               </CardContent>
             </Card>
             <Card className="bg-white">
               <CardContent className="p-4 text-center">
-                <p className="text-3xl font-bold text-blue-600">{approvedCount}</p>
-                <p className="text-sm text-gray-600">{t.statuses.approved}</p>
+                <p className="text-3xl font-bold text-[#4E616F]">{approvedCount}</p>
+                <p className="text-sm text-[#4E616F]">{t.statuses.approved}</p>
               </CardContent>
             </Card>
             <Card className="bg-white">
               <CardContent className="p-4 text-center">
-                <p className="text-3xl font-bold text-green-600">{purchasedCount}</p>
-                <p className="text-sm text-gray-600">{t.statuses.purchased}</p>
+                <p className="text-3xl font-bold text-[#5C2F0E]">{purchasedCount}</p>
+                <p className="text-sm text-[#4E616F]">{t.statuses.purchased}</p>
               </CardContent>
             </Card>
             <Card className="bg-white">
               <CardContent className="p-4 text-center">
-                <p className="text-3xl font-bold text-red-600">{rejectedCount}</p>
-                <p className="text-sm text-gray-600">{t.statuses.rejected}</p>
+                <p className="text-3xl font-bold text-[#AA2F0D]">{rejectedCount}</p>
+                <p className="text-sm text-[#4E616F]">{t.statuses.rejected}</p>
               </CardContent>
             </Card>
           </div>
@@ -366,7 +366,7 @@ export default function RequestsPage() {
           {/* Filters */}
           <div className="flex flex-col md:flex-row gap-4 md:items-center mb-6">
             <div className="flex gap-2 flex-wrap items-center">
-              <Filter className="h-5 w-5 text-gray-500" />
+              <Filter className="h-5 w-5 text-white0" />
               {filters.map((f) => (
                 <Button
                   key={f.key}
@@ -394,7 +394,7 @@ export default function RequestsPage() {
             </div>
           ) : filteredRequests.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-white0">
                 <ClipboardList className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="mb-2">{t.noRequests}</p>
                 {requests.length === 0 && (
@@ -515,34 +515,34 @@ export default function RequestsPage() {
 
                       {/* Rejection Reason */}
                       {request.rejection_reason && (
-                        <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                          <div className="flex items-center gap-2 text-sm font-medium text-red-800 mb-1">
+                        <div className="mt-3 p-3 bg-[#AA2F0D]/10 rounded-lg border border-[#AA2F0D]-200">
+                          <div className="flex items-center gap-2 text-sm font-medium text-[#AA2F0D] mb-1">
                             <XCircle className="h-4 w-4" />
                             {t.rejectionReason}
                           </div>
-                          <p className="text-sm text-red-700">{getTranslatedText(request.rejection_reason_translated, request.rejection_reason, language)}</p>
+                          <p className="text-sm text-[#AA2F0D]">{getTranslatedText(request.rejection_reason_translated, request.rejection_reason, language)}</p>
                         </div>
                       )}
 
                       {/* Purchase Info (visible when purchased) */}
                       {request.status === 'purchased' && (request.purchase_notes || request.order_number) && (
-                        <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                          <div className="flex items-center gap-2 text-sm font-medium text-green-800 mb-2">
+                        <div className="mt-3 p-3 bg-[#ABC0B9]/20 rounded-lg border border-[#ABC0B9]-200">
+                          <div className="flex items-center gap-2 text-sm font-medium text-[#2D363F] mb-2">
                             <FileText className="h-4 w-4" />
                             {t.purchaseInfo}
                           </div>
                           {request.order_number && (
-                            <p className="text-sm text-green-700">
+                            <p className="text-sm text-[#5C2F0E]">
                               <span className="font-medium">{t.orderNumber}:</span> {request.order_number}
                             </p>
                           )}
                           {request.purchased_by && (
-                            <p className="text-sm text-green-700">
+                            <p className="text-sm text-[#5C2F0E]">
                               <span className="font-medium">{t.purchasedBy}:</span> {request.purchased_by.name}
                             </p>
                           )}
                           {request.purchase_notes && (
-                            <p className="text-sm text-green-700 mt-1">{getTranslatedText(request.purchase_notes_translated, request.purchase_notes, language)}</p>
+                            <p className="text-sm text-[#5C2F0E] mt-1">{getTranslatedText(request.purchase_notes_translated, request.purchase_notes, language)}</p>
                           )}
                         </div>
                       )}
@@ -677,9 +677,9 @@ export default function RequestsPage() {
 
               {/* Rejection Reason */}
               {selectedRequest.rejection_reason && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-sm font-medium text-red-800">{t.rejectionReason}:</p>
-                  <p className="text-sm text-red-700">{getTranslatedText(selectedRequest.rejection_reason_translated, selectedRequest.rejection_reason, language)}</p>
+                <div className="p-3 bg-[#AA2F0D]/10 border border-[#AA2F0D]-200 rounded-lg">
+                  <p className="text-sm font-medium text-[#AA2F0D]">{t.rejectionReason}:</p>
+                  <p className="text-sm text-[#AA2F0D]">{getTranslatedText(selectedRequest.rejection_reason_translated, selectedRequest.rejection_reason, language)}</p>
                 </div>
               )}
 
@@ -696,26 +696,26 @@ export default function RequestsPage() {
 
               {/* Purchase Info */}
               {selectedRequest.status === 'purchased' && (selectedRequest.purchase_notes || selectedRequest.order_number || selectedRequest.purchased_by) && (
-                <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+                <div className="p-4 bg-[#ABC0B9]/20 border border-[#ABC0B9]-200 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                      <FileText className="h-4 w-4 text-green-700" />
+                    <div className="w-8 h-8 rounded-lg bg-[#ABC0B9]/30 flex items-center justify-center">
+                      <FileText className="h-4 w-4 text-[#5C2F0E]" />
                     </div>
-                    <p className="text-base font-semibold text-green-800">{t.purchaseInfo}</p>
+                    <p className="text-base font-semibold text-[#2D363F]">{t.purchaseInfo}</p>
                   </div>
                   <div className="space-y-2 pl-10">
                     {selectedRequest.order_number && (
-                      <p className="text-sm text-green-700">
+                      <p className="text-sm text-[#5C2F0E]">
                         <span className="font-medium">{t.orderNumber}:</span> {selectedRequest.order_number}
                       </p>
                     )}
                     {selectedRequest.purchased_by && (
-                      <p className="text-sm text-green-700">
+                      <p className="text-sm text-[#5C2F0E]">
                         <span className="font-medium">{t.purchasedBy}:</span> {selectedRequest.purchased_by.name}
                       </p>
                     )}
                     {selectedRequest.purchase_notes && (
-                      <p className="text-sm text-green-700 pt-2 border-t border-green-200">
+                      <p className="text-sm text-[#5C2F0E] pt-2 border-t border-[#ABC0B9]-200">
                         {getTranslatedText(selectedRequest.purchase_notes_translated, selectedRequest.purchase_notes, language)}
                       </p>
                     )}

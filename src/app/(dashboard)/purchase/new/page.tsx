@@ -778,8 +778,8 @@ export default function NewPurchaseRequestPage() {
     return (
       <div className="min-h-screen bg-[#FAFBFA] flex items-center justify-center p-8">
         <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="h-8 w-8 text-green-600" />
+          <div className="w-16 h-16 bg-[#ABC0B9]/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="h-8 w-8 text-[#5C2F0E]" />
           </div>
           <h2 className="text-2xl font-semibold text-[#2D363F] mb-2">
             {isDirectSubmit ? t.directSubmitSuccess : t.success}
@@ -1000,7 +1000,7 @@ export default function NewPurchaseRequestPage() {
                                 isAdded
                                   ? 'bg-[#5C2F0E] text-white'
                                   : isOutOfStock
-                                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                  ? 'bg-[#ABC0B9]/20 text-[#80959A] cursor-not-allowed'
                                   : 'bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20'
                               }`}
                             >
@@ -1100,7 +1100,7 @@ export default function NewPurchaseRequestPage() {
                   <button
                     type="button"
                     onClick={() => removeProduct(product.id)}
-                    className="flex items-center gap-1 text-sm text-red-500 hover:text-red-600"
+                    className="flex items-center gap-1 text-sm text-[#AA2F0D] hover:text-[#AA2F0D]"
                   >
                     <Trash2 className="h-4 w-4" />
                     <span className="hidden sm:inline">{t.removeProduct}</span>
@@ -1157,7 +1157,7 @@ export default function NewPurchaseRequestPage() {
                     {/* URL Input */}
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-[#4E616F] mb-2">
-                        {t.urlLabel} <span className="text-red-500">*</span>
+                        {t.urlLabel} <span className="text-[#AA2F0D]">*</span>
                       </label>
                       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                         <div className="flex-1 relative">
@@ -1304,9 +1304,9 @@ export default function NewPurchaseRequestPage() {
 
                     {/* Product Error */}
                     {product.error && (
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
-                        <p className="text-xs text-yellow-700">{product.error}</p>
+                      <div className="bg-[#F38756]/20 border border-[#E95F20]-200 rounded-lg p-3 flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 text-[#E95F20] flex-shrink-0" />
+                        <p className="text-xs text-[#E95F20]">{product.error}</p>
                       </div>
                     )}
                   </>
@@ -1414,9 +1414,9 @@ export default function NewPurchaseRequestPage() {
 
             {/* Error */}
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-                <p className="text-sm text-red-700">{error}</p>
+              <div className="bg-[#AA2F0D]/10 border border-[#AA2F0D]-200 rounded-lg p-4 flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 text-[#AA2F0D] flex-shrink-0" />
+                <p className="text-sm text-[#AA2F0D]">{error}</p>
               </div>
             )}
 
@@ -1559,7 +1559,7 @@ export default function NewPurchaseRequestPage() {
                               isAdded
                                 ? 'bg-[#5C2F0E] text-white'
                                 : isOutOfStock
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                ? 'bg-[#ABC0B9]/20 text-[#80959A] cursor-not-allowed'
                                 : 'bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20'
                             }`}
                           >

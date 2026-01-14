@@ -221,21 +221,21 @@ export default function CatalogPage() {
   const getStockBadge = (product: Product) => {
     if (product.stock === 0 || product.stock_status === 'out_of_stock') {
       return (
-        <Badge className="bg-[#E0E4E7] text-[#6B7280] hover:bg-[#E0E4E7] border-0 font-medium flex items-center gap-1">
+        <Badge className="bg-[#ABC0B9] text-[#4E616F] hover:bg-[#ABC0B9] border-0 font-medium flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {t.outOfStock}
         </Badge>
       );
     } else if (product.stock < 100 || product.stock_status === 'limited') {
       return (
-        <Badge className="bg-[#FEF3C7] text-[#F59E0B] hover:bg-[#FEF3C7] border-0 font-medium flex items-center gap-1">
+        <Badge className="bg-[#F38756] text-[#E95F20] hover:bg-[#F38756] border-0 font-medium flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {t.limitedStock}
         </Badge>
       );
     } else {
       return (
-        <Badge className="bg-[#D1FAE5] text-[#10B981] hover:bg-[#D1FAE5] border-0 font-medium flex items-center gap-1">
+        <Badge className="bg-[#ABC0B9] text-[#5C2F0E] hover:bg-[#ABC0B9] border-0 font-medium flex items-center gap-1">
           <CheckCircle className="h-3 w-3" />
           {t.inStock}
         </Badge>
@@ -482,7 +482,7 @@ export default function CatalogPage() {
               {requestType === 'issue' && (
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                    {t.issueReason} <span className="text-[#EF4444]">*</span>
+                    {t.issueReason} <span className="text-[#AA2F0D]">*</span>
                   </label>
                   <textarea
                     rows={3}
@@ -497,7 +497,7 @@ export default function CatalogPage() {
               {requestType === 'pr' && (
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                    {t.purpose} <span className="text-[#EF4444]">*</span>
+                    {t.purpose} <span className="text-[#AA2F0D]">*</span>
                   </label>
                   <textarea
                     rows={3}
@@ -511,7 +511,7 @@ export default function CatalogPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.costCenter} <span className="text-[#EF4444]">*</span>
+                  {t.costCenter} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <input
                   type="text"

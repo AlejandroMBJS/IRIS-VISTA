@@ -326,17 +326,17 @@ export default function ActivityLogsPage() {
 
   const getTypeBadgeColor = (type: string, success: boolean) => {
     if (!success || type === 'login_failed') {
-      return 'bg-red-100 text-red-700';
+      return 'bg-[#AA2F0D]/20 text-[#AA2F0D]';
     }
     switch (type) {
       case 'login':
-        return 'bg-green-100 text-green-700';
+        return 'bg-[#ABC0B9]/30 text-[#5C2F0E]';
       case 'logout':
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-[#ABC0B9]/20 text-[#2D363F]';
       case 'registration':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-[#ABC0B9]/30 text-[#4E616F]';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-[#ABC0B9]/20 text-[#2D363F]';
     }
   };
 
@@ -349,7 +349,7 @@ export default function ActivityLogsPage() {
   if (user?.role !== 'admin') {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-gray-500">{t.accessDenied}</p>
+        <p className="text-white0">{t.accessDenied}</p>
       </div>
     );
   }
@@ -366,66 +366,66 @@ export default function ActivityLogsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t.title}</h1>
-        <p className="text-gray-500 mt-1">{t.subtitle}</p>
+        <h1 className="text-2xl font-bold text-[#2D363F]">{t.title}</h1>
+        <p className="text-white0 mt-1">{t.subtitle}</p>
       </div>
 
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
-            <div className="flex items-center gap-2 text-green-600 mb-2">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
+            <div className="flex items-center gap-2 text-[#5C2F0E] mb-2">
               <CheckCircle className="h-5 w-5" />
               <span className="text-sm font-medium">{t.stats.totalLogins}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.total_logins.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-[#2D363F]">{stats.total_logins.toLocaleString()}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
-            <div className="flex items-center gap-2 text-red-600 mb-2">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
+            <div className="flex items-center gap-2 text-[#AA2F0D] mb-2">
               <XCircle className="h-5 w-5" />
               <span className="text-sm font-medium">{t.stats.failedLogins}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.failed_logins.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-[#2D363F]">{stats.failed_logins.toLocaleString()}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
-            <div className="flex items-center gap-2 text-blue-600 mb-2">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
+            <div className="flex items-center gap-2 text-[#4E616F] mb-2">
               <Monitor className="h-5 w-5" />
               <span className="text-sm font-medium">{t.stats.activeSessions}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.active_sessions.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-[#2D363F]">{stats.active_sessions.toLocaleString()}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
             <div className="flex items-center gap-2 text-purple-600 mb-2">
               <Users className="h-5 w-5" />
               <span className="text-sm font-medium">{t.stats.uniqueUsers}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.unique_users.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-[#2D363F]">{stats.unique_users.toLocaleString()}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
             <div className="flex items-center gap-2 text-[#5C2F0E] mb-2">
               <LogIn className="h-5 w-5" />
               <span className="text-sm font-medium">{t.stats.todayLogins}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.today_logins.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-[#2D363F]">{stats.today_logins.toLocaleString()}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
             <div className="flex items-center gap-2 text-orange-600 mb-2">
               <AlertTriangle className="h-5 w-5" />
               <span className="text-sm font-medium">{t.stats.todayFailed}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.today_failed_logins.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-[#2D363F]">{stats.today_failed_logins.toLocaleString()}</p>
           </div>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="flex gap-2 border-b border-[#ABC0B9]">
         <button
           onClick={() => setActiveTab('all')}
           className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'all'
               ? 'border-[#5C2F0E] text-[#5C2F0E]'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-white0 hover:text-[#2D363F]'
           }`}
         >
           {t.tabs.all}
@@ -435,7 +435,7 @@ export default function ActivityLogsPage() {
           className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'sessions'
               ? 'border-[#5C2F0E] text-[#5C2F0E]'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-white0 hover:text-[#2D363F]'
           }`}
         >
           {t.tabs.sessions} ({activeSessions.length})
@@ -446,12 +446,12 @@ export default function ActivityLogsPage() {
       {activeTab === 'all' && (
         <>
           {/* Filters */}
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] p-4">
             <div className="flex flex-wrap gap-4">
               {/* Search */}
               <div className="flex-1 min-w-[200px]">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#80959A]" />
                   <input
                     type="text"
                     placeholder={t.filters.search}
@@ -460,7 +460,7 @@ export default function ActivityLogsPage() {
                       setSearchQuery(e.target.value);
                       setPage(1);
                     }}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                    className="w-full pl-10 pr-4 py-2 border border-[#ABC0B9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
                   />
                 </div>
               </div>
@@ -472,7 +472,7 @@ export default function ActivityLogsPage() {
                   setFilters({ ...filters, type: e.target.value || undefined });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                className="px-3 py-2 border border-[#ABC0B9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               >
                 <option value="">{t.filters.all}</option>
                 <option value="login">{t.filters.login}</option>
@@ -492,7 +492,7 @@ export default function ActivityLogsPage() {
                   });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                className="px-3 py-2 border border-[#ABC0B9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               >
                 <option value="">{t.filters.success}</option>
                 <option value="true">{t.filters.successful}</option>
@@ -507,7 +507,7 @@ export default function ActivityLogsPage() {
                   setFilters({ ...filters, start_date: e.target.value || undefined });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                className="px-3 py-2 border border-[#ABC0B9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
               <input
                 type="date"
@@ -516,13 +516,13 @@ export default function ActivityLogsPage() {
                   setFilters({ ...filters, end_date: e.target.value || undefined });
                   setPage(1);
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
+                className="px-3 py-2 border border-[#ABC0B9] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20"
               />
 
               {/* Clear Filters */}
               <button
                 onClick={clearFilters}
-                className="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                className="px-3 py-2 text-sm text-white0 hover:text-[#2D363F] flex items-center gap-1"
               >
                 <X className="h-4 w-4" />
                 {t.filters.clear}
@@ -531,37 +531,37 @@ export default function ActivityLogsPage() {
           </div>
 
           {/* Logs Table */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-xl border border-[#ABC0B9] overflow-hidden">
             {loadingLogs ? (
               <div className="flex items-center justify-center py-12">
                 <RefreshCw className="h-6 w-6 animate-spin text-[#5C2F0E]" />
               </div>
             ) : logs.length === 0 ? (
               <div className="flex items-center justify-center py-12">
-                <p className="text-gray-500">{t.table.noLogs}</p>
+                <p className="text-white0">{t.table.noLogs}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-[#FAFBFA] border-b border-[#ABC0B9]">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.user}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.type}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.ipAddress}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.details}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.time}</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.user}</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.type}</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.ipAddress}</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.details}</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.time}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {logs.map((log) => (
-                      <tr key={log.id} className="hover:bg-gray-50">
+                      <tr key={log.id} className="hover:bg-[#FAFBFA]">
                         <td className="px-4 py-3">
                           <div>
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm font-medium text-[#2D363F]">
                               {log.user_name || log.identifier}
                             </p>
                             {log.user_email && (
-                              <p className="text-xs text-gray-500">{log.user_email}</p>
+                              <p className="text-xs text-white0">{log.user_email}</p>
                             )}
                           </div>
                         </td>
@@ -577,15 +577,15 @@ export default function ActivityLogsPage() {
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <span className="text-sm text-gray-600 font-mono">{log.ip_address}</span>
+                          <span className="text-sm text-[#4E616F] font-mono">{log.ip_address}</span>
                         </td>
                         <td className="px-4 py-3">
-                          <span className="text-sm text-gray-500 truncate max-w-[200px] block" title={log.details}>
+                          <span className="text-sm text-white0 truncate max-w-[200px] block" title={log.details}>
                             {log.details || '-'}
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                          <div className="flex items-center gap-1.5 text-sm text-white0">
                             <Clock className="h-3.5 w-3.5" />
                             {formatDate(log.created_at)}
                           </div>
@@ -599,8 +599,8 @@ export default function ActivityLogsPage() {
 
             {/* Pagination */}
             {pages > 1 && (
-              <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-                <p className="text-sm text-gray-500">
+              <div className="flex items-center justify-between px-4 py-3 border-t border-[#ABC0B9]">
+                <p className="text-sm text-white0">
                   {t.pagination.showing} {((page - 1) * (filters.per_page || 25)) + 1}-
                   {Math.min(page * (filters.per_page || 25), total)} {t.pagination.of} {total} {t.pagination.results}
                 </p>
@@ -608,17 +608,17 @@ export default function ActivityLogsPage() {
                   <button
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
-                    className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="p-2 rounded-lg border border-[#ABC0B9] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#FAFBFA]"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-[#4E616F]">
                     {t.pagination.page} {page} / {pages}
                   </span>
                   <button
                     onClick={() => setPage(page + 1)}
                     disabled={page === pages}
-                    className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="p-2 rounded-lg border border-[#ABC0B9] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#FAFBFA]"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -631,52 +631,52 @@ export default function ActivityLogsPage() {
 
       {/* Active Sessions Tab */}
       {activeTab === 'sessions' && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-[#ABC0B9] overflow-hidden">
           {activeSessions.length === 0 ? (
             <div className="flex items-center justify-center py-12">
-              <p className="text-gray-500">{t.table.noSessions}</p>
+              <p className="text-white0">{t.table.noSessions}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-[#FAFBFA] border-b border-[#ABC0B9]">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.user}</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.ipAddress}</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.time}</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.duration}</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{t.table.actions}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.user}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.ipAddress}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.time}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.duration}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4E616F]">{t.table.actions}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {activeSessions.map((session) => (
-                    <tr key={session.id} className="hover:bg-gray-50">
+                    <tr key={session.id} className="hover:bg-[#FAFBFA]">
                       <td className="px-4 py-3">
                         <div>
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-[#2D363F]">
                             {session.user_name || session.identifier}
                           </p>
                           {session.user_email && (
-                            <p className="text-xs text-gray-500">{session.user_email}</p>
+                            <p className="text-xs text-white0">{session.user_email}</p>
                           )}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-sm text-gray-600 font-mono">{session.ip_address}</span>
+                        <span className="text-sm text-[#4E616F] font-mono">{session.ip_address}</span>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                        <div className="flex items-center gap-1.5 text-sm text-white0">
                           <Clock className="h-3.5 w-3.5" />
                           {formatDate(session.created_at)}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-sm text-gray-600">{formatDuration(session.duration_seconds)}</span>
+                        <span className="text-sm text-[#4E616F]">{formatDuration(session.duration_seconds)}</span>
                       </td>
                       <td className="px-4 py-3">
                         <button
                           onClick={() => handleEndSession(session.id)}
-                          className="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+                          className="px-3 py-1.5 text-xs font-medium text-[#AA2F0D] bg-[#AA2F0D]/10 rounded-lg hover:bg-[#AA2F0D]/20 transition-colors"
                         >
                           {t.table.endSession}
                         </button>

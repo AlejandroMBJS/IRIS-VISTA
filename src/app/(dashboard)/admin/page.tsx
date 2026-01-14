@@ -102,25 +102,25 @@ export default function AdminPage() {
       icon: Users,
       label: t.activeUsers,
       value: stats?.active_users || 0,
-      color: 'from-[#5C2F0E] to-[#3D9066]',
+      color: 'from-[#5C2F0E] to-[#5C2F0E]',
     },
     {
       icon: Package,
       label: t.totalProducts,
       value: stats?.total_products || 0,
-      color: 'from-[#3F8F8F] to-[#337373]',
+      color: 'from-[#4E616F] to-[#4E616F]',
     },
     {
       icon: ClipboardList,
       label: t.totalRequests,
       value: stats?.total_requests || 0,
-      color: 'from-[#E95F20] to-[#C77A3F]',
+      color: 'from-[#E95F20] to-[#E95F20]',
     },
     {
       icon: CheckSquare,
       label: t.pendingApprovals,
       value: stats?.pending_approvals || 0,
-      color: 'from-[#E1A948] to-[#C79438]',
+      color: 'from-[#F38756] to-[#E95F20]',
     },
   ];
 

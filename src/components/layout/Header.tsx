@@ -364,7 +364,7 @@ export function Header() {
                             <p className="text-xs text-[#4E616F] mt-0.5 line-clamp-2">
                               {notification.message}
                             </p>
-                            <p className="text-xs text-[#9E9B97] mt-1">
+                            <p className="text-xs text-[#80959A] mt-1">
                               {formatRelativeTime(notification.created_at)}
                             </p>
                           </div>
@@ -475,7 +475,7 @@ export function Header() {
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="w-full px-4 py-3 text-left text-sm text-[#AA2F0D] hover:bg-red-50 transition-colors flex items-center gap-2"
+                  className="w-full px-4 py-3 text-left text-sm text-[#AA2F0D] hover:bg-[#AA2F0D]/10 transition-colors flex items-center gap-2"
                 >
                   <LogOut className="h-4 w-4" />
                   {t.logout}
@@ -508,7 +508,7 @@ export function Header() {
             <div className="px-6 py-4 space-y-4">
               {passwordSuccess ? (
                 <div className="flex flex-col items-center py-8">
-                  <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
+                  <CheckCircle className="h-16 w-16 text-[#5C2F0E] mb-4" />
                   <p className="text-lg font-medium text-[#2D363F]">{t.passwordChanged}</p>
                 </div>
               ) : (
@@ -528,7 +528,7 @@ export function Header() {
                       <button
                         type="button"
                         onClick={() => setShowCurrentPwd(!showCurrentPwd)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#80959A] hover:text-[#4E616F]"
                       >
                         {showCurrentPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -550,7 +550,7 @@ export function Header() {
                       <button
                         type="button"
                         onClick={() => setShowNewPwd(!showNewPwd)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#80959A] hover:text-[#4E616F]"
                       >
                         {showNewPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -573,7 +573,7 @@ export function Header() {
 
                   {/* Error */}
                   {passwordError && (
-                    <div className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-2 rounded-lg">
+                    <div className="flex items-center gap-2 text-[#AA2F0D] bg-[#AA2F0D]/10 px-4 py-2 rounded-lg">
                       <AlertCircle className="h-4 w-4 flex-shrink-0" />
                       <p className="text-sm">{passwordError}</p>
                     </div>

@@ -289,10 +289,10 @@ export default function HomePage() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
-      pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: <Clock className="h-3 w-3" /> },
-      approved: { bg: 'bg-green-100', text: 'text-green-800', icon: <CheckCircle className="h-3 w-3" /> },
-      rejected: { bg: 'bg-red-100', text: 'text-red-800', icon: <XCircle className="h-3 w-3" /> },
-      purchased: { bg: 'bg-blue-100', text: 'text-blue-800', icon: <ShoppingCart className="h-3 w-3" /> },
+      pending: { bg: 'bg-[#F38756]/30', text: 'text-[#5C2F0E]', icon: <Clock className="h-3 w-3" /> },
+      approved: { bg: 'bg-[#ABC0B9]/30', text: 'text-[#2D363F]', icon: <CheckCircle className="h-3 w-3" /> },
+      rejected: { bg: 'bg-[#AA2F0D]/20', text: 'text-[#AA2F0D]', icon: <XCircle className="h-3 w-3" /> },
+      purchased: { bg: 'bg-[#ABC0B9]/30', text: 'text-[#2D363F]', icon: <ShoppingCart className="h-3 w-3" /> },
     };
     const style = styles[status] || styles.pending;
     return (
@@ -354,7 +354,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                     <Users className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Users</span>
+                  <span className="text-xs font-medium text-[#4E616F] bg-[#ABC0B9]/20 px-2 py-1 rounded-full">Users</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{dashboardStats?.total_users || 0}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.totalUsers}</p>
@@ -365,7 +365,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <UserCheck className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Pending</span>
+                  <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">Pending</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{dashboardStats?.pending_users || 0}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.pendingUsers}</p>
@@ -464,7 +464,7 @@ export default function HomePage() {
                     <h3 className="font-semibold text-lg mb-1">System Status</h3>
                     <p className="text-white/70 text-sm mb-4">All systems operational</p>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      <div className="w-2 h-2 rounded-full bg-[#5C2F0E] animate-pulse" />
                       <span className="text-sm text-white/90">Online</span>
                     </div>
                   </div>
@@ -536,7 +536,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <Clock className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Pending</span>
+                  <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">Pending</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{pendingOrders.length}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.pendingOrders}</p>
@@ -547,7 +547,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                     <ShoppingCart className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">In Cart</span>
+                  <span className="text-xs font-medium text-[#4E616F] bg-[#ABC0B9]/20 px-2 py-1 rounded-full">In Cart</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">0</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.inCart}</p>
@@ -558,7 +558,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                     <CheckCircle className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Done</span>
+                  <span className="text-xs font-medium text-[#5C2F0E] bg-[#ABC0B9]/20 px-2 py-1 rounded-full">Done</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">0</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.purchased}</p>
@@ -593,8 +593,8 @@ export default function HomePage() {
 
                 {pendingOrders.length === 0 ? (
                   <div className="bg-white rounded-2xl p-10 border border-[#ABC0B9] text-center shadow-sm">
-                    <div className="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="h-8 w-8 text-green-500" />
+                    <div className="w-16 h-16 rounded-2xl bg-[#ABC0B9]/20 flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="h-8 w-8 text-[#5C2F0E]" />
                     </div>
                     <h3 className="text-lg font-semibold text-[#2D363F] mb-2">All caught up!</h3>
                     <p className="text-[#4E616F]">{t.noOrdersPending}</p>
@@ -715,7 +715,7 @@ export default function HomePage() {
                 </div>
                 {t.reviewApprovals}
                 {(approvalStats?.pending || 0) > 0 && (
-                  <span className="bg-red-500 text-white text-sm px-2 py-0.5 rounded-full">
+                  <span className="bg-[#AA2F0D]/100 text-white text-sm px-2 py-0.5 rounded-full">
                     {approvalStats?.pending}
                   </span>
                 )}
@@ -733,7 +733,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                     <Clock className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Pending</span>
+                  <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">Pending</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.pending || 0}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.awaitingReview}</p>
@@ -744,7 +744,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                     <CheckCircle className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Approved</span>
+                  <span className="text-xs font-medium text-[#5C2F0E] bg-[#ABC0B9]/20 px-2 py-1 rounded-full">Approved</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.approved || 0}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.approvedThisMonth}</p>
@@ -755,7 +755,7 @@ export default function HomePage() {
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-sm">
                     <XCircle className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">Rejected</span>
+                  <span className="text-xs font-medium text-[#AA2F0D] bg-[#AA2F0D]/10 px-2 py-1 rounded-full">Rejected</span>
                 </div>
                 <p className="text-3xl font-bold text-[#2D363F]">{approvalStats?.rejected || 0}</p>
                 <p className="text-sm text-[#4E616F] mt-1">{t.rejectedThisMonth}</p>
@@ -810,13 +810,13 @@ export default function HomePage() {
 
                 {/* Urgent Requests Notice */}
                 {(approvalStats?.urgent || 0) > 0 && (
-                  <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
-                      <AlertCircle className="h-5 w-5 text-red-600" />
+                  <div className="mt-4 p-4 bg-[#AA2F0D]/10 border border-[#AA2F0D]-200 rounded-xl flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-[#AA2F0D]/20 flex items-center justify-center flex-shrink-0">
+                      <AlertCircle className="h-5 w-5 text-[#AA2F0D]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-red-800">{approvalStats?.urgent} urgent request(s)</p>
-                      <p className="text-sm text-red-600">These requests require immediate attention</p>
+                      <p className="font-semibold text-[#AA2F0D]">{approvalStats?.urgent} urgent request(s)</p>
+                      <p className="text-sm text-[#AA2F0D]">These requests require immediate attention</p>
                     </div>
                   </div>
                 )}
@@ -859,14 +859,14 @@ export default function HomePage() {
                 </Link>
 
                 {/* Help Card */}
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-5 border border-green-100">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-5 border border-[#ABC0B9]-100">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
-                      <AlertCircle className="h-5 w-5 text-green-600" />
+                    <div className="w-10 h-10 rounded-xl bg-[#ABC0B9]/30 flex items-center justify-center flex-shrink-0">
+                      <AlertCircle className="h-5 w-5 text-[#5C2F0E]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-green-900 text-sm mb-1">Approval Tips</h3>
-                      <p className="text-xs text-green-700 leading-relaxed">
+                      <h3 className="font-semibold text-[#2D363F] text-sm mb-1">Approval Tips</h3>
+                      <p className="text-xs text-[#5C2F0E] leading-relaxed">
                         Review urgent requests first. Check justification and estimated costs before approving.
                       </p>
                     </div>
@@ -921,7 +921,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                   <FileText className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{t.totalBadge}</span>
+                <span className="text-xs font-medium text-[#4E616F] bg-[#ABC0B9]/20 px-2 py-1 rounded-full">{t.totalBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2D363F]">{myRequests.length}</p>
               <p className="text-sm text-[#4E616F] mt-1">{t.activeRequests}</p>
@@ -932,7 +932,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
                   <Clock className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">{t.waitingBadge}</span>
+                <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full">{t.waitingBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2D363F]">{myRequests.filter(r => r.status === 'pending').length}</p>
               <p className="text-sm text-[#4E616F] mt-1">{t.pending}</p>
@@ -943,7 +943,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm">
                   <CheckCircle className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">{t.readyBadge}</span>
+                <span className="text-xs font-medium text-[#5C2F0E] bg-[#ABC0B9]/20 px-2 py-1 rounded-full">{t.readyBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2D363F]">{myRequests.filter(r => r.status === 'approved' || r.status === 'purchased').length}</p>
               <p className="text-sm text-[#4E616F] mt-1">{t.approved}</p>
@@ -954,7 +954,7 @@ export default function HomePage() {
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-sm">
                   <XCircle className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{t.rejectedBadge}</span>
+                <span className="text-xs font-medium text-[#AA2F0D] bg-[#AA2F0D]/10 px-2 py-1 rounded-full">{t.rejectedBadge}</span>
               </div>
               <p className="text-3xl font-bold text-[#2D363F]">{myRequests.filter(r => r.status === 'rejected').length}</p>
               <p className="text-sm text-[#4E616F] mt-1">{t.rejected}</p>
@@ -1069,14 +1069,14 @@ export default function HomePage() {
               </Link>
 
               {/* Help Card */}
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-[#ABC0B9]-100">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <AlertCircle className="h-5 w-5 text-blue-600" />
+                  <div className="w-10 h-10 rounded-xl bg-[#ABC0B9]/30 flex items-center justify-center flex-shrink-0">
+                    <AlertCircle className="h-5 w-5 text-[#4E616F]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-blue-900 text-sm mb-1">{t.needHelp}</h3>
-                    <p className="text-xs text-blue-700 leading-relaxed">
+                    <h3 className="font-semibold text-[#2D363F] text-sm mb-1">{t.needHelp}</h3>
+                    <p className="text-xs text-[#4E616F] leading-relaxed">
                       {t.helpText}
                     </p>
                   </div>

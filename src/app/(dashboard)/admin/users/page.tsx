@@ -561,7 +561,7 @@ export default function UsersPage() {
       case 'approved':
         return <Badge className="bg-[#5C2F0E]/10 text-[#5C2F0E] border-0">{t.approved}</Badge>;
       case 'pending':
-        return <Badge className="bg-amber-100 text-amber-700 border-0">{t.pending}</Badge>;
+        return <Badge className="bg-[#F38756]/30 text-[#E95F20] border-0">{t.pending}</Badge>;
       case 'rejected':
         return <Badge className="bg-[#AA2F0D]/10 text-[#AA2F0D] border-0">{t.rejected}</Badge>;
       case 'disabled':
@@ -638,7 +638,7 @@ export default function UsersPage() {
             <Clock className="h-4 w-4" />
             {t.pendingApproval}
             {pendingUsers.length > 0 && (
-              <span className="ml-1 bg-amber-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="ml-1 bg-[#F38756]/200 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {pendingUsers.length}
               </span>
             )}
@@ -779,8 +779,8 @@ export default function UsersPage() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                          <Clock className="h-6 w-6 text-amber-600" />
+                        <div className="h-12 w-12 rounded-full bg-[#F38756]/30 flex items-center justify-center">
+                          <Clock className="h-6 w-6 text-[#E95F20]" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-[#2D363F]">{user.name}</h3>
@@ -796,7 +796,7 @@ export default function UsersPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleOpenApprovalModal(user)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#3D9066] transition-colors"
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#5C2F0E] transition-colors"
                         >
                           <UserCheck className="h-4 w-4" />
                           {t.approve}
@@ -837,7 +837,7 @@ export default function UsersPage() {
             <div className="p-6 space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.employeeNumber} <span className="text-[#EF4444]">*</span>
+                  {t.employeeNumber} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <input
                   type="text"
@@ -849,7 +849,7 @@ export default function UsersPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.name} <span className="text-[#EF4444]">*</span>
+                  {t.name} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <input
                   type="text"
@@ -861,7 +861,7 @@ export default function UsersPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.email} <span className="text-[#EF4444]">*</span>
+                  {t.email} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <input
                   type="email"
@@ -874,7 +874,7 @@ export default function UsersPage() {
               {!editingUser && (
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                    {t.password} <span className="text-[#EF4444]">*</span>
+                    {t.password} <span className="text-[#AA2F0D]">*</span>
                   </label>
                   <input
                     type="password"
@@ -887,7 +887,7 @@ export default function UsersPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.role} <span className="text-[#EF4444]">*</span>
+                  {t.role} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <select
                   value={formData.role}
@@ -958,7 +958,7 @@ export default function UsersPage() {
       {showApprovalModal && selectedPendingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#3D9066] p-6 rounded-t-xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#5C2F0E] p-6 rounded-t-xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <UserCheck className="h-6 w-6 text-white" />
                 <h2 className="text-xl text-white font-semibold">{t.approveUser}</h2>
@@ -985,7 +985,7 @@ export default function UsersPage() {
               <div className="space-y-4">
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                    {t.role} <span className="text-[#EF4444]">*</span>
+                    {t.role} <span className="text-[#AA2F0D]">*</span>
                   </label>
                   <select
                     value={approvalData.role}
@@ -1043,7 +1043,7 @@ export default function UsersPage() {
               <button
                 onClick={handleApprove}
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-lg bg-[#5C2F0E] text-white font-medium shadow-sm transition-all hover:bg-[#3D9066] active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-[#5C2F0E] text-white font-medium shadow-sm transition-all hover:bg-[#5C2F0E] active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 <CheckCircle className="h-4 w-4" />
@@ -1058,7 +1058,7 @@ export default function UsersPage() {
       {showRejectModal && selectedPendingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl">
-            <div className="bg-gradient-to-r from-[#AA2F0D] to-[#B94D47] p-6 rounded-t-xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#AA2F0D] to-[#AA2F0D] p-6 rounded-t-xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <UserX className="h-6 w-6 text-white" />
                 <h2 className="text-xl text-white font-semibold">{t.rejectUser}</h2>
@@ -1082,7 +1082,7 @@ export default function UsersPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.rejectionReason} <span className="text-[#EF4444]">*</span>
+                  {t.rejectionReason} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <textarea
                   value={rejectionReason}
@@ -1104,7 +1104,7 @@ export default function UsersPage() {
               <button
                 onClick={handleReject}
                 disabled={isSubmitting || !rejectionReason.trim()}
-                className="px-6 py-3 rounded-lg bg-[#AA2F0D] text-white font-medium shadow-sm transition-all hover:bg-[#B94D47] active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-[#AA2F0D] text-white font-medium shadow-sm transition-all hover:bg-[#AA2F0D] active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 <XCircle className="h-4 w-4" />
@@ -1169,20 +1169,20 @@ export default function UsersPage() {
                 <div className="rounded-lg border border-[#ABC0B9] bg-[#FAFBFA] p-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="font-medium text-green-600">{importResults.success} {t.imported}</span>
+                      <CheckCircle className="h-5 w-5 text-[#5C2F0E]" />
+                      <span className="font-medium text-[#5C2F0E]">{importResults.success} {t.imported}</span>
                     </div>
                     {importResults.failed > 0 && (
                       <div className="flex items-center gap-2">
-                        <XCircle className="h-5 w-5 text-red-500" />
-                        <span className="font-medium text-red-500">{importResults.failed} {t.failed}</span>
+                        <XCircle className="h-5 w-5 text-[#AA2F0D]" />
+                        <span className="font-medium text-[#AA2F0D]">{importResults.failed} {t.failed}</span>
                       </div>
                     )}
                   </div>
                   {importResults.results.some(r => r.error) && (
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {importResults.results.filter(r => r.error).map((r, i) => (
-                        <div key={i} className="text-sm text-red-600 bg-red-50 p-2 rounded">
+                        <div key={i} className="text-sm text-[#AA2F0D] bg-[#AA2F0D]/10 p-2 rounded">
                           <span className="font-medium">{r.employee_number || r.email}:</span> {r.error}
                         </div>
                       ))}

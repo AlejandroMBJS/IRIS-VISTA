@@ -537,11 +537,11 @@ export default function InventoryPage() {
   const getStockStatusBadge = (status: string) => {
     switch (status) {
       case 'in_stock':
-        return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{t.inStock}</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-[#ABC0B9]/30 text-[#2D363F]">{t.inStock}</span>;
       case 'limited':
-        return <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">{t.limited}</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-[#F38756]/30 text-[#5C2F0E]">{t.limited}</span>;
       case 'out_of_stock':
-        return <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">{t.outOfStock}</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-[#AA2F0D]/20 text-[#AA2F0D]">{t.outOfStock}</span>;
       default:
         return null;
     }
@@ -848,7 +848,7 @@ export default function InventoryPage() {
                               </button>
                               <button
                                 onClick={() => setDeleteConfirm(product.id)}
-                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                className="p-2 text-[#AA2F0D] hover:bg-[#AA2F0D]/10 rounded-lg transition-colors"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </button>
@@ -908,7 +908,7 @@ export default function InventoryPage() {
             </div>
 
             {error && (
-              <div className="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+              <div className="mx-6 mt-4 p-4 bg-[#AA2F0D]/10 border border-[#AA2F0D]-200 rounded-lg flex items-center gap-2 text-[#AA2F0D]">
                 <AlertCircle className="h-5 w-5" />
                 {error}
               </div>
@@ -926,7 +926,7 @@ export default function InventoryPage() {
                       value={formData.sku}
                       onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
                       disabled={!!editingProduct}
-                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E] disabled:bg-gray-100"
+                      className="w-full px-3 py-2 border border-[#ABC0B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C2F0E] disabled:bg-[#ABC0B9]/20"
                     />
                   </div>
                   <div>
@@ -1185,7 +1185,7 @@ export default function InventoryPage() {
                           <button
                             type="button"
                             onClick={() => removeImage(index)}
-                            className="p-1 bg-red-500 text-white rounded"
+                            className="p-1 bg-[#AA2F0D]/100 text-white rounded"
                           >
                             <X className="h-4 w-4" />
                           </button>
@@ -1332,7 +1332,7 @@ export default function InventoryPage() {
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                className="px-4 py-2 bg-[#AA2F0D] text-white rounded-lg hover:bg-[#AA2F0D]"
               >
                 {t.yes}
               </button>
@@ -1392,14 +1392,14 @@ export default function InventoryPage() {
 
               {/* Import Results */}
               {importResults && (
-                <div className={`p-4 rounded-lg ${importResults.failed > 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-green-50 border border-green-200'}`}>
+                <div className={`p-4 rounded-lg ${importResults.failed > 0 ? 'bg-[#F38756]/20 border border-[#E95F20]-200' : 'bg-[#ABC0B9]/20 border border-[#ABC0B9]-200'}`}>
                   <p className="font-medium text-[#2D363F] mb-2">
                     {t.importSuccess}: {importResults.success} {t.imported}, {importResults.failed} {t.failed}
                   </p>
                   {importResults.results.filter(r => !r.success).length > 0 && (
                     <div className="mt-2 space-y-1 max-h-40 overflow-y-auto">
                       {importResults.results.filter(r => !r.success).map((result, idx) => (
-                        <p key={idx} className="text-sm text-red-600">
+                        <p key={idx} className="text-sm text-[#AA2F0D]">
                           {t.row} {result.row}: {result.sku} - {result.error}
                         </p>
                       ))}

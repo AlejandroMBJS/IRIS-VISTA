@@ -203,7 +203,7 @@ export default function PurchaseConfigPage() {
       <div className="border-b border-[#ABC0B9] bg-white px-4 md:px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E95F20] to-[#D47A3B]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E95F20] to-[#E95F20]">
               <ShoppingCart className="h-6 w-6 text-white" />
             </div>
             <div>

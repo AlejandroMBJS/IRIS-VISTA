@@ -432,7 +432,7 @@ export default function ApprovedOrdersPage() {
   const getItemStatusBadge = (item: PurchaseRequestItem) => {
     if (item.added_to_cart) {
       return (
-        <Badge className="bg-blue-100 text-blue-800 text-xs">
+        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F] text-xs">
           <ShoppingCart className="h-3 w-3 mr-1" />
           {t.inCart}
         </Badge>
@@ -440,14 +440,14 @@ export default function ApprovedOrdersPage() {
     }
     if (item.cart_error) {
       return (
-        <Badge className="bg-red-100 text-red-800 text-xs">
+        <Badge className="bg-[#AA2F0D]/20 text-[#AA2F0D] text-xs">
           <AlertCircle className="h-3 w-3 mr-1" />
           Error
         </Badge>
       );
     }
     return (
-      <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+      <Badge className="bg-[#F38756]/30 text-[#5C2F0E] text-xs">
         <Clock className="h-3 w-3 mr-1" />
         {t.pending}
       </Badge>
@@ -457,7 +457,7 @@ export default function ApprovedOrdersPage() {
   const getOrderStatusBadge = (order: PurchaseRequest) => {
     if (order.status === 'delivered') {
       return (
-        <Badge className="bg-emerald-100 text-emerald-800">
+        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F]">
           <Truck className="h-3 w-3 mr-1" />
           {t.delivered}
         </Badge>
@@ -465,7 +465,7 @@ export default function ApprovedOrdersPage() {
     }
     if (order.status === 'cancelled') {
       return (
-        <Badge className="bg-red-100 text-red-800">
+        <Badge className="bg-[#AA2F0D]/20 text-[#AA2F0D]">
           <XCircle className="h-3 w-3 mr-1" />
           {t.cancelled}
         </Badge>
@@ -473,7 +473,7 @@ export default function ApprovedOrdersPage() {
     }
     if (order.status === 'purchased') {
       return (
-        <Badge className="bg-green-100 text-green-800">
+        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F]">
           <CheckCircle className="h-3 w-3 mr-1" />
           {t.purchased}
         </Badge>
@@ -483,7 +483,7 @@ export default function ApprovedOrdersPage() {
     const progress = getCartProgress(items);
     if (progress.inCart === progress.total && progress.total > 0) {
       return (
-        <Badge className="bg-blue-100 text-blue-800">
+        <Badge className="bg-[#ABC0B9]/30 text-[#2D363F]">
           <ShoppingCart className="h-3 w-3 mr-1" />
           {t.inCart}
         </Badge>
@@ -491,14 +491,14 @@ export default function ApprovedOrdersPage() {
     }
     if (progress.inCart > 0) {
       return (
-        <Badge className="bg-yellow-100 text-yellow-800">
+        <Badge className="bg-[#F38756]/30 text-[#5C2F0E]">
           <Clock className="h-3 w-3 mr-1" />
           {progress.inCart}/{progress.total} {t.itemsInCart}
         </Badge>
       );
     }
     return (
-      <Badge className="bg-gray-100 text-gray-800">
+      <Badge className="bg-[#ABC0B9]/20 text-[#2D363F]">
         <Package className="h-3 w-3 mr-1" />
         {t.pending}
       </Badge>
@@ -568,11 +568,11 @@ export default function ApprovedOrdersPage() {
             </div>
             <div className="flex items-center gap-2">
               {isAmazonEnabled ? (
-                <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
+                <Badge variant="outline" className="bg-[#ABC0B9]/20 border-[#ABC0B9]-200 text-[#5C2F0E]">
                   {t.amazonConnected}
                 </Badge>
               ) : (
-                <Badge variant="outline" className="bg-gray-100 border-gray-300 text-gray-600">
+                <Badge variant="outline" className="bg-[#ABC0B9]/20 border-[#ABC0B9] text-[#4E616F]">
                   {t.amazonDisconnected}
                 </Badge>
               )}
@@ -598,32 +598,32 @@ export default function ApprovedOrdersPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 mb-6">
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
-                  <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
-                  <p className="text-sm text-gray-600">{t.pendingPurchase}</p>
+                  <p className="text-3xl font-bold text-[#E95F20]">{pendingCount}</p>
+                  <p className="text-sm text-[#4E616F]">{t.pendingPurchase}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
-                  <p className="text-3xl font-bold text-blue-600">{inCartCount}</p>
-                  <p className="text-sm text-gray-600">{t.inCart}</p>
+                  <p className="text-3xl font-bold text-[#4E616F]">{inCartCount}</p>
+                  <p className="text-sm text-[#4E616F]">{t.inCart}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
-                  <p className="text-3xl font-bold text-green-600">{purchasedCount}</p>
-                  <p className="text-sm text-gray-600">{t.purchased}</p>
+                  <p className="text-3xl font-bold text-[#5C2F0E]">{purchasedCount}</p>
+                  <p className="text-sm text-[#4E616F]">{t.purchased}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
-                  <p className="text-3xl font-bold text-emerald-600">{deliveredCount}</p>
-                  <p className="text-sm text-gray-600">{t.delivered}</p>
+                  <p className="text-3xl font-bold text-[#5C2F0E]">{deliveredCount}</p>
+                  <p className="text-sm text-[#4E616F]">{t.delivered}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
-                  <p className="text-3xl font-bold text-red-600">{cancelledCount}</p>
-                  <p className="text-sm text-gray-600">{t.cancelled}</p>
+                  <p className="text-3xl font-bold text-[#AA2F0D]">{cancelledCount}</p>
+                  <p className="text-sm text-[#4E616F]">{t.cancelled}</p>
                 </CardContent>
               </Card>
             </div>
@@ -631,7 +631,7 @@ export default function ApprovedOrdersPage() {
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4 md:items-center">
               <div className="flex gap-2 flex-wrap items-center">
-                <Filter className="h-5 w-5 text-gray-500" />
+                <Filter className="h-5 w-5 text-white0" />
                 {filters.map((f) => (
                   <Button
                     key={f.key}
@@ -670,7 +670,7 @@ export default function ApprovedOrdersPage() {
             </div>
           ) : filteredOrders.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-white0">
                 <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>{t.noOrders}</p>
               </CardContent>
@@ -699,7 +699,7 @@ export default function ApprovedOrdersPage() {
                             {order.requester?.name}
                           </span>
                           <span className="flex items-center gap-1">
-                            <Check className="h-4 w-4 text-green-600" />
+                            <Check className="h-4 w-4 text-[#5C2F0E]" />
                             {order.approved_by?.name}
                           </span>
                         </div>
@@ -755,7 +755,7 @@ export default function ApprovedOrdersPage() {
                               )}
                             </div>
                             {item.cart_error && (
-                              <p className="text-xs text-red-600 mt-1">
+                              <p className="text-xs text-[#AA2F0D] mt-1">
                                 {item.cart_error}
                               </p>
                             )}
@@ -801,7 +801,7 @@ export default function ApprovedOrdersPage() {
                               </Button>
                             )}
                             {item.added_to_cart && (
-                              <CheckCircle className="h-5 w-5 text-green-600" />
+                              <CheckCircle className="h-5 w-5 text-[#5C2F0E]" />
                             )}
                           </div>
                         </div>
@@ -871,18 +871,18 @@ export default function ApprovedOrdersPage() {
 
                       {/* Purchase Info (visible when purchased) */}
                       {order.status === 'purchased' && (order.purchase_notes || order.order_number) && (
-                        <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                          <div className="flex items-center gap-2 text-sm font-medium text-green-800 mb-2">
+                        <div className="mt-3 p-3 bg-[#ABC0B9]/20 rounded-lg border border-[#ABC0B9]-200">
+                          <div className="flex items-center gap-2 text-sm font-medium text-[#2D363F] mb-2">
                             <FileText className="h-4 w-4" />
                             {t.orderInfo}
                           </div>
                           {order.order_number && (
-                            <p className="text-sm text-green-700">
+                            <p className="text-sm text-[#5C2F0E]">
                               <span className="font-medium">Order #:</span> {order.order_number}
                             </p>
                           )}
                           {order.purchase_notes && (
-                            <p className="text-sm text-green-700 mt-1">{getTranslatedText(order.purchase_notes_translated, order.purchase_notes, language)}</p>
+                            <p className="text-sm text-[#5C2F0E] mt-1">{getTranslatedText(order.purchase_notes_translated, order.purchase_notes, language)}</p>
                           )}
                         </div>
                       )}
@@ -905,7 +905,7 @@ export default function ApprovedOrdersPage() {
                               <div className="flex items-center gap-2">
                                 <div className="w-24 h-2 bg-[#ABC0B9] rounded-full overflow-hidden">
                                   <div
-                                    className="h-full bg-blue-500 rounded-full transition-all"
+                                    className="h-full bg-[#ABC0B9]/200 rounded-full transition-all"
                                     style={{ width: `${(progress.inCart / progress.total) * 100}%` }}
                                   />
                                 </div>
@@ -944,7 +944,7 @@ export default function ApprovedOrdersPage() {
                                 </Button>
                               )}
                               <Button
-                                className="bg-green-600 hover:bg-green-700 text-white"
+                                className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
                                 size="sm"
                                 onClick={() => {
                                   setSelectedOrder(order);
@@ -960,7 +960,7 @@ export default function ApprovedOrdersPage() {
                           {order.status === 'purchased' && (
                             <>
                               <Button
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
                                 size="sm"
                                 onClick={() => {
                                   setSelectedOrder(order);
@@ -974,7 +974,7 @@ export default function ApprovedOrdersPage() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="border-red-300 text-red-600 hover:bg-red-50"
+                                className="border-[#AA2F0D]-300 text-[#AA2F0D] hover:bg-[#AA2F0D]/10"
                                 onClick={() => {
                                   setSelectedOrder(order);
                                   setStatusChangeNotes('');
@@ -1015,7 +1015,7 @@ export default function ApprovedOrdersPage() {
                     setOrderNumber('');
                     setOrderNumberError('');
                   }}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[#80959A] hover:text-[#4E616F]"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -1048,7 +1048,7 @@ export default function ApprovedOrdersPage() {
               {/* Order Number */}
               <div>
                 <label className="block text-sm font-medium text-[#2D363F] mb-1">
-                  {t.orderNumberPlaceholder} <span className="text-red-500">*</span>
+                  {t.orderNumberPlaceholder} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <Input
                   value={orderNumber}
@@ -1057,10 +1057,10 @@ export default function ApprovedOrdersPage() {
                     if (e.target.value.trim()) setOrderNumberError('');
                   }}
                   placeholder="AMZ-123456789"
-                  className={orderNumberError ? 'border-red-500' : ''}
+                  className={orderNumberError ? 'border-[#AA2F0D]-500' : ''}
                 />
                 {orderNumberError && (
-                  <p className="mt-1 text-sm text-red-500">{orderNumberError}</p>
+                  <p className="mt-1 text-sm text-[#AA2F0D]">{orderNumberError}</p>
                 )}
               </div>
 
@@ -1080,7 +1080,7 @@ export default function ApprovedOrdersPage() {
 
               {/* Notify Checkbox */}
               <label className="flex items-center gap-2">
-                <input type="checkbox" defaultChecked className="rounded border-gray-300" />
+                <input type="checkbox" defaultChecked className="rounded border-[#ABC0B9]" />
                 <span className="text-sm text-[#4E616F]">{t.notifyRequester}</span>
               </label>
             </div>
@@ -1099,7 +1099,7 @@ export default function ApprovedOrdersPage() {
                 {t.cancel}
               </Button>
               <Button
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
                 onClick={handleMarkPurchased}
                 disabled={processingId !== null}
               >
@@ -1130,7 +1130,7 @@ export default function ApprovedOrdersPage() {
                     setSelectedOrder(null);
                     setStatusChangeNotes('');
                   }}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[#80959A] hover:text-[#4E616F]"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -1176,7 +1176,7 @@ export default function ApprovedOrdersPage() {
                 {t.cancel}
               </Button>
               <Button
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
                 onClick={handleMarkDelivered}
                 disabled={processingId !== null}
               >
@@ -1208,7 +1208,7 @@ export default function ApprovedOrdersPage() {
                     setStatusChangeNotes('');
                     setCancelNotesError('');
                   }}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[#80959A] hover:text-[#4E616F]"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -1230,7 +1230,7 @@ export default function ApprovedOrdersPage() {
               {/* Cancellation Reason */}
               <div>
                 <label className="block text-sm font-medium text-[#2D363F] mb-1">
-                  {t.cancellationReason} <span className="text-red-500">*</span>
+                  {t.cancellationReason} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <textarea
                   value={statusChangeNotes}
@@ -1240,10 +1240,10 @@ export default function ApprovedOrdersPage() {
                   }}
                   placeholder={t.cancellationReason}
                   rows={3}
-                  className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 ${cancelNotesError ? 'border-red-500' : 'border-[#ABC0B9]'}`}
+                  className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 ${cancelNotesError ? 'border-[#AA2F0D]-500' : 'border-[#ABC0B9]'}`}
                 />
                 {cancelNotesError && (
-                  <p className="mt-1 text-sm text-red-500">{cancelNotesError}</p>
+                  <p className="mt-1 text-sm text-[#AA2F0D]">{cancelNotesError}</p>
                 )}
               </div>
             </div>
@@ -1261,7 +1261,7 @@ export default function ApprovedOrdersPage() {
                 {t.cancel}
               </Button>
               <Button
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-[#AA2F0D] hover:bg-[#AA2F0D] text-white"
                 onClick={handleCancelOrder}
                 disabled={processingId !== null}
               >

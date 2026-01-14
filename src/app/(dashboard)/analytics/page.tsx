@@ -261,11 +261,11 @@ export default function AnalyticsPage() {
 
   // Status chart segments
   const statusSegments = approvalStats ? [
-    { value: approvalStats.pending, color: '#F59E0B', label: t.pending },
-    { value: approvalStats.approved, color: '#3B82F6', label: t.approved },
-    { value: approvalStats.purchased, color: '#10B981', label: t.purchased },
-    { value: approvalStats.rejected, color: '#EF4444', label: t.rejected },
-    { value: approvalStats.info_required, color: '#8B5CF6', label: t.infoRequired },
+    { value: approvalStats.pending, color: '#E95F20', label: t.pending },
+    { value: approvalStats.approved, color: '#4E616F', label: t.approved },
+    { value: approvalStats.purchased, color: '#5C2F0E', label: t.purchased },
+    { value: approvalStats.rejected, color: '#AA2F0D', label: t.rejected },
+    { value: approvalStats.info_required, color: '#5C2F0E', label: t.infoRequired },
   ] : [];
 
   if (isLoading) {
@@ -327,15 +327,15 @@ export default function AnalyticsPage() {
                   <TrendingUp className="h-5 w-5 text-white" />
                 </div>
                 {approvalRate >= 70 ? (
-                  <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
+                  <span className="text-xs font-medium text-[#5C2F0E] bg-[#ABC0B9]/20 px-2 py-1 rounded-full flex items-center gap-1">
                     <ArrowUp className="h-3 w-3" /> Good
                   </span>
                 ) : approvalRate >= 50 ? (
-                  <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full flex items-center gap-1">
+                  <span className="text-xs font-medium text-[#E95F20] bg-[#F38756]/20 px-2 py-1 rounded-full flex items-center gap-1">
                     <Minus className="h-3 w-3" /> Fair
                   </span>
                 ) : (
-                  <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full flex items-center gap-1">
+                  <span className="text-xs font-medium text-[#AA2F0D] bg-[#AA2F0D]/10 px-2 py-1 rounded-full flex items-center gap-1">
                     <ArrowDown className="h-3 w-3" /> Low
                   </span>
                 )}
@@ -351,7 +351,7 @@ export default function AnalyticsPage() {
                   <Clock className="h-5 w-5 text-white" />
                 </div>
                 {(approvalStats?.urgent || 0) > 0 && (
-                  <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">
+                  <span className="text-xs font-medium text-[#AA2F0D] bg-[#AA2F0D]/10 px-2 py-1 rounded-full">
                     {approvalStats?.urgent} {t.urgent}
                   </span>
                 )}
@@ -465,8 +465,8 @@ export default function AnalyticsPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-[#FAFBFA] rounded-xl">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
+                      <div className="w-10 h-10 rounded-lg bg-[#ABC0B9]/30 flex items-center justify-center">
+                        <CheckCircle className="h-5 w-5 text-[#5C2F0E]" />
                       </div>
                       <span className="text-sm text-[#4E616F]">{t.approved}</span>
                     </div>
@@ -475,8 +475,8 @@ export default function AnalyticsPage() {
 
                   <div className="flex items-center justify-between p-3 bg-[#FAFBFA] rounded-xl">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-                        <XCircle className="h-5 w-5 text-red-600" />
+                      <div className="w-10 h-10 rounded-lg bg-[#AA2F0D]/20 flex items-center justify-center">
+                        <XCircle className="h-5 w-5 text-[#AA2F0D]" />
                       </div>
                       <span className="text-sm text-[#4E616F]">{t.rejected}</span>
                     </div>
@@ -548,10 +548,10 @@ export default function AnalyticsPage() {
                     {recentRequests.slice(0, 5).map((request) => (
                       <div key={request.id} className="flex items-center gap-3 p-2 hover:bg-[#FAFBFA] rounded-lg transition-colors">
                         <div className={`w-2 h-2 rounded-full ${
-                          request.status === 'approved' ? 'bg-blue-500' :
-                          request.status === 'purchased' ? 'bg-green-500' :
-                          request.status === 'rejected' ? 'bg-red-500' :
-                          request.status === 'pending' ? 'bg-amber-500' :
+                          request.status === 'approved' ? 'bg-[#ABC0B9]/200' :
+                          request.status === 'purchased' ? 'bg-[#ABC0B9]/200' :
+                          request.status === 'rejected' ? 'bg-[#AA2F0D]/100' :
+                          request.status === 'pending' ? 'bg-[#F38756]/200' :
                           'bg-purple-500'
                         }`} />
                         <div className="flex-1 min-w-0">
@@ -563,10 +563,10 @@ export default function AnalyticsPage() {
                           </p>
                         </div>
                         <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                          request.status === 'approved' ? 'bg-blue-100 text-blue-700' :
-                          request.status === 'purchased' ? 'bg-green-100 text-green-700' :
-                          request.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                          request.status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                          request.status === 'approved' ? 'bg-[#ABC0B9]/30 text-[#4E616F]' :
+                          request.status === 'purchased' ? 'bg-[#ABC0B9]/30 text-[#5C2F0E]' :
+                          request.status === 'rejected' ? 'bg-[#AA2F0D]/20 text-[#AA2F0D]' :
+                          request.status === 'pending' ? 'bg-[#F38756]/30 text-[#E95F20]' :
                           'bg-purple-100 text-purple-700'
                         }`}>
                           {request.status === 'approved' ? t.approved :

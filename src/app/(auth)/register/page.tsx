@@ -191,8 +191,8 @@ export default function RegisterPage() {
         {/* Success Card */}
         <div className="rounded-2xl bg-white p-8 shadow-lg border border-[#ABC0B9]">
           <div className="text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#ABC0B9]/30 mb-4">
+              <CheckCircle className="h-8 w-8 text-[#5C2F0E]" />
             </div>
             <h2 className="text-xl text-[#2D363F] mb-2" style={{ fontWeight: 600 }}>
               {t.successTitle}
@@ -200,9 +200,9 @@ export default function RegisterPage() {
             <p className="text-sm text-[#4E616F] mb-4">
               {t.successMessage}
             </p>
-            <div className="flex items-center justify-center gap-2 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6">
-              <Clock className="h-4 w-4 text-amber-600" />
-              <p className="text-sm text-amber-700">
+            <div className="flex items-center justify-center gap-2 rounded-lg bg-[#F38756]/20 border border-amber-200 px-4 py-3 mb-6">
+              <Clock className="h-4 w-4 text-[#E95F20]" />
+              <p className="text-sm text-[#E95F20]">
                 {t.successNote}
               </p>
             </div>
@@ -280,7 +280,7 @@ export default function RegisterPage() {
         </div>
 
         {error && (
-          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-600">
+          <div className="mb-4 rounded-lg bg-[#AA2F0D]/10 border border-[#AA2F0D]-200 p-3 text-sm text-[#AA2F0D]">
             {error}
           </div>
         )}
@@ -303,7 +303,7 @@ export default function RegisterPage() {
               maxLength={50}
               className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:outline-none focus:ring-2 ${
                 fieldError === 'employee_number'
-                  ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                  ? 'border-[#AA2F0D]-300 focus:border-[#AA2F0D]-500 focus:ring-red-200'
                   : 'border-[#ABC0B9] focus:border-[#5C2F0E] focus:ring-[#5C2F0E]/20'
               }`}
             />
@@ -345,7 +345,7 @@ export default function RegisterPage() {
               required
               className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#2D363F] transition-all placeholder:text-[#4E616F] focus:outline-none focus:ring-2 ${
                 fieldError === 'email'
-                  ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                  ? 'border-[#AA2F0D]-300 focus:border-[#AA2F0D]-500 focus:ring-red-200'
                   : 'border-[#ABC0B9] focus:border-[#5C2F0E] focus:ring-[#5C2F0E]/20'
               }`}
             />

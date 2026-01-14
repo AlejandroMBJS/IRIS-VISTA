@@ -87,22 +87,22 @@ export function RecentActivity({ language }: RecentActivityProps) {
   const getStatusVariant = (status: string) => {
     switch (status) {
       case 'approved':
-        return 'bg-green-100 text-green-700 hover:bg-green-100';
+        return 'bg-[#ABC0B9]/30 text-[#5C2F0E] hover:bg-[#ABC0B9]/30';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100';
+        return 'bg-[#F38756]/30 text-[#E95F20] hover:bg-[#F38756]/30';
       case 'received':
-        return 'bg-blue-100 text-blue-700 hover:bg-blue-100';
+        return 'bg-[#ABC0B9]/30 text-[#4E616F] hover:bg-[#ABC0B9]/30';
       case 'rejected':
-        return 'bg-red-100 text-red-700 hover:bg-red-100';
+        return 'bg-[#AA2F0D]/20 text-[#AA2F0D] hover:bg-[#AA2F0D]/20';
       default:
-        return 'bg-gray-100 text-gray-700 hover:bg-gray-100';
+        return 'bg-[#ABC0B9]/20 text-[#2D363F] hover:bg-[#ABC0B9]/20';
     }
   };
 
   return (
     <section>
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-gray-900">{t.title}</h2>
+        <h2 className="text-[#2D363F]">{t.title}</h2>
         <button className="text-sm text-[#5C2F0E] hover:underline">
           {t.viewAll}
         </button>
@@ -111,11 +111,11 @@ export function RecentActivity({ language }: RecentActivityProps) {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
+              <tr className="border-b border-[#ABC0B9]/30 bg-[#FAFBFA]">
                 {t.headers.map((header, index) => (
                   <th
                     key={index}
-                    className="px-6 py-4 text-left text-sm text-gray-600"
+                    className="px-6 py-4 text-left text-sm text-[#4E616F]"
                   >
                     {header}
                   </th>
@@ -126,10 +126,10 @@ export function RecentActivity({ language }: RecentActivityProps) {
               {t.requests.map((request, index) => (
                 <tr
                   key={index}
-                  className="border-b border-gray-100 transition-colors hover:bg-gray-50"
+                  className="border-b border-[#ABC0B9]/30 transition-colors hover:bg-[#FAFBFA]"
                 >
                   <td className="px-6 py-4">
-                    <button className="text-left text-sm text-gray-900 hover:text-[#5C2F0E]">
+                    <button className="text-left text-sm text-[#2D363F] hover:text-[#5C2F0E]">
                       {request.title}
                     </button>
                   </td>
@@ -138,7 +138,7 @@ export function RecentActivity({ language }: RecentActivityProps) {
                       {request.statusLabel}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+                  <td className="px-6 py-4 text-sm text-white0">
                     {request.date}
                   </td>
                 </tr>

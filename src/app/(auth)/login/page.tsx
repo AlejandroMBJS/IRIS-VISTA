@@ -195,8 +195,8 @@ export default function LoginPage() {
         {error && (
           <div className={`mb-4 rounded-lg p-3 text-sm ${
             errorCode === 'PENDING_APPROVAL'
-              ? 'bg-amber-50 border border-amber-200 text-amber-700'
-              : 'bg-red-50 border border-red-200 text-red-600'
+              ? 'bg-[#F38756]/20 border border-amber-200 text-[#E95F20]'
+              : 'bg-[#AA2F0D]/10 border border-[#AA2F0D]-200 text-[#AA2F0D]'
           }`}>
             {error}
           </div>

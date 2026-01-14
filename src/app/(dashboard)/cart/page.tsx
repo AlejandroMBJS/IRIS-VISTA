@@ -201,8 +201,8 @@ export default function CartPage() {
     return (
       <div className="min-h-screen bg-[#FAFBFA] flex items-center justify-center p-8">
         <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="h-8 w-8 text-green-600" />
+          <div className="w-16 h-16 bg-[#ABC0B9]/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="h-8 w-8 text-[#5C2F0E]" />
           </div>
           <h2 className="text-2xl font-semibold text-[#2D363F] mb-2">{t.success}</h2>
           <p className="text-[#4E616F] mb-6">{t.successMessage}</p>
@@ -293,7 +293,7 @@ export default function CartPage() {
             </div>
             <button
               onClick={() => clearCart()}
-              className="text-sm text-[#AA2F0D] hover:text-[#B04840] font-medium hidden sm:block"
+              className="text-sm text-[#AA2F0D] hover:text-[#AA2F0D] font-medium hidden sm:block"
             >
               {t.clearCart}
             </button>
@@ -362,7 +362,7 @@ export default function CartPage() {
                         </div>
                         <button
                           onClick={() => removeItem(item.id)}
-                          className="p-2 text-[#AA2F0D] hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-[#AA2F0D] hover:bg-[#AA2F0D]/10 rounded-lg transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -412,7 +412,7 @@ export default function CartPage() {
               {/* Mobile clear cart */}
               <button
                 onClick={() => clearCart()}
-                className="w-full text-center text-sm text-[#AA2F0D] hover:text-[#B04840] font-medium py-2 sm:hidden"
+                className="w-full text-center text-sm text-[#AA2F0D] hover:text-[#AA2F0D] font-medium py-2 sm:hidden"
               >
                 {t.clearCart}
               </button>
@@ -436,7 +436,7 @@ export default function CartPage() {
                 {/* Justification */}
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-[#2D363F] mb-2">
-                    {t.justification} <span className="text-red-500">*</span>
+                    {t.justification} <span className="text-[#AA2F0D]">*</span>
                   </label>
                   <textarea
                     value={justification}
@@ -478,15 +478,15 @@ export default function CartPage() {
 
                 {/* Error */}
                 {error && (
-                  <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
-                    <p className="text-xs text-red-700">{error}</p>
+                  <div className="mb-4 bg-[#AA2F0D]/10 border border-[#AA2F0D]-200 rounded-lg p-3 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-[#AA2F0D] flex-shrink-0" />
+                    <p className="text-xs text-[#AA2F0D]">{error}</p>
                   </div>
                 )}
 
                 {/* Approval note */}
-                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-xs text-yellow-700">
+                <div className="mb-4 p-3 bg-[#F38756]/20 border border-[#E95F20]-200 rounded-lg">
+                  <p className="text-xs text-[#E95F20]">
                     <AlertCircle className="h-3.5 w-3.5 inline-block mr-1" />
                     {t.approvalNote}
                   </p>

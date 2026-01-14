@@ -84,7 +84,7 @@ export function ManagerDashboard({ language }: ManagerDashboardProps) {
 
   return (
     <section>
-      <h2 className="mb-6 text-gray-900">{t.title}</h2>
+      <h2 className="mb-6 text-[#2D363F]">{t.title}</h2>
       
       <div className="space-y-4">
         {/* Monthly Spend */}
@@ -93,51 +93,51 @@ export function ManagerDashboard({ language }: ManagerDashboardProps) {
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#5C2F0E]/10">
               <DollarSign className="h-5 w-5 text-[#5C2F0E]" />
             </div>
-            <h3 className="text-gray-900">{t.monthlySpend.title}</h3>
+            <h3 className="text-[#2D363F]">{t.monthlySpend.title}</h3>
           </div>
-          <div className="mb-2 text-3xl text-gray-900">{t.monthlySpend.amount}</div>
+          <div className="mb-2 text-3xl text-[#2D363F]">{t.monthlySpend.amount}</div>
           <div className="flex items-center gap-2 text-sm">
-            <TrendingUp className="h-4 w-4 text-green-600" />
-            <span className="text-green-600">{t.monthlySpend.change}</span>
+            <TrendingUp className="h-4 w-4 text-[#5C2F0E]" />
+            <span className="text-[#5C2F0E]">{t.monthlySpend.change}</span>
           </div>
         </div>
 
         {/* Pending Approvals */}
         <button className="w-full rounded-xl bg-white p-6 text-left shadow-sm transition-all hover:shadow-md">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-              <CheckCircle className="h-5 w-5 text-amber-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#F38756]/30">
+              <CheckCircle className="h-5 w-5 text-[#E95F20]" />
             </div>
-            <h3 className="text-gray-900">{t.pendingApprovals.title}</h3>
+            <h3 className="text-[#2D363F]">{t.pendingApprovals.title}</h3>
           </div>
-          <div className="mb-2 text-3xl text-gray-900">{t.pendingApprovals.count}</div>
-          <p className="text-sm text-gray-500">{t.pendingApprovals.description}</p>
+          <div className="mb-2 text-3xl text-[#2D363F]">{t.pendingApprovals.count}</div>
+          <p className="text-sm text-white0">{t.pendingApprovals.description}</p>
         </button>
 
         {/* Low Stock Alerts */}
         <div className="rounded-xl bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
-              <AlertCircle className="h-5 w-5 text-red-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#AA2F0D]/20">
+              <AlertCircle className="h-5 w-5 text-[#AA2F0D]" />
             </div>
-            <h3 className="text-gray-900">{t.lowStockAlerts.title}</h3>
+            <h3 className="text-[#2D363F]">{t.lowStockAlerts.title}</h3>
           </div>
           <div className="mb-4">
-            <div className="mb-2 text-3xl text-gray-900">{t.lowStockAlerts.count}</div>
-            <p className="text-sm text-gray-500">{t.lowStockAlerts.description}</p>
+            <div className="mb-2 text-3xl text-[#2D363F]">{t.lowStockAlerts.count}</div>
+            <p className="text-sm text-white0">{t.lowStockAlerts.description}</p>
           </div>
           
-          <div className="space-y-3 border-t border-gray-100 pt-4">
+          <div className="space-y-3 border-t border-[#ABC0B9]/30 pt-4">
             {t.alerts.map((alert, index) => (
               <div
                 key={index}
-                className="flex items-start justify-between gap-2 rounded-lg bg-red-50 p-3"
+                className="flex items-start justify-between gap-2 rounded-lg bg-[#AA2F0D]/10 p-3"
               >
                 <div className="flex-1">
-                  <div className="text-sm text-gray-900">{alert.item}</div>
-                  <div className="text-xs text-gray-500">{alert.quantity}</div>
+                  <div className="text-sm text-[#2D363F]">{alert.item}</div>
+                  <div className="text-xs text-white0">{alert.quantity}</div>
                 </div>
-                <div className="rounded bg-red-100 px-2 py-1 text-xs text-red-700">
+                <div className="rounded bg-[#AA2F0D]/20 px-2 py-1 text-xs text-[#AA2F0D]">
                   {alert.threshold}
                 </div>
               </div>

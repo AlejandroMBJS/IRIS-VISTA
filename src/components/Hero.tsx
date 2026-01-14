@@ -10,24 +10,24 @@ export function Hero({ language }: HeroProps) {
       title: 'What do you need today?',
       search: 'Search for forms, materials, services...',
       actions: [
-        { icon: ShoppingBag, label: 'Amazon Purchase', color: '#FF9900' },
+        { icon: ShoppingBag, label: 'Amazon Purchase', color: '#F38756' },
         { icon: Package, label: 'Regular Purchase (PR/PO)', color: '#5C2F0E' },
-        { icon: Shield, label: 'PPE Request', color: '#10B981' },
-        { icon: Zap, label: 'Non-Amazon Spot Purchase', color: '#F59E0B' },
-        { icon: Laptop, label: 'IT Request', color: '#3B82F6' },
-        { icon: Wrench, label: 'Maintenance Request', color: '#8B5CF6' },
+        { icon: Shield, label: 'PPE Request', color: '#5C2F0E' },
+        { icon: Zap, label: 'Non-Amazon Spot Purchase', color: '#E95F20' },
+        { icon: Laptop, label: 'IT Request', color: '#4E616F' },
+        { icon: Wrench, label: 'Maintenance Request', color: '#5C2F0E' },
       ],
     },
     zh: {
       title: '今天需要什么？',
       search: '搜索表单、物料、服务...',
       actions: [
-        { icon: ShoppingBag, label: '亚马逊采购', color: '#FF9900' },
+        { icon: ShoppingBag, label: '亚马逊采购', color: '#F38756' },
         { icon: Package, label: '常规采购 (PR/PO)', color: '#5C2F0E' },
-        { icon: Shield, label: 'PPE 请求', color: '#10B981' },
-        { icon: Zap, label: '非亚马逊现货采购', color: '#F59E0B' },
-        { icon: Laptop, label: 'IT 请求', color: '#3B82F6' },
-        { icon: Wrench, label: '维护请求', color: '#8B5CF6' },
+        { icon: Shield, label: 'PPE 请求', color: '#5C2F0E' },
+        { icon: Zap, label: '非亚马逊现货采购', color: '#E95F20' },
+        { icon: Laptop, label: 'IT 请求', color: '#4E616F' },
+        { icon: Wrench, label: '维护请求', color: '#5C2F0E' },
       ],
     },
   };
@@ -38,14 +38,14 @@ export function Hero({ language }: HeroProps) {
     <section className="mb-12">
       {/* Hero Title */}
       <div className="mb-8 text-center">
-        <h1 className="mb-4 text-gray-900">{t.title}</h1>
+        <h1 className="mb-4 text-[#2D363F]">{t.title}</h1>
         <div className="mx-auto max-w-2xl">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-[#80959A]" />
             <input
               type="text"
               placeholder={t.search}
-              className="w-full rounded-xl border border-gray-200 bg-white py-4 pl-14 pr-4 text-base shadow-sm transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 focus:shadow-md"
+              className="w-full rounded-xl border border-[#ABC0B9] bg-white py-4 pl-14 pr-4 text-base shadow-sm transition-all focus:border-[#5C2F0E] focus:outline-none focus:ring-2 focus:ring-[#5C2F0E]/20 focus:shadow-md"
             />
           </div>
         </div>
@@ -66,7 +66,7 @@ export function Hero({ language }: HeroProps) {
               >
                 <Icon className="h-7 w-7" style={{ color: action.color }} />
               </div>
-              <span className="text-center text-sm text-gray-700 group-hover:text-gray-900">
+              <span className="text-center text-sm text-[#2D363F] group-hover:text-[#2D363F]">
                 {action.label}
               </span>
             </button>

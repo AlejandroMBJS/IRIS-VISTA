@@ -409,7 +409,7 @@ export default function FilterRulesPage() {
             <div className="p-6 space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.name} <span className="text-[#EF4444]">*</span>
+                  {t.name} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <input
                   type="text"
@@ -433,7 +433,7 @@ export default function FilterRulesPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                  {t.type} <span className="text-[#EF4444]">*</span>
+                  {t.type} <span className="text-[#AA2F0D]">*</span>
                 </label>
                 <select
                   value={formData.rule_type}
@@ -456,7 +456,7 @@ export default function FilterRulesPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-[#2D363F]">
-                    {t.value} <span className="text-[#EF4444]">*</span>
+                    {t.value} <span className="text-[#AA2F0D]">*</span>
                   </label>
                   <input
                     type="text"

@@ -102,7 +102,7 @@ export function Categories({ language }: CategoriesProps) {
 
   return (
     <section className="mb-12">
-      <h2 className="mb-6 text-gray-900">{t.title}</h2>
+      <h2 className="mb-6 text-[#2D363F]">{t.title}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {t.categories.map((category, index) => {
           const Icon = category.icon;
@@ -115,10 +115,10 @@ export function Categories({ language }: CategoriesProps) {
                 <Icon className="h-6 w-6 text-[#5C2F0E]" />
               </div>
               <div className="flex-1">
-                <h3 className="mb-1 text-gray-900 group-hover:text-[#5C2F0E]">
+                <h3 className="mb-1 text-[#2D363F] group-hover:text-[#5C2F0E]">
                   {category.title}
                 </h3>
-                <p className="text-sm text-gray-500">{category.description}</p>
+                <p className="text-sm text-white0">{category.description}</p>
               </div>
             </button>
           );

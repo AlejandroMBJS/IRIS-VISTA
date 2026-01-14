@@ -312,13 +312,13 @@ export default function ApprovalsPage() {
 
   const getStatusBadge = (status: string) => {
     const statusMap: { [key: string]: { bg: string; text: string; icon: React.ReactNode } } = {
-      pending: { bg: '#FEF3C7', text: '#D97706', icon: <Clock className="h-3 w-3" /> },
-      approved: { bg: '#D1FAE5', text: '#059669', icon: <CheckCircle className="h-3 w-3" /> },
-      rejected: { bg: '#FEE2E2', text: '#DC2626', icon: <X className="h-3 w-3" /> },
-      info_requested: { bg: '#DBEAFE', text: '#2563EB', icon: <MessageSquare className="h-3 w-3" /> },
-      purchased: { bg: '#D1FAE5', text: '#059669', icon: <CheckCircle className="h-3 w-3" /> },
-      delivered: { bg: '#C7D2FE', text: '#4F46E5', icon: <Package className="h-3 w-3" /> },
-      cancelled: { bg: '#F3F4F6', text: '#6B7280', icon: <X className="h-3 w-3" /> },
+      pending: { bg: '#F38756', text: '#E95F20', icon: <Clock className="h-3 w-3" /> },
+      approved: { bg: '#ABC0B9', text: '#5C2F0E', icon: <CheckCircle className="h-3 w-3" /> },
+      rejected: { bg: '#AA2F0D', text: '#AA2F0D', icon: <X className="h-3 w-3" /> },
+      info_requested: { bg: '#ABC0B9', text: '#4E616F', icon: <MessageSquare className="h-3 w-3" /> },
+      purchased: { bg: '#ABC0B9', text: '#5C2F0E', icon: <CheckCircle className="h-3 w-3" /> },
+      delivered: { bg: '#ABC0B9', text: '#5C2F0E', icon: <Package className="h-3 w-3" /> },
+      cancelled: { bg: '#ABC0B9', text: '#4E616F', icon: <X className="h-3 w-3" /> },
     };
     const s = statusMap[status] || statusMap.pending;
     return (
@@ -510,7 +510,7 @@ export default function ApprovalsPage() {
                   {t.title}
                 </h1>
                 {pendingCount > 0 && (
-                  <Badge className="bg-red-500 text-white text-lg px-3 py-1">
+                  <Badge className="bg-[#AA2F0D]/100 text-white text-lg px-3 py-1">
                     {pendingCount}
                   </Badge>
                 )}
@@ -586,7 +586,7 @@ export default function ApprovalsPage() {
               {/* Search */}
               <div className="flex-1 min-w-[150px]">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#80959A]" />
                   <Input
                     placeholder={t.search}
                     value={searchQuery}
@@ -623,7 +623,7 @@ export default function ApprovalsPage() {
                             {getDisplayNumber(approval)}
                           </span>
                           {approval.urgency === 'urgent' && (
-                            <Badge className="bg-red-500 text-white animate-pulse">
+                            <Badge className="bg-[#AA2F0D]/100 text-white animate-pulse">
                               {t.urgent}
                             </Badge>
                           )}
@@ -732,7 +732,7 @@ export default function ApprovalsPage() {
                           <>
                             <Button
                               variant="outline"
-                              className="text-red-600 border-red-200 hover:bg-red-50"
+                              className="text-[#AA2F0D] border-[#AA2F0D]-200 hover:bg-[#AA2F0D]/10"
                               onClick={() => {
                                 setSelectedApproval(approval);
                                 setComment('');
@@ -741,7 +741,7 @@ export default function ApprovalsPage() {
                               <X className="h-4 w-4" />
                             </Button>
                             <Button
-                              className="bg-green-600 hover:bg-green-700 text-white"
+                              className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
                               onClick={() => {
                                 setSelectedApproval(approval);
                                 setComment('');
@@ -773,7 +773,7 @@ export default function ApprovalsPage() {
                     {getDisplayNumber(selectedApproval)}
                   </h2>
                   {selectedApproval.urgency === 'urgent' && (
-                    <Badge className="bg-red-500 text-white">
+                    <Badge className="bg-[#AA2F0D]/100 text-white">
                       {t.urgent}
                     </Badge>
                   )}
@@ -862,7 +862,7 @@ export default function ApprovalsPage() {
                             </h4>
                             <Badge
                               variant="outline"
-                              className={item.is_amazon_url || item.url ? 'border-orange-200 text-orange-700 bg-orange-50' : 'border-green-200 text-green-700 bg-green-50'}
+                              className={item.is_amazon_url || item.url ? 'border-orange-200 text-orange-700 bg-orange-50' : 'border-[#ABC0B9]-200 text-[#5C2F0E] bg-[#ABC0B9]/20'}
                             >
                               {item.is_amazon_url || item.url ? t.external : t.internalCatalog}
                             </Badge>
@@ -898,7 +898,7 @@ export default function ApprovalsPage() {
                               href={item.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 mt-3 text-sm text-blue-600 hover:underline"
+                              className="inline-flex items-center gap-1 mt-3 text-sm text-[#4E616F] hover:underline"
                             >
                               <ExternalLink className="h-4 w-4" />
                               {t.viewProduct}
@@ -988,9 +988,9 @@ export default function ApprovalsPage() {
                         <div
                           className={`flex h-8 w-8 items-center justify-center rounded-full flex-shrink-0 z-10 ${
                             step.new_status === 'approved'
-                              ? 'bg-green-500'
+                              ? 'bg-[#ABC0B9]/200'
                               : step.new_status === 'rejected'
-                              ? 'bg-red-500'
+                              ? 'bg-[#AA2F0D]/100'
                               : 'bg-[#ABC0B9]'
                           }`}
                         >
@@ -1043,7 +1043,7 @@ export default function ApprovalsPage() {
                     <button
                       onClick={handleApprove}
                       disabled={isSubmitting}
-                      className="flex items-center justify-center gap-2 rounded-lg bg-[#10B981] px-5 py-3 text-white font-medium shadow-sm transition-all hover:bg-[#059669] active:scale-95 disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-lg bg-[#5C2F0E] px-5 py-3 text-white font-medium shadow-sm transition-all hover:bg-[#5C2F0E] active:scale-95 disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
@@ -1055,7 +1055,7 @@ export default function ApprovalsPage() {
                     <button
                       onClick={handleReject}
                       disabled={isSubmitting || !comment}
-                      className="flex items-center justify-center gap-2 rounded-lg bg-[#EF4444] px-5 py-3 text-white font-medium shadow-sm transition-all hover:bg-[#DC2626] active:scale-95 disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-lg bg-[#AA2F0D] px-5 py-3 text-white font-medium shadow-sm transition-all hover:bg-[#AA2F0D] active:scale-95 disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
@@ -1070,14 +1070,14 @@ export default function ApprovalsPage() {
 
               {/* View Only Message */}
               {selectedApproval.status === 'pending' && !canApprove && (
-                <div className="rounded-lg bg-[#F0F9FF] p-4 md:p-6 border border-[#93C5FD]">
+                <div className="rounded-lg bg-[#ABC0B9] p-4 md:p-6 border border-[#ABC0B9]">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3B82F6]/10">
-                      <Eye className="h-5 w-5 text-[#3B82F6]" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4E616F]/10">
+                      <Eye className="h-5 w-5 text-[#4E616F]" />
                     </div>
                     <div>
-                      <h3 className="text-lg text-[#1E40AF] font-semibold">{t.viewOnly}</h3>
-                      <p className="text-sm text-[#3B82F6]">{t.viewOnlyMessage}</p>
+                      <h3 className="text-lg text-[#2D363F] font-semibold">{t.viewOnly}</h3>
+                      <p className="text-sm text-[#4E616F]">{t.viewOnlyMessage}</p>
                     </div>
                   </div>
                 </div>

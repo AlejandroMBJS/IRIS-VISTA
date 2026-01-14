@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import React from 'react';
 import {
   CheckSquare,
   Clock,
   X,
   Check,
-  RotateCcw,
-  AlertCircle,
   CheckCircle,
   Loader2,
   Eye,
@@ -21,10 +20,11 @@ import {
   Calendar,
   RefreshCw,
   Search,
-  Filter,
   Sparkles,
+  Globe,
+  ChevronDown,
 } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, type Language } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { approvalsApi, aiApi } from '@/lib/api';
 import { getTranslatedText } from '@/lib/translations';
@@ -37,6 +37,132 @@ import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 
 type ViewMode = 'cards' | 'table';
 
+// Simple markdown renderer for AI summary
+const renderMarkdown = (text: string) => {
+  const lines = text.split('\n');
+  const elements: React.ReactNode[] = [];
+  let listItems: string[] = [];
+  let listType: 'ul' | 'ol' | null = null;
+
+  const processInline = (line: string): React.ReactNode => {
+    // Process bold, italic, and inline code
+    const parts: React.ReactNode[] = [];
+    let remaining = line;
+    let key = 0;
+
+    while (remaining.length > 0) {
+      // Bold **text** or __text__
+      const boldMatch = remaining.match(/^(.*?)(\*\*|__)(.+?)\2(.*)$/);
+      if (boldMatch) {
+        if (boldMatch[1]) parts.push(boldMatch[1]);
+        parts.push(<strong key={key++} className="font-semibold text-purple-900">{processInline(boldMatch[3])}</strong>);
+        remaining = boldMatch[4];
+        continue;
+      }
+
+      // Italic *text* or _text_
+      const italicMatch = remaining.match(/^(.*?)(\*|_)(.+?)\2(.*)$/);
+      if (italicMatch) {
+        if (italicMatch[1]) parts.push(italicMatch[1]);
+        parts.push(<em key={key++} className="italic">{processInline(italicMatch[3])}</em>);
+        remaining = italicMatch[4];
+        continue;
+      }
+
+      // Inline code `code`
+      const codeMatch = remaining.match(/^(.*?)`(.+?)`(.*)$/);
+      if (codeMatch) {
+        if (codeMatch[1]) parts.push(codeMatch[1]);
+        parts.push(<code key={key++} className="bg-purple-100 px-1 py-0.5 rounded text-purple-800 font-mono text-xs">{codeMatch[2]}</code>);
+        remaining = codeMatch[3];
+        continue;
+      }
+
+      parts.push(remaining);
+      break;
+    }
+
+    return parts.length === 1 ? parts[0] : <>{parts}</>;
+  };
+
+  const flushList = () => {
+    if (listItems.length > 0 && listType) {
+      const ListTag = listType;
+      elements.push(
+        <ListTag key={elements.length} className={`${listType === 'ol' ? 'list-decimal' : 'list-disc'} ml-4 my-2 space-y-1`}>
+          {listItems.map((item, i) => (
+            <li key={i} className="text-[#2D363F]">{processInline(item)}</li>
+          ))}
+        </ListTag>
+      );
+      listItems = [];
+      listType = null;
+    }
+  };
+
+  lines.forEach((line, idx) => {
+    // Headers
+    if (line.startsWith('### ')) {
+      flushList();
+      elements.push(<h4 key={idx} className="text-sm font-bold text-purple-900 mt-3 mb-1">{processInline(line.slice(4))}</h4>);
+      return;
+    }
+    if (line.startsWith('## ')) {
+      flushList();
+      elements.push(<h3 key={idx} className="text-base font-bold text-purple-900 mt-3 mb-1">{processInline(line.slice(3))}</h3>);
+      return;
+    }
+    if (line.startsWith('# ')) {
+      flushList();
+      elements.push(<h2 key={idx} className="text-lg font-bold text-purple-900 mt-3 mb-2">{processInline(line.slice(2))}</h2>);
+      return;
+    }
+
+    // Horizontal rule
+    if (line.match(/^---+$/) || line.match(/^\*\*\*+$/) || line.match(/^___+$/)) {
+      flushList();
+      elements.push(<hr key={idx} className="my-3 border-purple-200" />);
+      return;
+    }
+
+    // Unordered list items
+    const ulMatch = line.match(/^[\-\*]\s+(.+)$/);
+    if (ulMatch) {
+      if (listType !== 'ul') {
+        flushList();
+        listType = 'ul';
+      }
+      listItems.push(ulMatch[1]);
+      return;
+    }
+
+    // Ordered list items
+    const olMatch = line.match(/^\d+\.\s+(.+)$/);
+    if (olMatch) {
+      if (listType !== 'ol') {
+        flushList();
+        listType = 'ol';
+      }
+      listItems.push(olMatch[1]);
+      return;
+    }
+
+    // Empty line
+    if (line.trim() === '') {
+      flushList();
+      elements.push(<div key={idx} className="h-2" />);
+      return;
+    }
+
+    // Regular paragraph
+    flushList();
+    elements.push(<p key={idx} className="text-sm text-[#2D363F] leading-relaxed">{processInline(line)}</p>);
+  });
+
+  flushList();
+  return <div className="space-y-1">{elements}</div>;
+};
+
 // Get display number - PO number if approved/purchased/delivered, otherwise request number
 const getDisplayNumber = (request: PurchaseRequest): string => {
   if ((request.status === 'approved' || request.status === 'purchased' || request.status === 'delivered') && request.po_number) {
@@ -46,7 +172,7 @@ const getDisplayNumber = (request: PurchaseRequest): string => {
 };
 
 export default function ApprovalsPage() {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { user } = useAuth();
   const [approvals, setApprovals] = useState<PurchaseRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,10 +184,15 @@ export default function ApprovalsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [aiSummary, setAiSummary] = useState('');
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [aiQuestion, setAiQuestion] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [showMyActions, setShowMyActions] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [showModalLangMenu, setShowModalLangMenu] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingText, setStreamingText] = useState('');
+  const [isThinking, setIsThinking] = useState(false);
 
   // Only general_manager can approve/reject - admin can only view
   const canApprove = user?.role === 'general_manager';
@@ -132,8 +263,22 @@ export default function ApprovalsPage() {
       ago: 'ago',
       generateSummary: 'Generate AI Summary',
       generatingSummary: 'Generating...',
-      aiSummary: 'AI Summary',
+      aiSummary: 'AI Assistant',
       aiSummaryError: 'Failed to generate summary. Make sure Ollama is running.',
+      aiQuestionPlaceholder: 'Ask a question about this request...',
+      aiAsk: 'Ask',
+      webSearch: 'Search Web',
+      quickQuestions: {
+        isPriceNormal: 'Is this price normal?',
+        alternatives: 'Are there cheaper alternatives?',
+        isUrgent: 'Is the urgency justified?',
+        recommendation: 'Should I approve this?',
+      },
+      languages: {
+        en: 'English',
+        zh: '中文',
+        es: 'Español',
+      },
       statuses: {
         pending: 'Pending',
         approved: 'Approved',
@@ -210,8 +355,22 @@ export default function ApprovalsPage() {
       ago: '前',
       generateSummary: '生成AI摘要',
       generatingSummary: '生成中...',
-      aiSummary: 'AI摘要',
+      aiSummary: 'AI助手',
       aiSummaryError: '生成摘要失败。请确保Ollama正在运行。',
+      aiQuestionPlaceholder: '询问有关此请求的问题...',
+      aiAsk: '提问',
+      webSearch: '网络搜索',
+      quickQuestions: {
+        isPriceNormal: '这个价格正常吗？',
+        alternatives: '有更便宜的替代品吗？',
+        isUrgent: '紧急程度合理吗？',
+        recommendation: '我应该批准吗？',
+      },
+      languages: {
+        en: 'English',
+        zh: '中文',
+        es: 'Español',
+      },
       statuses: {
         pending: '待审批',
         approved: '已批准',
@@ -288,8 +447,22 @@ export default function ApprovalsPage() {
       ago: 'hace',
       generateSummary: 'Generar Resumen IA',
       generatingSummary: 'Generando...',
-      aiSummary: 'Resumen IA',
+      aiSummary: 'Asistente IA',
       aiSummaryError: 'Error al generar resumen. Asegúrate de que Ollama esté corriendo.',
+      aiQuestionPlaceholder: 'Haz una pregunta sobre esta solicitud...',
+      aiAsk: 'Preguntar',
+      webSearch: 'Buscar en Web',
+      quickQuestions: {
+        isPriceNormal: '¿Es normal este precio?',
+        alternatives: '¿Hay alternativas más baratas?',
+        isUrgent: '¿Está justificada la urgencia?',
+        recommendation: '¿Debería aprobar esto?',
+      },
+      languages: {
+        en: 'English',
+        zh: '中文',
+        es: 'Español',
+      },
       statuses: {
         pending: 'Pendiente',
         approved: 'Aprobado',
@@ -414,11 +587,13 @@ export default function ApprovalsPage() {
     }
   };
 
-  const handleGenerateSummary = async () => {
+  const handleGenerateSummary = async (question?: string) => {
     if (!selectedApproval) return;
 
     setIsGeneratingSummary(true);
-    setAiSummary('');
+    setIsStreaming(true);
+    setIsThinking(true);
+    setStreamingText('');
 
     try {
       const items = getProductItems(selectedApproval).map(item => ({
@@ -429,19 +604,114 @@ export default function ApprovalsPage() {
         quantity: item.quantity,
       }));
 
-      const response = await aiApi.generateSummary({
+      const requestBody = {
         items,
         justification: getTranslatedText(selectedApproval.justification_translated, selectedApproval.justification || '', language),
         language,
+        question: question || undefined,
+        previousSummary: aiSummary || undefined,
+        stream: true,
+      };
+
+      // Use streaming API
+      const response = await fetch('/api/ai/generate-summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
       });
 
-      setAiSummary(response.summary);
+      if (!response.ok) throw new Error('Failed to generate summary');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+              if (data === '[THINKING]') {
+                setIsThinking(true);
+                continue;
+              }
+              if (data === '[RESPONDING]') {
+                setIsThinking(false);
+                continue;
+              }
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.content) {
+                  fullText += parsed.content;
+                  setStreamingText(fullText);
+                }
+              } catch {
+                // Not JSON, might be raw text
+                fullText += data;
+                setStreamingText(fullText);
+              }
+            }
+          }
+        }
+      }
+
+      // Finalize the response
+      setAiSummary(prev => {
+        if (question && prev) {
+          return `${prev}\n\n---\n\n**Q: ${question}**\n${fullText}`;
+        }
+        return fullText;
+      });
+      setAiQuestion('');
     } catch (error) {
       console.error('Failed to generate summary:', error);
-      alert(t.aiSummaryError);
+      // Fallback to non-streaming API
+      try {
+        const items = getProductItems(selectedApproval).map(item => ({
+          title: getTranslatedText(item.product_title_translated, item.product_title, language),
+          description: getTranslatedText(item.product_description_translated, item.product_description || '', language),
+          price: item.estimated_price || 0,
+          currency: item.currency || selectedApproval.currency || 'MXN',
+          quantity: item.quantity,
+        }));
+
+        const response = await aiApi.generateSummary({
+          items,
+          justification: getTranslatedText(selectedApproval.justification_translated, selectedApproval.justification || '', language),
+          language,
+          question: question || undefined,
+          previousSummary: aiSummary || undefined,
+        });
+
+        setAiSummary(prev => {
+          if (question && prev) {
+            return `${prev}\n\n---\n\n**Q: ${question}**\n${response.summary}`;
+          }
+          return response.summary;
+        });
+        setAiQuestion('');
+      } catch {
+        alert(t.aiSummaryError);
+      }
     } finally {
       setIsGeneratingSummary(false);
+      setIsStreaming(false);
+      setIsThinking(false);
+      setStreamingText('');
     }
+  };
+
+  // Handle web search for product prices
+  const handleWebSearch = (productTitle: string) => {
+    const searchQuery = encodeURIComponent(`${productTitle} price comparison`);
+    window.open(`https://www.google.com/search?q=${searchQuery}`, '_blank');
   };
 
   const filteredApprovals = approvals.filter((approval) => {
@@ -808,10 +1078,10 @@ export default function ApprovalsPage() {
 
       {/* Detail Modal */}
       {selectedApproval && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="w-full max-w-4xl my-8 rounded-xl bg-white shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-2 md:p-4">
+          <div className="w-full max-w-7xl h-[95vh] rounded-xl bg-white shadow-2xl flex flex-col">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-4 md:p-6 rounded-t-xl flex items-center justify-between z-10">
+            <div className="bg-gradient-to-r from-[#5C2F0E] to-[#2D363F] p-4 md:p-6 rounded-t-xl flex items-center justify-between flex-shrink-0">
               <div>
                 <div className="flex items-center gap-3">
                   <h2 className="text-xl md:text-2xl text-white font-semibold">
@@ -827,20 +1097,55 @@ export default function ApprovalsPage() {
                   {t.requester}: {selectedApproval.requester?.name || 'Unknown'}
                 </p>
               </div>
-              <button
-                onClick={() => {
-                  setSelectedApproval(null);
-                  setComment('');
-                  setAiSummary('');
-                }}
-                className="text-white hover:text-white/80 p-2"
-              >
-                <X className="h-6 w-6" />
-              </button>
+              <div className="flex items-center gap-3">
+                {/* Language Selector in Modal */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowModalLangMenu(!showModalLangMenu)}
+                    className="flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-sm text-white transition-all"
+                  >
+                    <Globe className="h-4 w-4" />
+                    <span className="hidden sm:inline font-medium">{t.languages[language as keyof typeof t.languages]}</span>
+                    <ChevronDown className={`h-3 w-3 transition-transform ${showModalLangMenu ? 'rotate-180' : ''}`} />
+                  </button>
+                  {showModalLangMenu && (
+                    <div className="absolute right-0 top-12 w-36 rounded-lg bg-white shadow-xl border border-gray-200 overflow-hidden z-50">
+                      {Object.entries(t.languages).map(([key, label]) => (
+                        <button
+                          key={key}
+                          onClick={() => {
+                            setLanguage(key as Language);
+                            setShowModalLangMenu(false);
+                          }}
+                          className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
+                            language === key
+                              ? 'bg-purple-50 text-purple-700 font-medium'
+                              : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedApproval(null);
+                    setComment('');
+                    setAiSummary('');
+                    setAiQuestion('');
+                    setShowModalLangMenu(false);
+                  }}
+                  className="text-white hover:text-white/80 p-2 rounded-lg hover:bg-white/10 transition-all"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
             </div>
 
             {/* Modal Content */}
-            <div className="p-4 md:p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+            <div className="p-4 md:p-6 space-y-6 flex-1 overflow-y-auto">
               {/* Requester Info */}
               <div className="rounded-lg bg-[#FAFBFA] p-4 border border-[#ABC0B9]">
                 <h3 className="text-sm font-semibold text-[#2D363F] mb-3 flex items-center gap-2">
@@ -1006,6 +1311,135 @@ export default function ApprovalsPage() {
                 </div>
               )}
 
+              {/* AI Summary Section */}
+              {canApprove && (
+                <div className="rounded-xl bg-gradient-to-br from-purple-50 via-indigo-50 to-violet-50 p-5 border border-purple-200 shadow-sm">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-base font-semibold text-purple-800 flex items-center gap-2">
+                      <div className="p-1.5 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg">
+                        <Sparkles className="h-4 w-4 text-white" />
+                      </div>
+                      {t.aiSummary}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      {/* Web Search Button */}
+                      {selectedApproval && getProductItems(selectedApproval).length > 0 && (
+                        <button
+                          onClick={() => {
+                            const firstProduct = getProductItems(selectedApproval)[0];
+                            const title = getTranslatedText(firstProduct.product_title_translated, firstProduct.product_title, language);
+                            handleWebSearch(title);
+                          }}
+                          className="flex items-center gap-1.5 rounded-lg bg-white border border-purple-200 px-3 py-1.5 text-purple-700 text-xs font-medium shadow-sm transition-all hover:bg-purple-50 hover:border-purple-300 active:scale-95"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          {t.webSearch}
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleGenerateSummary()}
+                        disabled={isGeneratingSummary}
+                        className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 text-white text-sm font-medium shadow-md transition-all hover:from-purple-700 hover:to-indigo-700 hover:shadow-lg active:scale-95 disabled:opacity-70"
+                      >
+                        {isGeneratingSummary ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Sparkles className="h-4 w-4" />
+                        )}
+                        {isGeneratingSummary ? t.generatingSummary : t.generateSummary}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* AI Response Area */}
+                  {(aiSummary || isStreaming) ? (
+                    <div className="bg-white rounded-xl p-4 border border-purple-100 mb-4 max-h-80 overflow-y-auto shadow-inner">
+                      {/* Thinking Indicator */}
+                      {isThinking && (
+                        <div className="flex items-center gap-2 mb-3 text-purple-600">
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                          </div>
+                          <span className="text-sm font-medium animate-pulse">
+                            {language === 'es' ? 'Pensando...' : language === 'zh' ? '思考中...' : 'Thinking...'}
+                          </span>
+                        </div>
+                      )}
+                      {/* Streaming or Final Content */}
+                      {isStreaming && streamingText ? (
+                        <div className="prose prose-sm prose-purple max-w-none">
+                          {renderMarkdown(streamingText)}
+                          <span className="inline-block w-2 h-4 bg-purple-500 animate-pulse ml-0.5" />
+                        </div>
+                      ) : aiSummary ? (
+                        <div className="prose prose-sm prose-purple max-w-none">
+                          {renderMarkdown(aiSummary)}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="bg-white/60 rounded-xl p-6 border border-purple-100 mb-4 text-center">
+                      <Sparkles className="h-8 w-8 text-purple-300 mx-auto mb-2" />
+                      <p className="text-sm text-purple-600/70">
+                        {language === 'es' ? 'Haz clic en el botón para generar un resumen con IA' :
+                         language === 'zh' ? '点击按钮生成AI摘要' :
+                         'Click the button to generate an AI summary'}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Quick Questions */}
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-purple-700 mb-2">
+                      {language === 'es' ? 'Preguntas rápidas:' : language === 'zh' ? '快速提问：' : 'Quick questions:'}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {Object.entries(t.quickQuestions).map(([key, question]) => (
+                        <button
+                          key={key}
+                          onClick={() => handleGenerateSummary(question)}
+                          disabled={isGeneratingSummary}
+                          className="rounded-full bg-white border border-purple-200 px-3 py-1.5 text-xs font-medium text-purple-700 shadow-sm transition-all hover:bg-purple-50 hover:border-purple-300 hover:shadow active:scale-95 disabled:opacity-50"
+                        >
+                          {question}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Custom Question Input */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={aiQuestion}
+                      onChange={(e) => setAiQuestion(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && aiQuestion.trim() && !isGeneratingSummary) {
+                          handleGenerateSummary(aiQuestion.trim());
+                        }
+                      }}
+                      placeholder={t.aiQuestionPlaceholder}
+                      className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-2.5 text-sm text-[#2D363F] placeholder:text-purple-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 shadow-sm"
+                    />
+                    <button
+                      onClick={() => aiQuestion.trim() && handleGenerateSummary(aiQuestion.trim())}
+                      disabled={isGeneratingSummary || !aiQuestion.trim()}
+                      className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2.5 text-white text-sm font-medium shadow-md transition-all hover:from-purple-700 hover:to-indigo-700 hover:shadow-lg active:scale-95 disabled:opacity-50"
+                    >
+                      {isGeneratingSummary ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <MessageSquare className="h-4 w-4" />
+                      )}
+                      {t.aiAsk}
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Admin/Internal Notes - visible to GM, admin, purchase_admin */}
               {selectedApproval.admin_notes && (
                 <div className="rounded-lg bg-[#5C2F0E]/5 p-4 border border-[#5C2F0E]/20">
@@ -1071,33 +1505,6 @@ export default function ApprovalsPage() {
               {/* Decision Section */}
               {selectedApproval.status === 'pending' && canApprove && (
                 <div className="rounded-lg bg-[#FAFBFA] p-4 md:p-6 border border-[#ABC0B9]">
-                  {/* AI Summary Button */}
-                  <div className="mb-4">
-                    <button
-                      onClick={handleGenerateSummary}
-                      disabled={isGeneratingSummary}
-                      className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2.5 text-white text-sm font-medium shadow-sm transition-all hover:from-purple-700 hover:to-indigo-700 active:scale-95 disabled:opacity-70"
-                    >
-                      {isGeneratingSummary ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Sparkles className="h-4 w-4" />
-                      )}
-                      {isGeneratingSummary ? t.generatingSummary : t.generateSummary}
-                    </button>
-                  </div>
-
-                  {/* AI Summary Result */}
-                  {aiSummary && (
-                    <div className="mb-4 rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 p-4 border border-purple-200">
-                      <h4 className="text-sm font-semibold text-purple-800 mb-2 flex items-center gap-2">
-                        <Sparkles className="h-4 w-4" />
-                        {t.aiSummary}
-                      </h4>
-                      <p className="text-sm text-[#2D363F] whitespace-pre-wrap">{aiSummary}</p>
-                    </div>
-                  )}
-
                   <h3 className="text-lg text-[#2D363F] mb-4 font-semibold">{t.addComment}</h3>
 
                   <textarea

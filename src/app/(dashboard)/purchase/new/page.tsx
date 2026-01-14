@@ -171,7 +171,7 @@ export default function NewPurchaseRequestPage() {
   const text = {
     en: {
       title: 'New Purchase Request',
-      subtitle: 'Submit products for approval',
+      subtitle: 'Non production',
       // Selection screen
       selectSourceTitle: 'What type of products do you want to request?',
       catalogOption: 'From Internal Catalog',
@@ -249,7 +249,7 @@ export default function NewPurchaseRequestPage() {
     },
     zh: {
       title: '新建采购请求',
-      subtitle: '提交产品以待批准',
+      subtitle: '非生产环境',
       selectSourceTitle: '您想请求什么类型的产品？',
       catalogOption: '从内部目录',
       catalogOptionDesc: '从公司目录中选择具有验证价格和库存的产品',
@@ -324,7 +324,7 @@ export default function NewPurchaseRequestPage() {
     },
     es: {
       title: 'Nueva Solicitud de Compra',
-      subtitle: 'Enviar productos para aprobacion',
+      subtitle: 'Non production',
       selectSourceTitle: 'Que tipo de productos deseas solicitar?',
       catalogOption: 'Del Catalogo Interno',
       catalogOptionDesc: 'Selecciona productos del catalogo de la empresa con precios y stock verificados',

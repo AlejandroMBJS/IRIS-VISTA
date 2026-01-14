@@ -894,6 +894,8 @@ export interface GenerateSummaryRequest {
   items: SummaryItem[];
   justification: string;
   language: string;
+  question?: string;
+  previousSummary?: string;
 }
 
 export interface GenerateSummaryResponse {

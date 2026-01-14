@@ -11,12 +11,16 @@ services:
     environment:
       - PORT=8087
       - ENVIRONMENT=development
-      - CORS_ORIGIN=http://localhost:3007
+      - CORS_ORIGIN=http://localhost:3007,http://192.168.32.206:3007
       - DATABASE_PATH=/app/data/vista.db
       - JWT_SECRET=${JWT_SECRET:-your-super-secret-key-change-in-production}
       - JWT_ACCESS_EXPIRY=15
       - JWT_REFRESH_EXPIRY=10080
       - ENCRYPTION_KEY=${ENCRYPTION_KEY:-32-byte-long-key-for-aes256!!!!!}
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=deepseek-r1:14b
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./data:/app/data
     healthcheck:
@@ -31,11 +35,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      args:
+        - BACKEND_URL=http://backend:8087
     container_name: iris-vista-frontend
     ports:
       - "3007:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8087/api/v1
       - BACKEND_URL=http://backend:8087
     depends_on:
       backend:

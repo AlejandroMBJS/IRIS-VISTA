@@ -8,10 +8,10 @@ import {
   ExternalLink,
   ClipboardList,
   CheckSquare,
+  Truck,
+  Package,
   Settings,
-  MoreHorizontal,
 } from 'lucide-react';
-import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -19,28 +19,12 @@ interface NavItem {
   icon: React.ElementType;
   labelKey: string;
   href: string;
-  roles?: string[];
 }
-
-// Primary nav items shown in bottom bar
-const primaryItems: NavItem[] = [
-  { icon: Home, labelKey: 'home', href: '/' },
-  { icon: ShoppingBag, labelKey: 'catalog', href: '/catalog' },
-  { icon: ExternalLink, labelKey: 'new', href: '/purchase/new' },
-  { icon: ClipboardList, labelKey: 'requests', href: '/requests' },
-];
-
-// Items shown in "More" menu
-const moreItems: NavItem[] = [
-  { icon: CheckSquare, labelKey: 'approvals', href: '/approvals', roles: ['general_manager', 'admin', 'purchase_admin'] },
-  { icon: Settings, labelKey: 'admin', href: '/admin', roles: ['admin'] },
-];
 
 export function MobileBottomNav() {
   const pathname = usePathname();
   const { user } = useAuth();
   const { language } = useLanguage();
-  const [showMore, setShowMore] = useState(false);
 
   const text = {
     en: {
@@ -50,8 +34,8 @@ export function MobileBottomNav() {
       requests: 'Requests',
       approvals: 'Approvals',
       orders: 'Orders',
+      inventory: 'Inventory',
       admin: 'Admin',
-      more: 'More',
     },
     zh: {
       home: '首页',
@@ -60,8 +44,8 @@ export function MobileBottomNav() {
       requests: '请求',
       approvals: '审批',
       orders: '订单',
+      inventory: '库存',
       admin: '管理',
-      more: '更多',
     },
     es: {
       home: 'Inicio',
@@ -70,8 +54,8 @@ export function MobileBottomNav() {
       requests: 'Solicitudes',
       approvals: 'Aprobaciones',
       orders: 'Órdenes',
+      inventory: 'Inventario',
       admin: 'Admin',
-      more: 'Más',
     },
   };
 
@@ -82,91 +66,59 @@ export function MobileBottomNav() {
     return pathname === href || pathname.startsWith(href + '/');
   };
 
-  const filteredMoreItems = moreItems.filter((item) => {
-    if (!item.roles) return true;
-    return user && item.roles.includes(user.role);
-  });
+  // Get 5 nav items based on user role
+  const getNavItems = (): NavItem[] => {
+    const baseItems: NavItem[] = [
+      { icon: Home, labelKey: 'home', href: '/' },
+      { icon: ShoppingBag, labelKey: 'catalog', href: '/catalog' },
+      { icon: ExternalLink, labelKey: 'new', href: '/purchase/new' },
+      { icon: ClipboardList, labelKey: 'requests', href: '/requests' },
+    ];
 
-  // Check if any "more" item is active
-  const isMoreActive = filteredMoreItems.some((item) => isActive(item.href));
+    // 5th item based on role
+    if (user?.role === 'general_manager') {
+      // GM sees Approvals as 5th item
+      baseItems.push({ icon: CheckSquare, labelKey: 'approvals', href: '/approvals' });
+    } else if (user?.role === 'admin') {
+      // Admin sees Admin settings as 5th item
+      baseItems.push({ icon: Settings, labelKey: 'admin', href: '/admin' });
+    } else if (user?.role === 'purchase_admin' || user?.role === 'supply_chain_manager') {
+      // Purchase admin and supply chain see Orders as 5th item
+      baseItems.push({ icon: Truck, labelKey: 'orders', href: '/admin/orders' });
+    } else {
+      // Regular employees see Inventory as 5th item (view only)
+      baseItems.push({ icon: Package, labelKey: 'inventory', href: '/inventory' });
+    }
+
+    return baseItems;
+  };
+
+  const navItems = getNavItems();
 
   return (
-    <>
-      {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ABC0B9]/40 bg-white/95 backdrop-blur-md lg:hidden shadow-soft">
-        <div className="flex items-center justify-around px-2 py-1 pb-[env(safe-area-inset-bottom)]">
-          {primaryItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.href);
-            const label = t[item.labelKey as keyof typeof t];
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ABC0B9]/40 bg-white/95 backdrop-blur-md lg:hidden shadow-soft">
+      <div className="flex items-center justify-around px-1 py-1 pb-[env(safe-area-inset-bottom)]">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item.href);
+          const label = t[item.labelKey as keyof typeof t];
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center gap-0.5 px-4 py-2 text-[10px] tracking-tight transition-all duration-200 active:scale-95 ${
-                  active ? 'text-[#5C2F0E]' : 'text-[#4E616F]/70'
-                }`}
-              >
-                <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-[#5C2F0E]/10' : ''}`}>
-                  <Icon className={`h-5 w-5 transition-all duration-200 ${active ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
-                </div>
-                <span className={`transition-all duration-200 ${active ? 'font-semibold' : 'font-medium'}`}>{label}</span>
-              </Link>
-            );
-          })}
-
-          {/* More button */}
-          {filteredMoreItems.length > 0 && (
-            <button
-              onClick={() => setShowMore(!showMore)}
-              className={`flex flex-col items-center gap-0.5 px-4 py-2 text-[10px] tracking-tight transition-all duration-200 active:scale-95 ${
-                isMoreActive || showMore ? 'text-[#5C2F0E]' : 'text-[#4E616F]/70'
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex flex-col items-center gap-0.5 px-2 py-2 text-[10px] tracking-tight transition-all duration-200 active:scale-95 min-w-0 flex-1 ${
+                active ? 'text-[#5C2F0E]' : 'text-[#4E616F]/70'
               }`}
             >
-              <div className={`p-1.5 rounded-xl transition-all duration-200 ${isMoreActive ? 'bg-[#5C2F0E]/10' : ''}`}>
-                <MoreHorizontal className={`h-5 w-5 transition-all duration-200 ${isMoreActive ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+              <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-[#5C2F0E]/10' : ''}`}>
+                <Icon className={`h-5 w-5 transition-all duration-200 ${active ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
               </div>
-              <span className={`transition-all duration-200 ${isMoreActive ? 'font-semibold' : 'font-medium'}`}>{t.more}</span>
-            </button>
-          )}
-        </div>
-      </nav>
-
-      {/* More Menu Overlay */}
-      {showMore && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden animate-fade-in"
-            onClick={() => setShowMore(false)}
-          />
-          <div className="fixed bottom-[72px] left-4 right-4 z-50 rounded-2xl bg-white p-5 shadow-modal lg:hidden animate-slide-up">
-            <div className="grid grid-cols-4 gap-3">
-              {filteredMoreItems.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.href);
-                const label = t[item.labelKey as keyof typeof t];
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setShowMore(false)}
-                    className={`flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-200 active:scale-95 ${
-                      active
-                        ? 'bg-gradient-to-br from-[#5C2F0E]/10 to-[#2D363F]/10 text-[#5C2F0E]'
-                        : 'text-[#4E616F] hover:bg-[#FAFBFA]'
-                    }`}
-                  >
-                    <Icon className={`h-6 w-6 ${active ? 'stroke-[2px]' : ''}`} />
-                    <span className={`text-xs tracking-tight ${active ? 'font-semibold' : 'font-medium'}`}>{label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </>
-      )}
-    </>
+              <span className={`transition-all duration-200 truncate ${active ? 'font-semibold' : 'font-medium'}`}>{label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }

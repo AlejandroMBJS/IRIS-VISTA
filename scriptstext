@@ -1,4 +1,8 @@
- Option 1: Remove all requests only (keep users)
+========================================
+  IRIS VISTA - Database Reset Scripts
+========================================
+
+  Option 1: Remove all requests only (keep users & products)
   docker exec -it <container_name> sqlite3 /app/data/vista.db "
   DELETE FROM request_histories;
   DELETE FROM purchase_request_items;
@@ -6,6 +10,42 @@
   DELETE FROM cart_items;
   DELETE FROM notifications;
   DELETE FROM activity_logs;
+  "
+
+  Option 1.1: Remove notifications only
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM notifications;
+  "
+
+  Option 1.2: Remove cart items only
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM cart_items;
+  "
+
+  Option 1.3: Remove activity logs only
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM activity_logs;
+  "
+
+  Option 1.4: Remove audit logs only
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM audit_logs;
+  "
+
+  Option 1.5: Remove inventory/catalog products only
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM product_images;
+  DELETE FROM products;
+  "
+
+  Option 1.6: Reset delivered orders back to purchased
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  UPDATE purchase_requests SET status = 'purchased' WHERE status = 'delivered';
+  "
+
+  Option 1.7: Remove users only (except admin)
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  DELETE FROM users WHERE employee_number != 'admin';
   "
 
   Option 2: Reset everything but keep admin user
@@ -17,6 +57,8 @@
   DELETE FROM notifications;
   DELETE FROM activity_logs;
   DELETE FROM audit_logs;
+  DELETE FROM product_images;
+  DELETE FROM products;
   DELETE FROM users WHERE employee_number != 'admin';
   "
 
@@ -29,8 +71,26 @@
   DELETE FROM notifications;
   DELETE FROM activity_logs;
   DELETE FROM audit_logs;
-  DELETE FROM users;
-  DELETE FROM products;
   DELETE FROM product_images;
+  DELETE FROM products;
+  DELETE FROM users;
   "
+
+========================================
+  Utility Commands
+========================================
+
+  View all tables:
+  docker exec -it <container_name> sqlite3 /app/data/vista.db ".tables"
+
+  Count rows in each table:
+  docker exec -it <container_name> sqlite3 /app/data/vista.db "
+  SELECT 'users' as tbl, COUNT(*) as cnt FROM users
+  UNION SELECT 'products', COUNT(*) FROM products
+  UNION SELECT 'purchase_requests', COUNT(*) FROM purchase_requests
+  UNION SELECT 'notifications', COUNT(*) FROM notifications;
+  "
+
+  View table schema:
+  docker exec -it <container_name> sqlite3 /app/data/vista.db ".schema <table_name>"
 

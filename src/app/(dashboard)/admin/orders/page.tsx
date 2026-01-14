@@ -33,7 +33,7 @@ import { adminApi, amazonConfigApi, type AmazonConfig } from '@/lib/api';
 import type { PurchaseRequest, PurchaseRequestItem } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-type FilterType = 'all' | 'amazon_cart' | 'pending_manual' | 'purchased' | 'delivered' | 'cancelled';
+type FilterType = 'amazon_cart' | 'pending_manual' | 'purchased' | 'delivered' | 'cancelled';
 
 // Get display number - PO number if available (for approved orders), otherwise request number
 const getDisplayNumber = (request: PurchaseRequest): string => {
@@ -72,7 +72,7 @@ export default function ApprovedOrdersPage() {
 
   const text = {
     en: {
-      title: 'Approved Orders',
+      title: 'Orders',
       subtitle: 'Manage approved purchase requests',
       all: 'All',
       pendingPurchase: 'Pending',
@@ -128,7 +128,7 @@ export default function ApprovedOrdersPage() {
       amazonDisabled: 'Amazon integration disabled - open URLs manually',
     },
     zh: {
-      title: '已批准订单',
+      title: '订单',
       subtitle: '管理已批准的采购请求',
       all: '全部',
       pendingPurchase: '待购买',
@@ -184,7 +184,7 @@ export default function ApprovedOrdersPage() {
       amazonDisabled: 'Amazon集成已禁用 - 请手动打开链接',
     },
     es: {
-      title: 'Pedidos Aprobados',
+      title: 'Órdenes',
       subtitle: 'Gestionar solicitudes de compra aprobadas',
       all: 'Todos',
       pendingPurchase: 'Pendientes',
@@ -242,24 +242,12 @@ export default function ApprovedOrdersPage() {
   };
 
   const t = text[language];
-  type ApiFilterType = 'all' | 'amazon_cart' | 'pending_manual' | 'purchased';
-
-  const applyLocalFilter = (data: PurchaseRequest[], f: FilterType) => {
-    if (f === 'delivered') return data.filter(o => o.status === 'delivered');
-    if (f === 'cancelled') return data.filter(o => o.status === 'cancelled');
-    return data;
-  };
-
 
   const fetchOrders = async () => {
     setIsLoading(true);
     try {
-      const apiFilter: ApiFilterType =
-        filter === 'delivered' || filter === 'cancelled' ? 'all' : filter;
-
-      const response = await adminApi.getApprovedOrders({ filter: apiFilter });
-      const data = response.data || [];
-      setOrders(applyLocalFilter(data, filter));
+      const response = await adminApi.getApprovedOrders({ filter });
+      setOrders(response.data || []);
     } catch (error) {
       console.error('Failed to fetch orders:', error);
     } finally {
@@ -511,7 +499,6 @@ export default function ApprovedOrdersPage() {
     { key: 'purchased', label: t.purchased },
     { key: 'delivered', label: t.delivered },
     { key: 'cancelled', label: t.cancelled },
-    { key: 'all', label: t.all },
   ];
 
   // Count orders by status
@@ -562,7 +549,7 @@ export default function ApprovedOrdersPage() {
           {/* Stats and Filters */}
           <div className="mb-6">
             {/* Stats Cards */}
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-6">
+            <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mb-6">
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
                   <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
@@ -591,12 +578,6 @@ export default function ApprovedOrdersPage() {
                 <CardContent className="p-4 text-center">
                   <p className="text-3xl font-bold text-red-600">{cancelledCount}</p>
                   <p className="text-sm text-gray-600">{t.cancelled}</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white">
-                <CardContent className="p-4 text-center">
-                  <p className="text-3xl font-bold text-[#75534B]">{orders.length}</p>
-                  <p className="text-sm text-gray-600">{t.all}</p>
                 </CardContent>
               </Card>
             </div>

@@ -64,6 +64,7 @@ func main() {
 	uploadHandler := handlers.NewUploadHandler()
 	cartHandler := handlers.NewCartHandler(db, metadataService)
 	activityLogHandler := handlers.NewActivityLogHandler(db)
+	aiSummaryHandler := handlers.NewAISummaryHandler()
 
 	// Setup router
 	router := gin.Default()
@@ -193,6 +194,14 @@ func main() {
 			approvalsAction.POST("/:id/approve", approvalHandler.ApproveRequest)
 			approvalsAction.POST("/:id/reject", approvalHandler.RejectRequest)
 			approvalsAction.POST("/:id/request-info", approvalHandler.RequestInfo)
+		}
+
+		// AI Summary route (GM can generate summaries)
+		aiRoutes := v1.Group("/ai")
+		aiRoutes.Use(middleware.Auth(jwtService))
+		aiRoutes.Use(middleware.RequireCanViewApprovals())
+		{
+			aiRoutes.POST("/generate-summary", aiSummaryHandler.GenerateSummary)
 		}
 
 		// Admin routes - System administration (Admin only)

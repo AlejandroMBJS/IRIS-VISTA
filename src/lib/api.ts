@@ -881,6 +881,33 @@ export interface ActivityLogsFilters {
   search?: string;
 }
 
+// AI Summary API
+export interface SummaryItem {
+  title: string;
+  description: string;
+  price: number;
+  currency: string;
+  quantity: number;
+}
+
+export interface GenerateSummaryRequest {
+  items: SummaryItem[];
+  justification: string;
+  language: string;
+}
+
+export interface GenerateSummaryResponse {
+  summary: string;
+  model: string;
+}
+
+export const aiApi = {
+  generateSummary: async (data: GenerateSummaryRequest): Promise<GenerateSummaryResponse> => {
+    const response = await api.post<ApiResponse<GenerateSummaryResponse>>('/ai/generate-summary', data);
+    return response.data.data!;
+  },
+};
+
 // Activity Logs API
 export const activityLogsApi = {
   getLogs: async (filters: ActivityLogsFilters = {}): Promise<ActivityLogsResponse> => {

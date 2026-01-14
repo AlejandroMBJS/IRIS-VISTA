@@ -22,10 +22,11 @@ import {
   RefreshCw,
   Search,
   Filter,
+  Sparkles,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { approvalsApi } from '@/lib/api';
+import { approvalsApi, aiApi } from '@/lib/api';
 import { getTranslatedText } from '@/lib/translations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -55,6 +56,8 @@ export default function ApprovalsPage() {
   const [selectedApproval, setSelectedApproval] = useState<PurchaseRequest | null>(null);
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [aiSummary, setAiSummary] = useState('');
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [showMyActions, setShowMyActions] = useState(false);
@@ -127,6 +130,10 @@ export default function ApprovalsPage() {
       cancel: 'Cancel',
       confirm: 'Confirm',
       ago: 'ago',
+      generateSummary: 'Generate AI Summary',
+      generatingSummary: 'Generating...',
+      aiSummary: 'AI Summary',
+      aiSummaryError: 'Failed to generate summary. Make sure Ollama is running.',
       statuses: {
         pending: 'Pending',
         approved: 'Approved',
@@ -201,6 +208,10 @@ export default function ApprovalsPage() {
       cancel: '取消',
       confirm: '确认',
       ago: '前',
+      generateSummary: '生成AI摘要',
+      generatingSummary: '生成中...',
+      aiSummary: 'AI摘要',
+      aiSummaryError: '生成摘要失败。请确保Ollama正在运行。',
       statuses: {
         pending: '待审批',
         approved: '已批准',
@@ -275,6 +286,10 @@ export default function ApprovalsPage() {
       cancel: 'Cancelar',
       confirm: 'Confirmar',
       ago: 'hace',
+      generateSummary: 'Generar Resumen IA',
+      generatingSummary: 'Generando...',
+      aiSummary: 'Resumen IA',
+      aiSummaryError: 'Error al generar resumen. Asegúrate de que Ollama esté corriendo.',
       statuses: {
         pending: 'Pendiente',
         approved: 'Aprobado',
@@ -396,6 +411,36 @@ export default function ApprovalsPage() {
       alert('Failed to request info');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleGenerateSummary = async () => {
+    if (!selectedApproval) return;
+
+    setIsGeneratingSummary(true);
+    setAiSummary('');
+
+    try {
+      const items = getProductItems(selectedApproval).map(item => ({
+        title: getTranslatedText(item.product_title_translated, item.product_title, language),
+        description: getTranslatedText(item.product_description_translated, item.product_description || '', language),
+        price: item.estimated_price || 0,
+        currency: item.currency || selectedApproval.currency || 'MXN',
+        quantity: item.quantity,
+      }));
+
+      const response = await aiApi.generateSummary({
+        items,
+        justification: getTranslatedText(selectedApproval.justification_translated, selectedApproval.justification || '', language),
+        language,
+      });
+
+      setAiSummary(response.summary);
+    } catch (error) {
+      console.error('Failed to generate summary:', error);
+      alert(t.aiSummaryError);
+    } finally {
+      setIsGeneratingSummary(false);
     }
   };
 
@@ -786,6 +831,7 @@ export default function ApprovalsPage() {
                 onClick={() => {
                   setSelectedApproval(null);
                   setComment('');
+                  setAiSummary('');
                 }}
                 className="text-white hover:text-white/80 p-2"
               >
@@ -1025,6 +1071,33 @@ export default function ApprovalsPage() {
               {/* Decision Section */}
               {selectedApproval.status === 'pending' && canApprove && (
                 <div className="rounded-lg bg-[#FAFBFA] p-4 md:p-6 border border-[#ABC0B9]">
+                  {/* AI Summary Button */}
+                  <div className="mb-4">
+                    <button
+                      onClick={handleGenerateSummary}
+                      disabled={isGeneratingSummary}
+                      className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2.5 text-white text-sm font-medium shadow-sm transition-all hover:from-purple-700 hover:to-indigo-700 active:scale-95 disabled:opacity-70"
+                    >
+                      {isGeneratingSummary ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Sparkles className="h-4 w-4" />
+                      )}
+                      {isGeneratingSummary ? t.generatingSummary : t.generateSummary}
+                    </button>
+                  </div>
+
+                  {/* AI Summary Result */}
+                  {aiSummary && (
+                    <div className="mb-4 rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 p-4 border border-purple-200">
+                      <h4 className="text-sm font-semibold text-purple-800 mb-2 flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" />
+                        {t.aiSummary}
+                      </h4>
+                      <p className="text-sm text-[#2D363F] whitespace-pre-wrap">{aiSummary}</p>
+                    </div>
+                  )}
+
                   <h3 className="text-lg text-[#2D363F] mb-4 font-semibold">{t.addComment}</h3>
 
                   <textarea

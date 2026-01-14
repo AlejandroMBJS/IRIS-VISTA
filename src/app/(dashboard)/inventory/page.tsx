@@ -568,10 +568,63 @@ export default function InventoryPage() {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setCsvText(event.target?.result as string || '');
+        let content = event.target?.result as string || '';
+        // Remove BOM if present
+        if (content.charCodeAt(0) === 0xFEFF) {
+          content = content.slice(1);
+        }
+        setCsvText(content);
       };
-      reader.readAsText(file);
+      reader.readAsText(file, 'UTF-8');
     }
+  };
+
+  // Parse a single CSV line handling quoted fields, escaped quotes, and commas within quotes
+  const parseCSVLine = (line: string): string[] => {
+    const values: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    let i = 0;
+
+    while (i < line.length) {
+      const char = line[i];
+
+      if (inQuotes) {
+        if (char === '"') {
+          // Check for escaped quote ("")
+          if (i + 1 < line.length && line[i + 1] === '"') {
+            current += '"';
+            i += 2;
+            continue;
+          } else {
+            // End of quoted field
+            inQuotes = false;
+            i++;
+            continue;
+          }
+        } else {
+          current += char;
+          i++;
+        }
+      } else {
+        if (char === '"') {
+          // Start of quoted field
+          inQuotes = true;
+          i++;
+        } else if (char === ',') {
+          values.push(current.trim());
+          current = '';
+          i++;
+        } else {
+          current += char;
+          i++;
+        }
+      }
+    }
+
+    // Push the last field
+    values.push(current.trim());
+    return values;
   };
 
   const handleImport = async () => {
@@ -581,7 +634,14 @@ export default function InventoryPage() {
     setImportResults(null);
 
     try {
-      const lines = csvText.trim().split('\n');
+      // Normalize line endings and remove BOM
+      let content = csvText;
+      if (content.charCodeAt(0) === 0xFEFF) {
+        content = content.slice(1);
+      }
+      content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+      const lines = content.trim().split('\n');
       if (lines.length < 2) {
         setError('CSV must have a header row and at least one data row');
         setImporting(false);
@@ -615,24 +675,10 @@ export default function InventoryPage() {
         const line = lines[i].trim();
         if (!line) continue;
 
-        // Parse CSV line (handle quoted fields)
-        const values: string[] = [];
-        let current = '';
-        let inQuotes = false;
-        for (let j = 0; j < line.length; j++) {
-          const char = line[j];
-          if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if (char === ',' && !inQuotes) {
-            values.push(current.trim());
-            current = '';
-          } else {
-            current += char;
-          }
-        }
-        values.push(current.trim());
+        // Parse CSV line using robust parser
+        const values = parseCSVLine(line);
 
-        if (values.length >= 3) {
+        if (values.length >= 3 && values[0] && values[1]) {
           products.push({
             sku: values[0] || '',
             name: values[1] || '',

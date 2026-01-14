@@ -347,7 +347,7 @@ export default function HomePage() {
         {/* Stats Cards - Overlapping Header */}
         <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-3.5 md:gap-4">
               <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
@@ -529,7 +529,7 @@ export default function HomePage() {
         {/* Stats Cards - Overlapping Header */}
         <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-3.5 md:gap-4">
               <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
@@ -726,7 +726,7 @@ export default function HomePage() {
         {/* Stats Cards - Overlapping Header */}
         <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-3.5 md:gap-4">
               <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
@@ -914,7 +914,7 @@ export default function HomePage() {
       {/* Stats Cards */}
       <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-3.5 md:gap-4">
             <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">

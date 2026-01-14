@@ -297,7 +297,7 @@ export default function AnalyticsPage() {
       {/* Stats Cards - Overlapping Header */}
       <section className="px-4 md:px-8 -mt-10 md:-mt-12 relative z-10">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-3.5 md:gap-4">
             {/* Total Requests */}
             <div className="bg-white rounded-2xl p-4 md:p-5 border border-[#ABC0B9] shadow-md">
               <div className="flex items-center justify-between mb-3">

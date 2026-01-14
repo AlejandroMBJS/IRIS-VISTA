@@ -552,7 +552,7 @@ export default function ApprovedOrdersPage() {
           {/* Stats and Filters */}
           <div className="mb-6">
             {/* Stats Cards */}
-            <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 mb-6">
               <Card className="bg-white">
                 <CardContent className="p-4 text-center">
                   <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>

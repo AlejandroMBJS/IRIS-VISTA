@@ -318,7 +318,7 @@ export function Header() {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 sm:right-0 top-12 w-[calc(100vw-1.5rem)] sm:w-80 max-w-80 rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
+              <div className="absolute right-0 top-12 w-80 max-w-[calc(100vw-2rem)] rounded-xl bg-white shadow-lg border border-[#ABC0B9] overflow-hidden z-50">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-[#ABC0B9] bg-[#FAFBFA]">
                   <span className="text-sm font-semibold text-[#2D363F]">{t.notifications}</span>
                   {unreadCount > 0 && (

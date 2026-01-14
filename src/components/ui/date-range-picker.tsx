@@ -36,6 +36,7 @@ const texts = {
     thisMonth: "This month",
     lastMonth: "Last month",
     clear: "Clear",
+    apply: "Apply",
   },
   zh: {
     placeholder: "选择日期范围",
@@ -46,6 +47,7 @@ const texts = {
     thisMonth: "本月",
     lastMonth: "上月",
     clear: "清除",
+    apply: "应用",
   },
   es: {
     placeholder: "Seleccionar rango de fechas",
@@ -56,6 +58,7 @@ const texts = {
     thisMonth: "Este mes",
     lastMonth: "Mes anterior",
     clear: "Limpiar",
+    apply: "Aplicar",
   },
 };
 
@@ -68,8 +71,14 @@ export function DateRangePicker({
   align = "start",
 }: DateRangePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [internalRange, setInternalRange] = React.useState<DateRange | undefined>(dateRange);
   const t = texts[language];
   const locale = localeMap[language];
+
+  // Sync internal state when external dateRange changes
+  React.useEffect(() => {
+    setInternalRange(dateRange);
+  }, [dateRange]);
 
   const formatDate = (date: Date) => {
     return format(date, "d MMM yyyy", { locale });
@@ -106,12 +115,41 @@ export function DateRangePicker({
 
   const handlePresetClick = (preset: { from: Date; to: Date }) => {
     onDateRangeChange(preset);
+    setInternalRange(preset);
     setIsOpen(false);
   };
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDateRangeChange(undefined);
+    setInternalRange(undefined);
+  };
+
+  const handleCalendarSelect = (range: DateRange | undefined) => {
+    setInternalRange(range);
+    // Auto-apply if both dates are selected
+    if (range?.from && range?.to) {
+      onDateRangeChange(range);
+      setIsOpen(false);
+    }
+  };
+
+  const handleApply = () => {
+    if (internalRange?.from) {
+      // If only one date selected, use it for both from and to
+      const finalRange = {
+        from: internalRange.from,
+        to: internalRange.to || internalRange.from,
+      };
+      onDateRangeChange(finalRange);
+      setIsOpen(false);
+    }
+  };
+
+  const handleClearInternal = () => {
+    setInternalRange(undefined);
+    onDateRangeChange(undefined);
+    setIsOpen(false);
   };
 
   return (
@@ -152,22 +190,29 @@ export function DateRangePicker({
             {presets.map((preset, index) => (
               <Button
                 key={index}
+                type="button"
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start text-sm"
-                onClick={() => handlePresetClick(preset.range)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handlePresetClick(preset.range);
+                }}
               >
                 {preset.label}
               </Button>
             ))}
             <hr className="my-2" />
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               className="w-full justify-start text-sm text-muted-foreground"
-              onClick={() => {
-                onDateRangeChange(undefined);
-                setIsOpen(false);
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleClearInternal();
               }}
             >
               {t.clear}
@@ -179,27 +224,53 @@ export function DateRangePicker({
             <Calendar
               initialFocus
               mode="range"
-              defaultMonth={dateRange?.from}
-              selected={dateRange}
-              onSelect={onDateRangeChange}
+              defaultMonth={internalRange?.from || dateRange?.from}
+              selected={internalRange}
+              onSelect={handleCalendarSelect}
               numberOfMonths={2}
               locale={locale}
               className="rounded-md"
             />
 
-            {/* Mobile presets */}
-            <div className="flex flex-wrap gap-1 mt-3 sm:hidden">
-              {presets.slice(0, 4).map((preset, index) => (
+            {/* Action buttons */}
+            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-border">
+              {/* Mobile presets */}
+              <div className="flex flex-wrap gap-1 sm:hidden">
+                {presets.slice(0, 3).map((preset, index) => (
+                  <Button
+                    key={index}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                    onClick={() => handlePresetClick(preset.range)}
+                  >
+                    {preset.label}
+                  </Button>
+                ))}
+              </div>
+
+              {/* Apply/Clear buttons */}
+              <div className="flex gap-2 ml-auto">
                 <Button
-                  key={index}
+                  type="button"
                   variant="outline"
                   size="sm"
-                  className="text-xs"
-                  onClick={() => handlePresetClick(preset.range)}
+                  onClick={handleClearInternal}
+                  className="text-muted-foreground"
                 >
-                  {preset.label}
+                  {t.clear}
                 </Button>
-              ))}
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleApply}
+                  disabled={!internalRange?.from}
+                  className="bg-[#5C2F0E] hover:bg-[#5C2F0E]/90"
+                >
+                  {t.apply}
+                </Button>
+              </div>
             </div>
           </div>
         </div>

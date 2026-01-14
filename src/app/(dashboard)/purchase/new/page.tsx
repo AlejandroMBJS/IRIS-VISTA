@@ -122,6 +122,7 @@ export default function NewPurchaseRequestPage() {
   const [catalogSearch, setCatalogSearch] = useState('');
   const [catalogCategory, setCatalogCategory] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
+  const [modalQuantities, setModalQuantities] = useState<Record<number, number>>({});
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -246,6 +247,8 @@ export default function NewPurchaseRequestPage() {
       noProductsFound: 'No products found',
       close: 'Close',
       stock: 'Stock',
+      addSelected: 'Add Selected',
+      itemsSelected: 'items selected',
     },
     zh: {
       title: '新建采购请求',
@@ -321,6 +324,8 @@ export default function NewPurchaseRequestPage() {
       noProductsFound: '未找到产品',
       close: '关闭',
       stock: '库存',
+      addSelected: '添加所选',
+      itemsSelected: '件已选',
     },
     es: {
       title: 'Nueva Solicitud de Compra',
@@ -396,6 +401,8 @@ export default function NewPurchaseRequestPage() {
       noProductsFound: 'No se encontraron productos',
       close: 'Cerrar',
       stock: 'Stock',
+      addSelected: 'Agregar Seleccionados',
+      itemsSelected: 'items seleccionados',
     },
   };
 
@@ -543,7 +550,56 @@ export default function NewPurchaseRequestPage() {
     setView('form');
   };
 
-  // Add catalog product
+  // Modal quantity helpers
+  const getModalQuantity = (productId: number) => modalQuantities[productId] || 0;
+
+  const updateModalQuantity = (productId: number, delta: number) => {
+    setModalQuantities(prev => {
+      const current = prev[productId] || 0;
+      const newQty = Math.max(0, current + delta);
+      if (newQty === 0) {
+        const { [productId]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [productId]: newQty };
+    });
+  };
+
+  const setModalQuantityDirect = (productId: number, qty: number) => {
+    setModalQuantities(prev => {
+      if (qty <= 0) {
+        const { [productId]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [productId]: qty };
+    });
+  };
+
+  // Add catalog products from modal (with quantities)
+  const addCatalogProductsFromModal = () => {
+    Object.entries(modalQuantities).forEach(([productIdStr, quantity]) => {
+      const productId = parseInt(productIdStr);
+      const product = catalogProducts.find(p => p.id === productId);
+      if (!product || quantity <= 0) return;
+
+      // Check if product is already in the list
+      const existingIndex = products.findIndex(p => p.source === 'catalog' && p.catalogProduct?.id === productId);
+      if (existingIndex >= 0) {
+        // Update quantity
+        setProducts(prev => prev.map((p, i) =>
+          i === existingIndex ? { ...p, quantity: p.quantity + quantity } : p
+        ));
+      } else {
+        // Add new product with quantity
+        const newProduct = createCatalogProduct(product);
+        newProduct.quantity = quantity;
+        setProducts(prev => [...prev, newProduct]);
+      }
+    });
+    setModalQuantities({});
+  };
+
+  // Add catalog product (single click - for backwards compatibility)
   const addCatalogProductToRequest = (product: Product) => {
     // Check if product is already in the list
     const exists = products.some(p => p.source === 'catalog' && p.catalogProduct?.id === product.id);
@@ -749,6 +805,7 @@ export default function NewPurchaseRequestPage() {
 
   const openCatalogModal = () => {
     loadCatalog();
+    setModalQuantities({});
     setShowCatalogModal(true);
   };
 
@@ -965,13 +1022,15 @@ export default function NewPurchaseRequestPage() {
                     {filteredCatalogProducts.map(product => {
                       const isAdded = products.some(p => p.source === 'catalog' && p.catalogProduct?.id === product.id);
                       const isOutOfStock = product.stock <= 0;
+                      const modalQty = getModalQuantity(product.id);
+                      const hasQty = modalQty > 0;
 
                       return (
                         <div
                           key={product.id}
-                          className={`bg-[#FAFBFA] rounded-lg p-4 border ${isAdded ? 'border-[#5C2F0E]' : 'border-transparent'}`}
+                          className={`bg-[#FAFBFA] rounded-lg p-4 border transition-all ${hasQty || isAdded ? 'border-[#5C2F0E] ring-1 ring-[#5C2F0E]/20' : 'border-transparent'}`}
                         >
-                          <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden">
+                          <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden relative">
                             {product.image_url ? (
                               <img
                                 src={product.image_url}
@@ -982,6 +1041,11 @@ export default function NewPurchaseRequestPage() {
                               <span className="text-4xl">{product.image_emoji}</span>
                             ) : (
                               <Package className="h-8 w-8 text-[#80959A]" />
+                            )}
+                            {hasQty && (
+                              <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#5C2F0E] text-white rounded-full flex items-center justify-center text-xs font-bold">
+                                {modalQty}
+                              </div>
                             )}
                           </div>
                           <h4 className="font-medium text-[#2D363F] text-sm line-clamp-2 mb-1">
@@ -995,25 +1059,42 @@ export default function NewPurchaseRequestPage() {
                             <span className="font-bold text-[#5C2F0E]">
                               ${formatPrice(product.price)}
                             </span>
-                            <button
-                              onClick={() => addCatalogProductToRequest(product)}
-                              disabled={isOutOfStock}
-                              className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
-                                isAdded
-                                  ? 'bg-[#5C2F0E] text-white'
-                                  : isOutOfStock
-                                  ? 'bg-[#ABC0B9]/20 text-[#80959A] cursor-not-allowed'
-                                  : 'bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20'
-                              }`}
-                            >
-                              {isAdded ? (
-                                <CheckCircle className="h-4 w-4" />
-                              ) : isOutOfStock ? (
-                                t.outOfStock
-                              ) : (
+                            {isOutOfStock ? (
+                              <span className="text-xs text-[#80959A] px-3 py-1.5">
+                                {t.outOfStock}
+                              </span>
+                            ) : hasQty ? (
+                              <div className="flex items-center gap-1 bg-white border border-[#ABC0B9] rounded-lg">
+                                <button
+                                  onClick={() => updateModalQuantity(product.id, -1)}
+                                  className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-l-lg transition-colors"
+                                >
+                                  <span className="w-4 h-4 flex items-center justify-center font-bold">-</span>
+                                </button>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max={product.stock}
+                                  value={modalQty}
+                                  onChange={(e) => setModalQuantityDirect(product.id, Math.min(product.stock, Math.max(0, parseInt(e.target.value) || 0)))}
+                                  className="w-10 text-center text-sm font-medium text-[#2D363F] border-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
+                                <button
+                                  onClick={() => updateModalQuantity(product.id, 1)}
+                                  disabled={modalQty >= product.stock}
+                                  className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-r-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  <span className="w-4 h-4 flex items-center justify-center font-bold">+</span>
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => updateModalQuantity(product.id, 1)}
+                                className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20"
+                              >
                                 <Plus className="h-4 w-4" />
-                              )}
-                            </button>
+                              </button>
+                            )}
                           </div>
                         </div>
                       );
@@ -1025,19 +1106,41 @@ export default function NewPurchaseRequestPage() {
               {/* Modal Footer */}
               <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[#ABC0B9] bg-[#FAFBFA] flex-shrink-0">
                 <p className="text-sm text-[#4E616F]">
-                  {products.filter(p => p.source === 'catalog').length} {t.totalProducts} {t.catalogBadge.toLowerCase()}
+                  {Object.values(modalQuantities).reduce((sum, q) => sum + q, 0) > 0 ? (
+                    <span className="font-medium text-[#5C2F0E]">
+                      {Object.values(modalQuantities).reduce((sum, q) => sum + q, 0)} {t.itemsSelected}
+                    </span>
+                  ) : (
+                    <span>{products.filter(p => p.source === 'catalog').length} {t.totalProducts} {t.catalogBadge.toLowerCase()}</span>
+                  )}
                 </p>
-                <button
-                  onClick={() => {
-                    setShowCatalogModal(false);
-                    if (products.length > 0) {
-                      setView('form');
-                    }
-                  }}
-                  className="px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#2D363F] transition-colors"
-                >
-                  {products.length > 0 ? t.close : t.close}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setShowCatalogModal(false);
+                      setModalQuantities({});
+                      if (products.length > 0) {
+                        setView('form');
+                      }
+                    }}
+                    className="px-4 py-2 rounded-lg border border-[#ABC0B9] text-[#4E616F] font-medium hover:bg-[#FAFBFA] transition-colors"
+                  >
+                    {t.close}
+                  </button>
+                  {Object.values(modalQuantities).reduce((sum, q) => sum + q, 0) > 0 && (
+                    <button
+                      onClick={() => {
+                        addCatalogProductsFromModal();
+                        setShowCatalogModal(false);
+                        setView('form');
+                      }}
+                      className="px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#2D363F] transition-colors flex items-center gap-2"
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                      {t.addSelected}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -1524,13 +1627,15 @@ export default function NewPurchaseRequestPage() {
                   {filteredCatalogProducts.map(product => {
                     const isAdded = products.some(p => p.source === 'catalog' && p.catalogProduct?.id === product.id);
                     const isOutOfStock = product.stock <= 0;
+                    const modalQty = getModalQuantity(product.id);
+                    const hasQty = modalQty > 0;
 
                     return (
                       <div
                         key={product.id}
-                        className={`bg-[#FAFBFA] rounded-lg p-4 border ${isAdded ? 'border-[#5C2F0E]' : 'border-transparent'}`}
+                        className={`bg-[#FAFBFA] rounded-lg p-4 border transition-all ${hasQty || isAdded ? 'border-[#5C2F0E] ring-1 ring-[#5C2F0E]/20' : 'border-transparent'}`}
                       >
-                        <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden">
+                        <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden relative">
                           {product.image_url ? (
                             <img
                               src={product.image_url}
@@ -1541,6 +1646,11 @@ export default function NewPurchaseRequestPage() {
                             <span className="text-4xl">{product.image_emoji}</span>
                           ) : (
                             <Package className="h-8 w-8 text-[#80959A]" />
+                          )}
+                          {hasQty && (
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#5C2F0E] text-white rounded-full flex items-center justify-center text-xs font-bold">
+                              {modalQty}
+                            </div>
                           )}
                         </div>
                         <h4 className="font-medium text-[#2D363F] text-sm line-clamp-2 mb-1">
@@ -1554,25 +1664,42 @@ export default function NewPurchaseRequestPage() {
                           <span className="font-bold text-[#5C2F0E]">
                             ${formatPrice(product.price)}
                           </span>
-                          <button
-                            onClick={() => addCatalogProductToRequest(product)}
-                            disabled={isOutOfStock}
-                            className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
-                              isAdded
-                                ? 'bg-[#5C2F0E] text-white'
-                                : isOutOfStock
-                                ? 'bg-[#ABC0B9]/20 text-[#80959A] cursor-not-allowed'
-                                : 'bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20'
-                            }`}
-                          >
-                            {isAdded ? (
-                              <CheckCircle className="h-4 w-4" />
-                            ) : isOutOfStock ? (
-                              t.outOfStock
-                            ) : (
+                          {isOutOfStock ? (
+                            <span className="text-xs text-[#80959A] px-3 py-1.5">
+                              {t.outOfStock}
+                            </span>
+                          ) : hasQty ? (
+                            <div className="flex items-center gap-1 bg-white border border-[#ABC0B9] rounded-lg">
+                              <button
+                                onClick={() => updateModalQuantity(product.id, -1)}
+                                className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-l-lg transition-colors"
+                              >
+                                <span className="w-4 h-4 flex items-center justify-center font-bold">-</span>
+                              </button>
+                              <input
+                                type="number"
+                                min="1"
+                                max={product.stock}
+                                value={modalQty}
+                                onChange={(e) => setModalQuantityDirect(product.id, Math.min(product.stock, Math.max(0, parseInt(e.target.value) || 0)))}
+                                className="w-10 text-center text-sm font-medium text-[#2D363F] border-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              />
+                              <button
+                                onClick={() => updateModalQuantity(product.id, 1)}
+                                disabled={modalQty >= product.stock}
+                                className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-r-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <span className="w-4 h-4 flex items-center justify-center font-bold">+</span>
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => updateModalQuantity(product.id, 1)}
+                              className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20"
+                            >
                               <Plus className="h-4 w-4" />
-                            )}
-                          </button>
+                            </button>
+                          )}
                         </div>
                       </div>
                     );
@@ -1584,19 +1711,37 @@ export default function NewPurchaseRequestPage() {
             {/* Modal Footer */}
             <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[#ABC0B9] bg-[#FAFBFA] flex-shrink-0">
               <p className="text-sm text-[#4E616F]">
-                {products.filter(p => p.source === 'catalog').length} {t.totalProducts} {t.catalogBadge.toLowerCase()}
+                {Object.values(modalQuantities).reduce((sum, q) => sum + q, 0) > 0 ? (
+                  <span className="font-medium text-[#5C2F0E]">
+                    {Object.values(modalQuantities).reduce((sum, q) => sum + q, 0)} {t.itemsSelected}
+                  </span>
+                ) : (
+                  <span>{products.filter(p => p.source === 'catalog').length} {t.totalProducts} {t.catalogBadge.toLowerCase()}</span>
+                )}
               </p>
-              <button
-                onClick={() => {
-                  setShowCatalogModal(false);
-                  if (products.length > 0) {
-                    setView('form');
-                  }
-                }}
-                className="px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#2D363F] transition-colors"
-              >
-                {products.length > 0 ? t.close : t.close}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setShowCatalogModal(false);
+                    setModalQuantities({});
+                  }}
+                  className="px-4 py-2 rounded-lg border border-[#ABC0B9] text-[#4E616F] font-medium hover:bg-[#FAFBFA] transition-colors"
+                >
+                  {t.close}
+                </button>
+                {Object.values(modalQuantities).reduce((sum, q) => sum + q, 0) > 0 && (
+                  <button
+                    onClick={() => {
+                      addCatalogProductsFromModal();
+                      setShowCatalogModal(false);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-[#5C2F0E] text-white font-medium hover:bg-[#2D363F] transition-colors flex items-center gap-2"
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                    {t.addSelected}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

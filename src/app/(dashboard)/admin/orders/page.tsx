@@ -1664,6 +1664,137 @@ export default function ApprovedOrdersPage() {
         </div>
       )}
 
+      {/* Confirm Single Item Purchase Modal */}
+      {showItemPurchaseModal && selectedOrder && selectedItemInfo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl">
+            <div className="p-6 border-b border-[#ABC0B9]">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-[#2D363F]">
+                  {t.confirmItemPurchase}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowItemPurchaseModal(false);
+                    setSelectedOrder(null);
+                    setSelectedItemId(null);
+                    setSelectedItemInfo(null);
+                  }}
+                  className="text-[#4E616F] hover:text-[#2D363F]"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-[#4E616F]">{t.confirmItemPurchaseMsg}</p>
+
+              {/* Item Summary */}
+              <div className="bg-[#FAFBFA] rounded-lg p-4 border border-[#ABC0B9]">
+                <p className="font-medium text-[#2D363F] line-clamp-2">{selectedItemInfo.title}</p>
+                <p className="text-sm text-[#4E616F] mt-1">
+                  {t.quantity}: {selectedItemInfo.quantity}
+                </p>
+              </div>
+
+              {/* Order Info */}
+              <div className="text-sm text-[#4E616F]">
+                <p>{getDisplayNumber(selectedOrder)}</p>
+                <p>{selectedOrder.requester?.name}</p>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-[#ABC0B9] flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowItemPurchaseModal(false);
+                  setSelectedOrder(null);
+                  setSelectedItemId(null);
+                  setSelectedItemInfo(null);
+                }}
+              >
+                {t.cancel}
+              </Button>
+              <Button
+                className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
+                onClick={handleConfirmItemPurchased}
+                disabled={processingId !== null}
+              >
+                {processingId !== null ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                )}
+                {t.confirm}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm All Items Purchase Modal */}
+      {showAllItemsPurchaseModal && selectedOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl">
+            <div className="p-6 border-b border-[#ABC0B9]">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-[#2D363F]">
+                  {t.confirmAllItemsPurchase}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowAllItemsPurchaseModal(false);
+                    setSelectedOrder(null);
+                  }}
+                  className="text-[#4E616F] hover:text-[#2D363F]"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-[#4E616F]">{t.confirmAllItemsPurchaseMsg}</p>
+
+              {/* Order Summary */}
+              <div className="bg-[#FAFBFA] rounded-lg p-4 border border-[#ABC0B9]">
+                <p className="text-sm text-[#4E616F]">{getDisplayNumber(selectedOrder)}</p>
+                <p className="font-medium text-[#2D363F]">{selectedOrder.requester?.name}</p>
+                <p className="text-sm text-[#5C2F0E] mt-1">
+                  {getProductItems(selectedOrder).filter(i => !i.is_purchased).length} {t.products.toLowerCase()} {t.itemPending.toLowerCase()}
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-[#ABC0B9] flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowAllItemsPurchaseModal(false);
+                  setSelectedOrder(null);
+                }}
+              >
+                {t.cancel}
+              </Button>
+              <Button
+                className="bg-[#5C2F0E] hover:bg-[#2D363F] text-white"
+                onClick={handleConfirmAllItemsPurchased}
+                disabled={processingId !== null}
+              >
+                {processingId !== null ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                )}
+                {t.markAllPurchased}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Order Details Modal */}
       {showDetailsModal && detailsOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">

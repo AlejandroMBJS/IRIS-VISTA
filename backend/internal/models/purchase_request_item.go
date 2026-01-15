@@ -23,11 +23,15 @@ type PurchaseRequestItem struct {
 	Quantity int `gorm:"not null;default:1" json:"quantity"`
 
 	// Amazon automation status (per item)
-	IsAmazonURL   bool   `gorm:"default:false" json:"is_amazon_url"`
-	AmazonASIN    string `gorm:"size:20" json:"amazon_asin,omitempty"`
-	AddedToCart   bool   `gorm:"default:false" json:"added_to_cart"`
+	IsAmazonURL   bool       `gorm:"default:false" json:"is_amazon_url"`
+	AmazonASIN    string     `gorm:"size:20" json:"amazon_asin,omitempty"`
+	AddedToCart   bool       `gorm:"default:false" json:"added_to_cart"`
 	AddedToCartAt *time.Time `json:"added_to_cart_at,omitempty"`
-	CartError     string `gorm:"type:text" json:"cart_error,omitempty"`
+	CartError     string     `gorm:"type:text" json:"cart_error,omitempty"`
+
+	// Purchase status (per item)
+	IsPurchased bool       `gorm:"default:false" json:"is_purchased"`
+	PurchasedAt *time.Time `json:"purchased_at,omitempty"`
 
 	// Timestamps
 	CreatedAt time.Time `json:"created_at"`

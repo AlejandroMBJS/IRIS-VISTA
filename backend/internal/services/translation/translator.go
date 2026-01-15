@@ -88,6 +88,17 @@ func (t *Translator) translate(text, sourceLang, targetLang string) (string, err
 	// Use Google Translate free API endpoint
 	baseURL := "https://translate.googleapis.com/translate_a/single"
 
+	// Map language codes for Google Translate compatibility
+	googleLangMap := map[string]string{
+		"zh": "zh-CN", // Use Simplified Chinese
+	}
+	if mapped, ok := googleLangMap[targetLang]; ok {
+		targetLang = mapped
+	}
+	if mapped, ok := googleLangMap[sourceLang]; ok {
+		sourceLang = mapped
+	}
+
 	params := url.Values{}
 	params.Add("client", "gtx")
 	params.Add("sl", sourceLang)

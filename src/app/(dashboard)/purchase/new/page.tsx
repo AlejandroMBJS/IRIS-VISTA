@@ -550,28 +550,42 @@ export default function NewPurchaseRequestPage() {
     setView('form');
   };
 
-  // Modal quantity helpers
-  const getModalQuantity = (productId: number) => modalQuantities[productId] || 0;
+  // Modal quantity helpers - use string keys to handle both number and string IDs
+  const getModalQuantity = (productId: number | string) => {
+    const key = String(productId);
+    return modalQuantities[key as unknown as number] || 0;
+  };
 
-  const updateModalQuantity = (productId: number, delta: number) => {
+  const updateModalQuantity = (productId: number | string, delta: number, maxStock?: number) => {
+    const key = String(productId);
     setModalQuantities(prev => {
-      const current = prev[productId] || 0;
-      const newQty = Math.max(0, current + delta);
-      if (newQty === 0) {
-        const { [productId]: _, ...rest } = prev;
-        return rest;
+      const current = prev[key as unknown as number] || 0;
+      let newQty = Math.max(0, current + delta);
+      if (maxStock !== undefined) {
+        newQty = Math.min(newQty, maxStock);
       }
-      return { ...prev, [productId]: newQty };
+      if (newQty === 0) {
+        const newState = { ...prev };
+        delete newState[key as unknown as number];
+        return newState;
+      }
+      return { ...prev, [key]: newQty };
     });
   };
 
-  const setModalQuantityDirect = (productId: number, qty: number) => {
+  const setModalQuantityDirect = (productId: number | string, qty: number, maxStock?: number) => {
+    const key = String(productId);
     setModalQuantities(prev => {
-      if (qty <= 0) {
-        const { [productId]: _, ...rest } = prev;
-        return rest;
+      let finalQty = qty;
+      if (maxStock !== undefined) {
+        finalQty = Math.min(finalQty, maxStock);
       }
-      return { ...prev, [productId]: qty };
+      if (finalQty <= 0) {
+        const newState = { ...prev };
+        delete newState[key as unknown as number];
+        return newState;
+      }
+      return { ...prev, [key]: finalQty };
     });
   };
 
@@ -1030,7 +1044,7 @@ export default function NewPurchaseRequestPage() {
                           key={product.id}
                           className={`bg-[#FAFBFA] rounded-lg p-4 border transition-all ${hasQty || isAdded ? 'border-[#5C2F0E] ring-1 ring-[#5C2F0E]/20' : 'border-transparent'}`}
                         >
-                          <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden relative">
+                          <div className="w-full h-24 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center mb-3 overflow-hidden">
                             {product.image_url ? (
                               <img
                                 src={product.image_url}
@@ -1041,11 +1055,6 @@ export default function NewPurchaseRequestPage() {
                               <span className="text-4xl">{product.image_emoji}</span>
                             ) : (
                               <Package className="h-8 w-8 text-[#80959A]" />
-                            )}
-                            {hasQty && (
-                              <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#5C2F0E] text-white rounded-full flex items-center justify-center text-xs font-bold">
-                                {modalQty}
-                              </div>
                             )}
                           </div>
                           <h4 className="font-medium text-[#2D363F] text-sm line-clamp-2 mb-1">
@@ -1063,37 +1072,31 @@ export default function NewPurchaseRequestPage() {
                               <span className="text-xs text-[#80959A] px-3 py-1.5">
                                 {t.outOfStock}
                               </span>
-                            ) : hasQty ? (
+                            ) : (
                               <div className="flex items-center gap-1 bg-white border border-[#ABC0B9] rounded-lg">
                                 <button
-                                  onClick={() => updateModalQuantity(product.id, -1)}
-                                  className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-l-lg transition-colors"
+                                  onClick={() => updateModalQuantity(product.id, -1, product.stock)}
+                                  disabled={modalQty <= 0}
+                                  className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-l-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                   <span className="w-4 h-4 flex items-center justify-center font-bold">-</span>
                                 </button>
                                 <input
                                   type="number"
-                                  min="1"
+                                  min="0"
                                   max={product.stock}
                                   value={modalQty}
-                                  onChange={(e) => setModalQuantityDirect(product.id, Math.min(product.stock, Math.max(0, parseInt(e.target.value) || 0)))}
+                                  onChange={(e) => setModalQuantityDirect(product.id, parseInt(e.target.value) || 0, product.stock)}
                                   className="w-10 text-center text-sm font-medium text-[#2D363F] border-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 />
                                 <button
-                                  onClick={() => updateModalQuantity(product.id, 1)}
+                                  onClick={() => updateModalQuantity(product.id, 1, product.stock)}
                                   disabled={modalQty >= product.stock}
-                                  className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-r-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                  className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-r-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                   <span className="w-4 h-4 flex items-center justify-center font-bold">+</span>
                                 </button>
                               </div>
-                            ) : (
-                              <button
-                                onClick={() => updateModalQuantity(product.id, 1)}
-                                className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20"
-                              >
-                                <Plus className="h-4 w-4" />
-                              </button>
                             )}
                           </div>
                         </div>
@@ -1668,37 +1671,31 @@ export default function NewPurchaseRequestPage() {
                             <span className="text-xs text-[#80959A] px-3 py-1.5">
                               {t.outOfStock}
                             </span>
-                          ) : hasQty ? (
+                          ) : (
                             <div className="flex items-center gap-1 bg-white border border-[#ABC0B9] rounded-lg">
                               <button
-                                onClick={() => updateModalQuantity(product.id, -1)}
-                                className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-l-lg transition-colors"
+                                onClick={() => updateModalQuantity(product.id, -1, product.stock)}
+                                disabled={modalQty <= 0}
+                                className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-l-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                               >
                                 <span className="w-4 h-4 flex items-center justify-center font-bold">-</span>
                               </button>
                               <input
                                 type="number"
-                                min="1"
+                                min="0"
                                 max={product.stock}
                                 value={modalQty}
-                                onChange={(e) => setModalQuantityDirect(product.id, Math.min(product.stock, Math.max(0, parseInt(e.target.value) || 0)))}
+                                onChange={(e) => setModalQuantityDirect(product.id, parseInt(e.target.value) || 0, product.stock)}
                                 className="w-10 text-center text-sm font-medium text-[#2D363F] border-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                               />
                               <button
-                                onClick={() => updateModalQuantity(product.id, 1)}
+                                onClick={() => updateModalQuantity(product.id, 1, product.stock)}
                                 disabled={modalQty >= product.stock}
-                                className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-r-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="p-1.5 text-[#5C2F0E] hover:bg-[#5C2F0E]/10 rounded-r-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                               >
                                 <span className="w-4 h-4 flex items-center justify-center font-bold">+</span>
                               </button>
                             </div>
-                          ) : (
-                            <button
-                              onClick={() => updateModalQuantity(product.id, 1)}
-                              className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors bg-[#5C2F0E]/10 text-[#5C2F0E] hover:bg-[#5C2F0E]/20"
-                            >
-                              <Plus className="h-4 w-4" />
-                            </button>
                           )}
                         </div>
                       </div>

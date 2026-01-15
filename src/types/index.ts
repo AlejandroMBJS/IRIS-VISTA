@@ -154,6 +154,9 @@ export interface PurchaseRequestItem {
   added_to_cart: boolean;
   added_to_cart_at?: string;
   cart_error?: string;
+  // Purchase status per item
+  is_purchased: boolean;
+  purchased_at?: string;
 }
 
 export interface PurchaseRequest {

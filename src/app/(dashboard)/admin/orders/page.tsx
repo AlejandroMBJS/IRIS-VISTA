@@ -67,6 +67,12 @@ export default function ApprovedOrdersPage() {
   const [statusChangeNotes, setStatusChangeNotes] = useState('');
   const [cancelNotesError, setCancelNotesError] = useState('');
 
+  // Item purchase confirmation modals
+  const [showItemPurchaseModal, setShowItemPurchaseModal] = useState(false);
+  const [showAllItemsPurchaseModal, setShowAllItemsPurchaseModal] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [selectedItemInfo, setSelectedItemInfo] = useState<{ title: string; quantity: number } | null>(null);
+
   // Details modal
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [detailsOrder, setDetailsOrder] = useState<PurchaseRequest | null>(null);
@@ -107,8 +113,18 @@ export default function ApprovedOrdersPage() {
       products: 'Products',
       total: 'Total',
       progress: 'Progress',
+      purchaseProgress: 'Purchase Progress',
       addAllToCart: 'Add All to Cart',
       goToCart: 'Go to Cart',
+      markItemPurchased: 'Mark Purchased',
+      markAllPurchased: 'Mark All Purchased',
+      itemPurchased: 'Purchased',
+      itemPending: 'Pending',
+      confirmItemPurchase: 'Confirm Item Purchase',
+      confirmAllItemsPurchase: 'Confirm All Items Purchase',
+      confirmItemPurchaseMsg: 'Are you sure you want to mark this item as purchased?',
+      confirmAllItemsPurchaseMsg: 'Are you sure you want to mark all items as purchased?',
+      confirm: 'Confirm',
       amazonConnected: 'Amazon: Connected',
       amazonDisconnected: 'Amazon: Disconnected',
       refresh: 'Refresh',
@@ -181,8 +197,18 @@ export default function ApprovedOrdersPage() {
       products: '产品',
       total: '总计',
       progress: '进度',
+      purchaseProgress: '采购进度',
       addAllToCart: '全部加入购物车',
       goToCart: '前往购物车',
+      markItemPurchased: '标记已购',
+      markAllPurchased: '全部标记已购',
+      itemPurchased: '已购买',
+      itemPending: '待购买',
+      confirmItemPurchase: '确认购买商品',
+      confirmAllItemsPurchase: '确认购买所有商品',
+      confirmItemPurchaseMsg: '确定要将此商品标记为已购买吗？',
+      confirmAllItemsPurchaseMsg: '确定要将所有商品标记为已购买吗？',
+      confirm: '确认',
       amazonConnected: 'Amazon: 已连接',
       amazonDisconnected: 'Amazon: 未连接',
       refresh: '刷新',
@@ -255,8 +281,18 @@ export default function ApprovedOrdersPage() {
       products: 'Productos',
       total: 'Total',
       progress: 'Progreso',
+      purchaseProgress: 'Progreso de Compra',
       addAllToCart: 'Agregar Todo al Carrito',
       goToCart: 'Ir al Carrito',
+      markItemPurchased: 'Marcar Comprado',
+      markAllPurchased: 'Marcar Todo Comprado',
+      itemPurchased: 'Comprado',
+      itemPending: 'Pendiente',
+      confirmItemPurchase: 'Confirmar Compra de Producto',
+      confirmAllItemsPurchase: 'Confirmar Compra de Todos',
+      confirmItemPurchaseMsg: '¿Está seguro que desea marcar este producto como comprado?',
+      confirmAllItemsPurchaseMsg: '¿Está seguro que desea marcar todos los productos como comprados?',
+      confirm: 'Confirmar',
       amazonConnected: 'Amazon: Conectado',
       amazonDisconnected: 'Amazon: Desconectado',
       refresh: 'Actualizar',
@@ -429,6 +465,54 @@ export default function ApprovedOrdersPage() {
     }
   };
 
+  // Open confirmation modal for marking item as purchased
+  const openItemPurchaseModal = (order: PurchaseRequest, itemId: number, itemTitle: string, itemQty: number) => {
+    setSelectedOrder(order);
+    setSelectedItemId(itemId);
+    setSelectedItemInfo({ title: itemTitle, quantity: itemQty });
+    setShowItemPurchaseModal(true);
+  };
+
+  // Open confirmation modal for marking all items as purchased
+  const openAllItemsPurchaseModal = (order: PurchaseRequest) => {
+    setSelectedOrder(order);
+    setShowAllItemsPurchaseModal(true);
+  };
+
+  // Mark individual item as purchased (after confirmation)
+  const handleConfirmItemPurchased = async () => {
+    if (!selectedOrder || selectedItemId === null) return;
+    setProcessingId(selectedOrder.id);
+    try {
+      await adminApi.markItemPurchased(selectedOrder.id, selectedItemId);
+      setShowItemPurchaseModal(false);
+      setSelectedOrder(null);
+      setSelectedItemId(null);
+      setSelectedItemInfo(null);
+      fetchOrders();
+    } catch (error) {
+      console.error('Failed to mark item as purchased:', error);
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  // Mark all items as purchased (after confirmation)
+  const handleConfirmAllItemsPurchased = async () => {
+    if (!selectedOrder) return;
+    setProcessingId(selectedOrder.id);
+    try {
+      await adminApi.markAllItemsPurchased(selectedOrder.id);
+      setShowAllItemsPurchaseModal(false);
+      setSelectedOrder(null);
+      fetchOrders();
+    } catch (error) {
+      console.error('Failed to mark all items as purchased:', error);
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
   // Handle saving admin notes
   const handleSaveAdminNotes = async (orderId: number) => {
     setSavingNotesId(orderId);
@@ -472,6 +556,8 @@ export default function ApprovedOrdersPage() {
       is_amazon_url: request.is_amazon_url,
       added_to_cart: request.added_to_cart,
       cart_error: request.cart_error,
+      is_purchased: request.status === 'purchased' || request.status === 'delivered',
+      purchased_at: request.purchased_at,
     }];
   };
 
@@ -481,6 +567,12 @@ export default function ApprovedOrdersPage() {
     return { inCart, total: items.length };
   };
 
+  // Calculate purchase progress (items marked as purchased)
+  const getPurchaseProgress = (items: PurchaseRequestItem[]) => {
+    const purchased = items.filter(item => item.is_purchased).length;
+    return { purchased, total: items.length };
+  };
+
   // Calculate total
   const calculateTotal = (request: PurchaseRequest) => {
     const items = getProductItems(request);
@@ -488,6 +580,14 @@ export default function ApprovedOrdersPage() {
   };
 
   const getItemStatusBadge = (item: PurchaseRequestItem) => {
+    if (item.is_purchased) {
+      return (
+        <Badge className="bg-[#5C2F0E] text-white text-xs">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          {t.itemPurchased}
+        </Badge>
+      );
+    }
     if (item.added_to_cart) {
       return (
         <Badge className="bg-[#4E616F] text-white text-xs">
@@ -507,7 +607,7 @@ export default function ApprovedOrdersPage() {
     return (
       <Badge className="bg-[#E95F20] text-white text-xs">
         <Clock className="h-3 w-3 mr-1" />
-        {t.pending}
+        {t.itemPending}
       </Badge>
     );
   };
@@ -961,7 +1061,23 @@ export default function ApprovedOrdersPage() {
                                 <RefreshCw className="h-3 w-3" />
                               </Button>
                             )}
-                            {item.added_to_cart && (
+                            {/* Mark individual item as purchased */}
+                            {order.status !== 'purchased' && order.status !== 'delivered' && order.status !== 'cancelled' && !item.is_purchased && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openItemPurchaseModal(order, item.id, getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product', item.quantity);
+                                }}
+                                disabled={processingId === order.id}
+                                className="border-[#5C2F0E] text-[#5C2F0E] hover:bg-[#5C2F0E]/10"
+                                title={t.markItemPurchased}
+                              >
+                                <CheckCircle className="h-3 w-3" />
+                              </Button>
+                            )}
+                            {item.is_purchased && (
                               <CheckCircle className="h-5 w-5 text-[#5C2F0E]" />
                             )}
                           </div>
@@ -1144,18 +1260,19 @@ export default function ApprovedOrdersPage() {
                               {order.currency}${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </p>
                           </div>
+                          {/* Purchase Progress Bar */}
                           {order.status !== 'purchased' && order.status !== 'delivered' && order.status !== 'cancelled' && (
                             <div>
-                              <p className="text-sm text-[#4E616F]">{t.progress}</p>
+                              <p className="text-sm text-[#4E616F]">{t.purchaseProgress}</p>
                               <div className="flex items-center gap-2">
-                                <div className="w-24 h-2 bg-[#ABC0B9] rounded-full overflow-hidden">
+                                <div className="w-32 h-3 bg-[#ABC0B9]/30 rounded-full overflow-hidden">
                                   <div
-                                    className="h-full bg-[#ABC0B9]/200 rounded-full transition-all"
-                                    style={{ width: `${(progress.inCart / progress.total) * 100}%` }}
+                                    className="h-full bg-[#5C2F0E] rounded-full transition-all"
+                                    style={{ width: `${(getPurchaseProgress(items).purchased / getPurchaseProgress(items).total) * 100}%` }}
                                   />
                                 </div>
-                                <span className="text-sm font-medium">
-                                  {progress.inCart}/{progress.total}
+                                <span className="text-sm font-medium text-[#5C2F0E]">
+                                  {getPurchaseProgress(items).purchased}/{getPurchaseProgress(items).total}
                                 </span>
                               </div>
                             </div>
@@ -1192,6 +1309,22 @@ export default function ApprovedOrdersPage() {
                                 >
                                   <Link2 className="h-4 w-4 mr-2" />
                                   {t.goToCart}
+                                </Button>
+                              )}
+                              {/* Mark All Items Purchased */}
+                              {items.some(i => !i.is_purchased) && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openAllItemsPurchaseModal(order);
+                                  }}
+                                  disabled={processingId === order.id}
+                                  className="border-[#5C2F0E] text-[#5C2F0E] hover:bg-[#5C2F0E]/10"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-2" />
+                                  {t.markAllPurchased}
                                 </Button>
                               )}
                               <Button

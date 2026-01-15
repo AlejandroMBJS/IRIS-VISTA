@@ -120,6 +120,8 @@ type RequestItemResponse struct {
 	AddedToCart             bool         `json:"added_to_cart"`
 	AddedToCartAt           *time.Time   `json:"added_to_cart_at,omitempty"`
 	CartError               string       `json:"cart_error,omitempty"`
+	IsPurchased             bool         `json:"is_purchased"`
+	PurchasedAt             *time.Time   `json:"purchased_at,omitempty"`
 }
 
 // RequestResponse represents the response for a purchase request
@@ -294,6 +296,8 @@ func requestToResponse(r models.PurchaseRequest) RequestResponse {
 			AddedToCart:            item.AddedToCart,
 			AddedToCartAt:          item.AddedToCartAt,
 			CartError:              item.CartError,
+			IsPurchased:            item.IsPurchased,
+			PurchasedAt:            item.PurchasedAt,
 		})
 	}
 

@@ -80,6 +80,9 @@ export default function RequestsPage() {
       adminNotes: 'Internal Notes',
       all: 'All',
       viewProduct: 'View',
+      purchaseProgress: 'Purchase Progress',
+      itemPurchased: 'Purchased',
+      itemPending: 'Pending',
       statuses: {
         pending: 'Pending',
         approved: 'Approved',
@@ -122,6 +125,9 @@ export default function RequestsPage() {
       adminNotes: '内部备注',
       all: '全部',
       viewProduct: '查看',
+      purchaseProgress: '采购进度',
+      itemPurchased: '已购买',
+      itemPending: '待购买',
       statuses: {
         pending: '待审批',
         approved: '已批准',
@@ -164,6 +170,9 @@ export default function RequestsPage() {
       adminNotes: 'Notas Internas',
       all: 'Todos',
       viewProduct: 'Ver',
+      purchaseProgress: 'Progreso de Compra',
+      itemPurchased: 'Comprado',
+      itemPending: 'Pendiente',
       statuses: {
         pending: 'Pendiente',
         approved: 'Aprobado',
@@ -221,6 +230,8 @@ export default function RequestsPage() {
       subtotal: (request.estimated_price || 0) * request.quantity,
       is_amazon_url: request.is_amazon_url,
       added_to_cart: request.added_to_cart,
+      is_purchased: request.status === 'purchased' || request.status === 'delivered',
+      purchased_at: request.purchased_at,
     }];
   };
 
@@ -229,6 +240,30 @@ export default function RequestsPage() {
     if (request.total_estimated) return request.total_estimated;
     const items = getProductItems(request);
     return items.reduce((sum, item) => sum + (item.estimated_price || 0) * item.quantity, 0);
+  };
+
+  // Calculate purchase progress (items marked as purchased)
+  const getPurchaseProgress = (items: PurchaseRequestItem[]) => {
+    const purchased = items.filter(item => item.is_purchased).length;
+    return { purchased, total: items.length };
+  };
+
+  // Get item purchase status badge
+  const getItemPurchaseStatus = (item: PurchaseRequestItem) => {
+    if (item.is_purchased) {
+      return (
+        <Badge className="bg-[#5C2F0E] text-white text-xs">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          {t.itemPurchased}
+        </Badge>
+      );
+    }
+    return (
+      <Badge className="bg-[#E95F20] text-white text-xs">
+        <Clock className="h-3 w-3 mr-1" />
+        {t.itemPending}
+      </Badge>
+    );
   };
 
   const getStatusBadge = (status: string) => {
@@ -449,25 +484,37 @@ export default function RequestsPage() {
                       {items.map((item, idx) => (
                         <div
                           key={idx}
-                          className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]"
+                          className={`flex flex-col md:flex-row md:items-center gap-4 p-3 rounded-lg border ${
+                            item.is_purchased
+                              ? 'bg-[#5C2F0E]/5 border-[#5C2F0E]/30'
+                              : 'bg-[#FAFBFA] border-[#ABC0B9]'
+                          }`}
                         >
                           {/* Product Image */}
-                          {item.product_image_url ? (
-                            <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
-                              <Image
-                                src={item.product_image_url}
-                                alt={getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product'}
-                                width={64}
-                                height={64}
-                                className="object-contain w-full h-full"
-                                unoptimized
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-16 h-16 rounded bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
-                              <Package className="h-6 w-6 text-[#4E616F]" />
-                            </div>
-                          )}
+                          <div className="relative">
+                            {item.product_image_url ? (
+                              <div className="w-16 h-16 rounded bg-white border border-[#ABC0B9] overflow-hidden flex-shrink-0">
+                                <Image
+                                  src={item.product_image_url}
+                                  alt={getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product'}
+                                  width={64}
+                                  height={64}
+                                  className="object-contain w-full h-full"
+                                  unoptimized
+                                />
+                              </div>
+                            ) : (
+                              <div className="w-16 h-16 rounded bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                                <Package className="h-6 w-6 text-[#4E616F]" />
+                              </div>
+                            )}
+                            {/* Purchase status indicator */}
+                            {request.status === 'approved' && item.is_purchased && (
+                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#5C2F0E] rounded-full flex items-center justify-center">
+                                <CheckCircle className="h-3 w-3 text-white" />
+                              </div>
+                            )}
+                          </div>
 
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">
@@ -486,6 +533,8 @@ export default function RequestsPage() {
                                   Amazon
                                 </Badge>
                               )}
+                              {/* Show purchase status for approved requests */}
+                              {request.status === 'approved' && getItemPurchaseStatus(item)}
                             </div>
                           </div>
 
@@ -551,11 +600,30 @@ export default function RequestsPage() {
                     {/* Request Footer */}
                     <div className="px-4 md:px-6 py-4 bg-[#FAFBFA] border-t border-[#ABC0B9]">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div>
-                          <p className="text-sm text-[#4E616F]">{t.total}</p>
-                          <p className="text-xl font-bold text-[#5C2F0E]">
-                            {request.currency} ${formatPrice(total)}
-                          </p>
+                        <div className="flex items-center gap-6">
+                          <div>
+                            <p className="text-sm text-[#4E616F]">{t.total}</p>
+                            <p className="text-xl font-bold text-[#5C2F0E]">
+                              {request.currency} ${formatPrice(total)}
+                            </p>
+                          </div>
+                          {/* Purchase Progress Bar for approved requests */}
+                          {request.status === 'approved' && (
+                            <div>
+                              <p className="text-sm text-[#4E616F]">{t.purchaseProgress}</p>
+                              <div className="flex items-center gap-2">
+                                <div className="w-32 h-3 bg-[#ABC0B9]/30 rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full bg-[#5C2F0E] rounded-full transition-all"
+                                    style={{ width: `${(getPurchaseProgress(items).purchased / getPurchaseProgress(items).total) * 100}%` }}
+                                  />
+                                </div>
+                                <span className="text-sm font-medium text-[#5C2F0E]">
+                                  {getPurchaseProgress(items).purchased}/{getPurchaseProgress(items).total}
+                                </span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -596,33 +664,65 @@ export default function RequestsPage() {
             <div className="p-6 space-y-4 overflow-y-auto flex-1">
               {/* Items List */}
               <div>
-                <p className="text-sm font-semibold text-[#2D363F] mb-3">
-                  {t.products} ({getProductItems(selectedRequest).length})
-                </p>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-[#2D363F]">
+                    {t.products} ({getProductItems(selectedRequest).length})
+                  </p>
+                  {/* Purchase Progress in Modal */}
+                  {selectedRequest.status === 'approved' && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-[#4E616F]">{t.purchaseProgress}:</span>
+                      <div className="w-24 h-2 bg-[#ABC0B9]/30 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-[#5C2F0E] rounded-full transition-all"
+                          style={{ width: `${(getPurchaseProgress(getProductItems(selectedRequest)).purchased / getPurchaseProgress(getProductItems(selectedRequest)).total) * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-xs font-medium text-[#5C2F0E]">
+                        {getPurchaseProgress(getProductItems(selectedRequest)).purchased}/{getPurchaseProgress(getProductItems(selectedRequest)).total}
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div className="space-y-3">
                   {getProductItems(selectedRequest).map((item, idx) => (
-                    <div key={idx} className="flex gap-4 p-3 bg-[#FAFBFA] rounded-lg border border-[#ABC0B9]">
-                      {item.product_image_url ? (
-                        <div className="w-20 h-20 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
-                          <Image
-                            src={item.product_image_url}
-                            alt={getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product'}
-                            width={80}
-                            height={80}
-                            className="object-contain"
-                            unoptimized
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-20 h-20 rounded-lg bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
-                          <Package className="h-8 w-8 text-[#4E616F]" />
-                        </div>
-                      )}
+                    <div
+                      key={idx}
+                      className={`flex gap-4 p-3 rounded-lg border ${
+                        item.is_purchased && selectedRequest.status === 'approved'
+                          ? 'bg-[#5C2F0E]/5 border-[#5C2F0E]/30'
+                          : 'bg-[#FAFBFA] border-[#ABC0B9]'
+                      }`}
+                    >
+                      <div className="relative">
+                        {item.product_image_url ? (
+                          <div className="w-20 h-20 rounded-lg bg-white border border-[#ABC0B9] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            <Image
+                              src={item.product_image_url}
+                              alt={getTranslatedText(item.product_title_translated, item.product_title, language) || 'Product'}
+                              width={80}
+                              height={80}
+                              className="object-contain"
+                              unoptimized
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-20 h-20 rounded-lg bg-[#ABC0B9] flex items-center justify-center flex-shrink-0">
+                            <Package className="h-8 w-8 text-[#4E616F]" />
+                          </div>
+                        )}
+                        {/* Purchase checkmark */}
+                        {selectedRequest.status === 'approved' && item.is_purchased && (
+                          <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#5C2F0E] rounded-full flex items-center justify-center">
+                            <CheckCircle className="h-4 w-4 text-white" />
+                          </div>
+                        )}
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-[#2D363F] line-clamp-2">
                           {getTranslatedText(item.product_title_translated, item.product_title || 'Product', language)}
                         </h4>
-                        <div className="flex items-center gap-4 mt-2">
+                        <div className="flex flex-wrap items-center gap-3 mt-2">
                           <span className="text-sm text-[#4E616F]">{t.quantity}: {item.quantity}</span>
                           {item.estimated_price && (
                             <span className="text-sm font-semibold text-[#5C2F0E]">
@@ -634,6 +734,8 @@ export default function RequestsPage() {
                               Amazon
                             </Badge>
                           )}
+                          {/* Show purchase status for approved requests */}
+                          {selectedRequest.status === 'approved' && getItemPurchaseStatus(item)}
                         </div>
                         {item.url && !item.url.startsWith('catalog://') && (
                           <a

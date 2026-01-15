@@ -297,3 +297,138 @@ func (s *AutomationService) IsLoggedIn() bool {
 	defer s.mu.Unlock()
 	return s.isLoggedIn
 }
+
+// ProductData contains extracted product information
+type ProductData struct {
+	ASIN     string  `json:"asin"`
+	Title    string  `json:"title"`
+	Price    float64 `json:"price"`
+	ImageURL string  `json:"image_url"`
+	URL      string  `json:"url"`
+}
+
+// GetProductByASIN fetches product data from Amazon using the ASIN
+func (s *AutomationService) GetProductByASIN(asin string) (*ProductData, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.ctx == nil {
+		// Initialize if not already
+		s.mu.Unlock()
+		if err := s.Initialize(); err != nil {
+			s.mu.Lock()
+			return nil, fmt.Errorf("failed to initialize browser: %w", err)
+		}
+		s.mu.Lock()
+	}
+
+	ctx, cancel := context.WithTimeout(s.ctx, 30*time.Second)
+	defer cancel()
+
+	productURL := fmt.Sprintf("%s/dp/%s", s.baseURL, asin)
+
+	// Navigate to product page
+	if err := chromedp.Run(ctx,
+		chromedp.Navigate(productURL),
+		chromedp.WaitVisible(`body`, chromedp.ByQuery),
+	); err != nil {
+		return nil, fmt.Errorf("failed to load product page: %w", err)
+	}
+
+	// Wait for page to load
+	time.Sleep(2 * time.Second)
+
+	var title, priceText, imageURL string
+
+	// Extract title
+	titleSelectors := []string{
+		`#productTitle`,
+		`#title span`,
+		`span#productTitle`,
+	}
+	for _, sel := range titleSelectors {
+		if err := chromedp.Run(ctx,
+			chromedp.Text(sel, &title, chromedp.ByQuery),
+		); err == nil && title != "" {
+			title = strings.TrimSpace(title)
+			break
+		}
+	}
+
+	// Extract price - try offscreen first (contains full price)
+	priceSelectors := []string{
+		`.a-price .a-offscreen`,
+		`#corePrice_feature_div .a-offscreen`,
+		`#corePriceDisplay_desktop_feature_div .a-offscreen`,
+		`.apexPriceToPay .a-offscreen`,
+		`#priceblock_ourprice`,
+		`#priceblock_dealprice`,
+	}
+	for _, sel := range priceSelectors {
+		if err := chromedp.Run(ctx,
+			chromedp.Text(sel, &priceText, chromedp.ByQuery),
+		); err == nil && priceText != "" {
+			break
+		}
+	}
+
+	// Extract image URL
+	imageSelectors := []string{
+		`#landingImage`,
+		`#imgBlkFront`,
+		`#main-image`,
+	}
+	for _, sel := range imageSelectors {
+		if err := chromedp.Run(ctx,
+			chromedp.AttributeValue(sel, "src", &imageURL, nil, chromedp.ByQuery),
+		); err == nil && imageURL != "" {
+			break
+		}
+		// Try data-old-hires for high-res image
+		if err := chromedp.Run(ctx,
+			chromedp.AttributeValue(sel, "data-old-hires", &imageURL, nil, chromedp.ByQuery),
+		); err == nil && imageURL != "" {
+			break
+		}
+	}
+
+	// Parse price
+	var price float64
+	if priceText != "" {
+		// Remove currency symbols and parse
+		priceText = strings.TrimSpace(priceText)
+		priceText = strings.ReplaceAll(priceText, "$", "")
+		priceText = strings.ReplaceAll(priceText, ",", "")
+		priceText = strings.ReplaceAll(priceText, " ", "")
+		fmt.Sscanf(priceText, "%f", &price)
+	}
+
+	return &ProductData{
+		ASIN:     asin,
+		Title:    title,
+		Price:    price,
+		ImageURL: imageURL,
+		URL:      productURL,
+	}, nil
+}
+
+// GetProductsByASINs fetches multiple products (with rate limiting)
+func (s *AutomationService) GetProductsByASINs(asins []string) ([]*ProductData, error) {
+	var results []*ProductData
+
+	for i, asin := range asins {
+		data, err := s.GetProductByASIN(asin)
+		if err != nil {
+			log.Printf("Failed to get product %s: %v", asin, err)
+			continue
+		}
+		results = append(results, data)
+
+		// Rate limiting between requests
+		if i < len(asins)-1 {
+			time.Sleep(2 * time.Second)
+		}
+	}
+
+	return results, nil
+}

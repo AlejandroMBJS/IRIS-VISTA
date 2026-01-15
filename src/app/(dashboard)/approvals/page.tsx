@@ -301,6 +301,7 @@ export default function ApprovalsPage() {
         cancelled: 'Cancelled',
         all: 'All',
       },
+      internalNotes: 'Internal Notes',
     },
     zh: {
       title: '审批管理',
@@ -405,6 +406,7 @@ export default function ApprovalsPage() {
         cancelled: '已取消',
         all: '全部',
       },
+      internalNotes: '内部备注',
     },
     es: {
       title: 'Aprobaciones',
@@ -509,6 +511,7 @@ export default function ApprovalsPage() {
         cancelled: 'Cancelado',
         all: 'Todas',
       },
+      internalNotes: 'Notas Internas',
     },
   };
 
@@ -900,6 +903,8 @@ export default function ApprovalsPage() {
       subtotal: (request.estimated_price || 0) * request.quantity,
       is_amazon_url: request.is_amazon_url,
       added_to_cart: request.added_to_cart,
+      is_purchased: request.status === 'purchased' || request.status === 'delivered',
+      purchased_at: request.purchased_at,
     }];
   };
 
@@ -1555,7 +1560,7 @@ export default function ApprovalsPage() {
                 <div className="rounded-lg bg-[#5C2F0E]/5 p-4 border border-[#5C2F0E]/20">
                   <h3 className="text-sm font-semibold text-[#5C2F0E] mb-2 flex items-center gap-2">
                     <MessageSquare className="h-4 w-4" />
-                    Internal Notes
+                    {t.internalNotes}
                   </h3>
                   <p className="text-sm text-[#4E616F] whitespace-pre-wrap">
                     {getTranslatedText(selectedApproval.admin_notes_translated, selectedApproval.admin_notes, language)}

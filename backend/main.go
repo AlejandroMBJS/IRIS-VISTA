@@ -261,6 +261,8 @@ func main() {
 			orders.PATCH("/orders/:id/cancel", adminHandler.CancelOrder)
 			orders.POST("/orders/:id/retry-cart", adminHandler.RetryAddToCart)
 			orders.PATCH("/orders/:id/notes", adminHandler.UpdateOrderNotes)
+			orders.PATCH("/orders/:id/items/:item_id/purchased", adminHandler.MarkItemPurchased)
+			orders.PATCH("/orders/:id/items/purchased-all", adminHandler.MarkAllItemsPurchased)
 		}
 
 		// Upload routes (admin/purchase_admin/supply chain)
@@ -354,6 +356,64 @@ func main() {
 			"status_code": resp.StatusCode,
 			"html_length": len(body),
 			"html_preview": htmlStr,
+		})
+	})
+
+	// Debug: Fetch Amazon product by ASIN using headless browser (bypasses CAPTCHA)
+	router.POST("/debug/amazon-product", func(c *gin.Context) {
+		var input struct {
+			ASIN string `json:"asin" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Use the Amazon automation service (chromedp)
+		data, err := amazonService.GetProductByASIN(input.ASIN)
+		if err != nil {
+			c.JSON(200, gin.H{
+				"success": false,
+				"error":   err.Error(),
+				"asin":    input.ASIN,
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"success": true,
+			"data":    data,
+		})
+	})
+
+	// Debug: Fetch multiple Amazon products by ASINs
+	router.POST("/debug/amazon-products", func(c *gin.Context) {
+		var input struct {
+			ASINs []string `json:"asins" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		if len(input.ASINs) > 20 {
+			c.JSON(400, gin.H{"error": "Maximum 20 ASINs at a time"})
+			return
+		}
+
+		results, err := amazonService.GetProductsByASINs(input.ASINs)
+		if err != nil {
+			c.JSON(200, gin.H{
+				"success": false,
+				"error":   err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"success": true,
+			"data":    results,
+			"count":   len(results),
 		})
 	})
 

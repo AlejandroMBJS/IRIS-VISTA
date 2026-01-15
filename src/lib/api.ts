@@ -632,6 +632,18 @@ export const adminApi = {
     return response.data.data!;
   },
 
+  // Mark individual item as purchased
+  markItemPurchased: async (orderId: number, itemId: number): Promise<PurchaseRequest> => {
+    const response = await api.patch<ApiResponse<PurchaseRequest>>(`/admin/orders/${orderId}/items/${itemId}/purchased`);
+    return response.data.data!;
+  },
+
+  // Mark all items as purchased
+  markAllItemsPurchased: async (orderId: number): Promise<PurchaseRequest> => {
+    const response = await api.patch<ApiResponse<PurchaseRequest>>(`/admin/orders/${orderId}/items/purchased-all`);
+    return response.data.data!;
+  },
+
   // Purchase Config
   getPurchaseConfig: async (): Promise<PurchaseConfig> => {
     const response = await api.get<ApiResponse<PurchaseConfig>>('/admin/purchase-config');

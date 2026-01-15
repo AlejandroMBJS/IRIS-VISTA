@@ -679,6 +679,121 @@ func (h *AdminHandler) CancelOrder(c *gin.Context) {
 	response.SuccessWithMessage(c, "Order cancelled", requestToResponse(request))
 }
 
+// MarkItemPurchased marks a single item within a request as purchased
+func (h *AdminHandler) MarkItemPurchased(c *gin.Context) {
+	requestID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		response.BadRequest(c, "Invalid request ID")
+		return
+	}
+
+	itemID, err := strconv.ParseUint(c.Param("item_id"), 10, 32)
+	if err != nil {
+		response.BadRequest(c, "Invalid item ID")
+		return
+	}
+
+	// Get the purchase request
+	var request models.PurchaseRequest
+	if err := h.db.Preload("Items").First(&request, requestID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.NotFound(c, "Request not found")
+		} else {
+			response.InternalServerError(c, "Failed to fetch request")
+		}
+		return
+	}
+
+	// Check status
+	if request.Status != models.StatusApproved && request.Status != models.StatusPurchased {
+		response.BadRequest(c, "Only approved or in-progress requests can have items marked as purchased")
+		return
+	}
+
+	// Find and update the item
+	var itemFound bool
+	now := time.Now()
+	for i := range request.Items {
+		if request.Items[i].ID == uint(itemID) {
+			request.Items[i].IsPurchased = true
+			request.Items[i].PurchasedAt = &now
+			itemFound = true
+			if err := h.db.Save(&request.Items[i]).Error; err != nil {
+				response.InternalServerError(c, "Failed to update item")
+				return
+			}
+			break
+		}
+	}
+
+	if !itemFound {
+		response.NotFound(c, "Item not found in this request")
+		return
+	}
+
+	// Reload items to check purchase progress
+	h.db.Preload("Items").First(&request, requestID)
+
+	// Reload with relations
+	h.db.
+		Preload("Requester").
+		Preload("ApprovedBy").
+		Preload("PurchasedBy").
+		Preload("Items").
+		First(&request, request.ID)
+
+	response.SuccessWithMessage(c, "Item marked as purchased", requestToResponse(request))
+}
+
+// MarkAllItemsPurchased marks all items within a request as purchased
+func (h *AdminHandler) MarkAllItemsPurchased(c *gin.Context) {
+	requestID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		response.BadRequest(c, "Invalid request ID")
+		return
+	}
+
+	// Get the purchase request
+	var request models.PurchaseRequest
+	if err := h.db.Preload("Items").First(&request, requestID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.NotFound(c, "Request not found")
+		} else {
+			response.InternalServerError(c, "Failed to fetch request")
+		}
+		return
+	}
+
+	// Check status
+	if request.Status != models.StatusApproved && request.Status != models.StatusPurchased {
+		response.BadRequest(c, "Only approved or in-progress requests can have items marked as purchased")
+		return
+	}
+
+	// Mark all items as purchased
+	now := time.Now()
+	for i := range request.Items {
+		if !request.Items[i].IsPurchased {
+			request.Items[i].IsPurchased = true
+			request.Items[i].PurchasedAt = &now
+			if err := h.db.Save(&request.Items[i]).Error; err != nil {
+				response.InternalServerError(c, "Failed to update items")
+				return
+			}
+		}
+	}
+
+	// Reload with relations
+	h.db.
+		Preload("Requester").
+		Preload("ApprovedBy").
+		Preload("PurchasedBy").
+		Preload("Items").
+		First(&request, request.ID)
+
+	response.SuccessWithMessage(c, "All items marked as purchased", requestToResponse(request))
+}
+
 // GetDashboardStats returns admin dashboard statistics
 func (h *AdminHandler) GetDashboardStats(c *gin.Context) {
 	var stats struct {

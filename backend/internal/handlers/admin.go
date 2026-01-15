@@ -734,6 +734,30 @@ func (h *AdminHandler) MarkItemPurchased(c *gin.Context) {
 	// Reload items to check purchase progress
 	h.db.Preload("Items").First(&request, requestID)
 
+	// Check if ALL items are now purchased - auto-mark order as purchased
+	allPurchased := true
+	for _, item := range request.Items {
+		if !item.IsPurchased {
+			allPurchased = false
+			break
+		}
+	}
+
+	if allPurchased && request.Status == models.StatusApproved {
+		userID := middleware.GetUserID(c)
+		request.Status = models.StatusPurchased
+		request.PurchasedByID = &userID
+		request.PurchasedAt = &now
+		if err := h.db.Save(&request).Error; err != nil {
+			response.InternalServerError(c, "Failed to update order status")
+			return
+		}
+
+		// Create history entry
+		history := models.NewHistory(request.ID, userID, models.ActionCompleted, models.StatusApproved, models.StatusPurchased, "All items purchased")
+		h.db.Create(history)
+	}
+
 	// Reload with relations
 	h.db.
 		Preload("Requester").
@@ -781,6 +805,22 @@ func (h *AdminHandler) MarkAllItemsPurchased(c *gin.Context) {
 				return
 			}
 		}
+	}
+
+	// Auto-mark order as purchased if status is still approved
+	if request.Status == models.StatusApproved {
+		userID := middleware.GetUserID(c)
+		request.Status = models.StatusPurchased
+		request.PurchasedByID = &userID
+		request.PurchasedAt = &now
+		if err := h.db.Save(&request).Error; err != nil {
+			response.InternalServerError(c, "Failed to update order status")
+			return
+		}
+
+		// Create history entry
+		history := models.NewHistory(request.ID, userID, models.ActionCompleted, models.StatusApproved, models.StatusPurchased, "All items purchased")
+		h.db.Create(history)
 	}
 
 	// Reload with relations
